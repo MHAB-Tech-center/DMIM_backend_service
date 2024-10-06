@@ -17,7 +17,6 @@ import {
   Post,
   Put,
   Req,
-  Res,
 } from '@nestjs/common';
 import { LoginDTO } from 'src/common/dtos/lodin.dto';
 import { UsersService } from 'src/modules/users/users.service';

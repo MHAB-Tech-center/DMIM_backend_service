@@ -25,6 +25,16 @@ import { APP_GUARD } from '@nestjs/core';
 import { JwtModule } from '@nestjs/jwt';
 import { RoleService } from './modules/roles/role.service';
 import { RoleModule } from './modules/roles/role.module';
+import { Inspector } from './entities/inspector.entity';
+import { CheckList } from './entities/checklist.entity';
+import { Company } from './entities/company.entity';
+import { MineSite } from './entities/minesite.entity';
+import { Profile } from './entities/profile.entity';
+import { Question } from './entities/Question.entity';
+import { QuestionCategory } from './entities/questionCategory.entity';
+import { InspectionResults } from './entities/inspectionResults.entity';
+import { Notification } from './entities/notification.entity';
+import { InspectionPlan } from './entities/InspectionPlan.entity';
 
 @Module({
   imports: [
@@ -38,7 +48,20 @@ import { RoleModule } from './modules/roles/role.module';
         username: configService.get('DB_USERNAME'),
         password: configService.get('DB_PASSWORD'),
         database: configService.get('DB_NAME'),
-        entities: [User, Role],
+        entities: [
+          User,
+          Role,
+          Inspector,
+          CheckList,
+          Company,
+          MineSite,
+          Notification,
+          Profile,
+          Question,
+          QuestionCategory,
+          InspectionResults,
+          InspectionPlan,
+        ],
         synchronize: true,
       }),
       inject: [ConfigService],
