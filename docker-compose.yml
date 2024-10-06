@@ -1,0 +1,19 @@
+version: '3.8'
+services:
+  api:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    environment:
+      DATABASE_URL: 'postgres://jgwvrova:dtM4wG2jPYKsczgI0Qr-ks3L-byZlz_h@trumpet.db.elephantsql.com/jgwvrova'
+      NODE_ENV: development
+      PORT: 3000
+    ports:
+      - "8060:3000"
+    networks:
+      - kabstore-network
+
+networks:
+  kabstore-network:
+    driver: bridge
+
