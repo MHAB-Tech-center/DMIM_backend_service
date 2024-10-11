@@ -18,10 +18,10 @@ export const headerHTML = `<html lang='en'>
 <body>
   <div class='container'>
     <div class='header'>
-      <h1 style='text-align: center;'>Kabstore</h1>`;
+      <h1 style='text-align: center;'>DMIM</h1>`;
 
 export const footerHTML = `     <div class='footer'>
-<p>Kabstore, you are our priority</p>
+<p>DMIM, you are our priority</p>
 <p>This is an automated email. Please do not reply.</p>
 </div>
 </div>

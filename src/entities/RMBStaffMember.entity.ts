@@ -1,8 +1,8 @@
 import { Entity } from 'typeorm';
 import { Person } from './person.entity';
 
-Entity('rmb_staff');
-export class RTBStaffMembebr extends Person {
+@Entity('rmb_staff')
+export class RMBStaffMember extends Person {
   constructor(
     firstName: string,
     lastName: string,

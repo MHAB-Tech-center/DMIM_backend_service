@@ -30,6 +30,9 @@ import { MineSite } from './entities/minesite.entity';
 import { Notification } from './entities/notification.entity';
 import { InspectionPlan } from './entities/InspectionPlan.entity';
 import { Profile } from './entities/profile.entity';
+import { InspectorsModule } from './modules/inspectors/inspectors.module';
+import { RmbModule } from './modules/rmb/rmb.module';
+import { RMBStaffMember } from './entities/RMBStaffMember.entity';
 
 @Module({
   imports: [
@@ -45,6 +48,7 @@ import { Profile } from './entities/profile.entity';
         database: configService.get('DB_NAME'),
         entities: [
           Profile,
+          RMBStaffMember,
           Role,
           Inspector,
           Company,
@@ -72,6 +76,8 @@ import { Profile } from './entities/profile.entity';
     AuthModule,
     FilesModule,
     UtilsModule,
+    RmbModule,
+    InspectorsModule,
   ],
   controllers: [AuthController, HomeController],
   providers: [{ provide: APP_GUARD, useClass: RolesGuard }],

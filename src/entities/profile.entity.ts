@@ -34,21 +34,12 @@ export class Profile extends InitiatorAudit {
   @Column()
   username: String;
 
-  @Column()
-  phonenumber: String;
-
   @Column({
     nullable: true,
     default: null,
   })
   last_login: Date;
 
-  @Column({
-    type: String,
-    enum: EGender,
-    default: EGender[EGender.MALE],
-  })
-  gender: EGender;
   @JoinColumn({
     name: 'profile_picture',
   })
@@ -70,19 +61,12 @@ export class Profile extends InitiatorAudit {
   @ManyToMany(() => Role)
   @JoinTable()
   roles: Role[];
-  constructor(
-    email: String,
-    username: String,
-    myGender: EGender,
-    password: String,
-    status: EAccountStatus,
-  ) {
+  constructor(email: String, username: String, password: string) {
     super();
     this.email = email;
     this.username = username;
-    this.gender = myGender;
-    // this.profile_pic=this.profile_pic
     this.password = password;
-    this.status = EAccountStatus[status];
+    // this.profile_pic=this.profile_pic
+    this.status = EAccountStatus[EAccountStatus.ACTIVE];
   }
 }

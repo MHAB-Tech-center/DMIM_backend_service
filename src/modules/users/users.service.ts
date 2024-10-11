@@ -173,9 +173,7 @@ export class UsersService {
       registercode,
       national_id,
       phonenumber,
-      password,
     } = body;
-    console.log(registercode);
     if (registercode != 'KabstoreKeyAdmin') {
       return new UnauthorizedException('Incorrect Registration Key');
     }
@@ -204,15 +202,9 @@ export class UsersService {
           'The provided gender is invalid, should male or female',
         );
     }
-    const userToCreate = new Profile(
-      email,
-      username,
-      gender,
-      password,
-      EAccountStatus.WAIT_EMAIL_VERIFICATION,
-    );
+    const password = await this.utilsService.hashString('Default');
+    const userToCreate = new Profile(email, username, password);
     userToCreate.activationCode = this.generateRandomFourDigitNumber();
-    userToCreate.password = await this.utilsService.hashString(password);
     try {
       const userEntity = this.userRepo.create(userToCreate);
       const createdEnity = this.userRepo.save({ ...userEntity, roles: [role] });
@@ -232,6 +224,24 @@ export class UsersService {
     }
   }
 
+  async createProfile(
+    email: string,
+    username: string,
+    password: string,
+    role: any,
+  ) {
+    try {
+      const profile: Profile = new Profile(email, username, password);
+      const profileEntity = await this.userRepo.create(profile);
+      profile.activationCode = this.generateRandomFourDigitNumber();
+      return this.userRepo.save({
+        ...profileEntity,
+        roles: [role],
+      });
+    } catch (error) {
+      console.log(error);
+    }
+  }
   async updateUser(id: UUID, attrs: Partial<Profile>) {
     const user = await this.getUserById(id, 'User');
     if (!user) {
@@ -269,5 +279,13 @@ export class UsersService {
     }
     this.userRepo.remove(user);
     return user;
+  }
+
+  async saveExistingProfile(profile: Profile) {
+    try {
+      return await this.userRepo.save(profile);
+    } catch (error) {
+      console.log(error);
+    }
   }
 }
