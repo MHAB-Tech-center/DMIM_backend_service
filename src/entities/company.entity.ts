@@ -1,14 +1,4 @@
-import {
-  Column,
-  Entity,
-  JoinColumn,
-  JoinTable,
-  ManyToMany,
-  ManyToOne,
-  OneToMany,
-} from 'typeorm';
-import { MineSite } from './minesite.entity';
-import { Exclude } from 'class-transformer';
+import { Column, Entity, OneToMany } from 'typeorm';
 import { Notification } from './notification.entity';
 import { BaseEntity } from 'src/db/base-entity';
 
@@ -47,6 +37,9 @@ export class Company extends BaseEntity {
     miniLicense: number,
   ) {
     super();
+    this.name = name;
+    this.email = email;
+    this.phoneNumber = phoneNumber;
     this.numberOfEmployees = numberOfEmployees;
     this.productionCapacity = productionCapacity;
     this.miniLicense = miniLicense;

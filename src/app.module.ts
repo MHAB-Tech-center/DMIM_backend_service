@@ -10,7 +10,6 @@
 import { Module, OnModuleInit } from '@nestjs/common';
 import { UsersModule } from './modules/users/users.module';
 import { TypeOrmModule } from '@nestjs/typeorm';
-import { User } from './entities/user.entity';
 import { Role } from './entities/role.entity';
 import { HomeController } from './home/home.controller';
 import { ConfigModule, ConfigService } from '@nestjs/config';
@@ -26,15 +25,11 @@ import { JwtModule } from '@nestjs/jwt';
 import { RoleService } from './modules/roles/role.service';
 import { RoleModule } from './modules/roles/role.module';
 import { Inspector } from './entities/inspector.entity';
-import { CheckList } from './entities/checklist.entity';
 import { Company } from './entities/company.entity';
 import { MineSite } from './entities/minesite.entity';
-import { Profile } from './entities/profile.entity';
-import { Question } from './entities/Question.entity';
-import { QuestionCategory } from './entities/questionCategory.entity';
-import { InspectionResults } from './entities/inspectionResults.entity';
 import { Notification } from './entities/notification.entity';
 import { InspectionPlan } from './entities/InspectionPlan.entity';
+import { Profile } from './entities/profile.entity';
 
 @Module({
   imports: [
@@ -49,17 +44,12 @@ import { InspectionPlan } from './entities/InspectionPlan.entity';
         password: configService.get('DB_PASSWORD'),
         database: configService.get('DB_NAME'),
         entities: [
-          User,
+          Profile,
           Role,
           Inspector,
-          CheckList,
           Company,
           MineSite,
           Notification,
-          Profile,
-          Question,
-          QuestionCategory,
-          InspectionResults,
           InspectionPlan,
         ],
         synchronize: true,

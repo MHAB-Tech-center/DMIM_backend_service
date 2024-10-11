@@ -7,9 +7,9 @@ import {
 } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { JwtService } from '@nestjs/jwt';
-import { User } from 'src/entities/user.entity';
 import * as bcrypt from 'bcrypt';
 import { Request } from 'express';
+import { Profile } from 'src/entities/profile.entity';
 import { UsersService } from 'src/modules/users/users.service';
 
 @Injectable()
@@ -22,17 +22,17 @@ export class UtilsService {
   ) {}
 
   async getTokens(
-    user: User,
+    user: Profile,
   ): Promise<{ accessToken: String; refreshToken: String }> {
     const accessToken: String = await this.jwt.signAsync(
-      { roles: user.roles, id: user.id, national_id: user.national_id },
+      { roles: user.roles, id: user.id },
       {
         expiresIn: '3h',
         secret: this.config.get('SECRET_KEY'),
       },
     );
     const refreshToken: String = await this.jwt.signAsync(
-      { roles: user.roles, id: user.id, national_id: user.national_id },
+      { roles: user.roles, id: user.id },
       {
         expiresIn: '1d',
         secret: this.config.get('SECRET_KEY'),

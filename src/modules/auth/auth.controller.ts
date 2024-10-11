@@ -23,17 +23,17 @@ import { UsersService } from 'src/modules/users/users.service';
 import * as bcrypt from 'bcrypt';
 import { ApiResponse } from 'src/common/payload/ApiResponse';
 import { VerifyAccountDTO } from 'src/common/dtos/verify-account.dto';
-import { User } from 'src/entities/user.entity';
 import { ResetPasswordDTO } from 'src/common/dtos/reset-password.dto';
 import { ApiTags } from '@nestjs/swagger';
 import { AuthService } from './auth.service';
 import { Request, Response } from 'express';
 import { Public } from 'src/decorators/public.decorator';
+import { Profile } from 'src/entities/profile.entity';
 
 @ApiTags('auth')
 @Controller('auth')
 export class AuthController {
-  public isUserAvailable: User;
+  public isUserAvailable: Profile;
   constructor(
     private userService: UsersService,
     private authService: AuthService,

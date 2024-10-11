@@ -5,8 +5,8 @@ import {
   OneToOne,
   JoinColumn,
 } from 'typeorm';
-import { Profile } from './profile.entity';
 import { BaseExceptionFilter } from '@nestjs/core';
+import { Profile } from './profile.entity';
 
 @Entity()
 export abstract class Person extends BaseExceptionFilter {

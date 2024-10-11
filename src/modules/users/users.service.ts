@@ -18,7 +18,6 @@ import {
 import { EAccountStatus } from 'src/common/Enum/EAccountStatus.enum';
 import { EGender } from 'src/common/Enum/EGender.enum';
 import { ERole } from 'src/common/Enum/ERole.enum';
-import { User } from 'src/entities/user.entity';
 import { UtilsService } from 'src/utils/utils.service';
 import { LoginDTO } from 'src/common/dtos/lodin.dto';
 import { CreateUserDto } from 'src/common/dtos/create-user.dto';
@@ -26,11 +25,12 @@ import { UUID } from 'crypto';
 import { EUserType } from 'src/common/Enum/EUserType.enum';
 import { MailingService } from 'src/integrations/mailing/mailing.service';
 import { RoleService } from '../roles/role.service';
+import { Profile } from 'src/entities/profile.entity';
 
 @Injectable()
 export class UsersService {
   constructor(
-    @InjectRepository(User) public userRepo: Repository<User>,
+    @InjectRepository(Profile) public userRepo: Repository<Profile>,
     // @Inject(forwardRef(() => RoleService))
     private roleService: RoleService,
     @Inject(forwardRef(() => UtilsService))
@@ -204,14 +204,10 @@ export class UsersService {
           'The provided gender is invalid, should male or female',
         );
     }
-    const userToCreate = new User(
-      firstName,
-      lastName,
+    const userToCreate = new Profile(
       email,
       username,
       gender,
-      national_id,
-      phonenumber,
       password,
       EAccountStatus.WAIT_EMAIL_VERIFICATION,
     );
@@ -236,7 +232,7 @@ export class UsersService {
     }
   }
 
-  async updateUser(id: UUID, attrs: Partial<User>) {
+  async updateUser(id: UUID, attrs: Partial<Profile>) {
     const user = await this.getUserById(id, 'User');
     if (!user) {
       throw new NotFoundException('User not found');

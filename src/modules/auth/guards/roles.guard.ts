@@ -9,8 +9,8 @@ import {
 import { ConfigService } from '@nestjs/config';
 import { Reflector } from '@nestjs/core';
 import { JwtService } from '@nestjs/jwt';
+import { Profile } from 'src/entities/profile.entity';
 import { Role } from 'src/entities/role.entity';
-import { User } from 'src/entities/user.entity';
 import { UsersService } from 'src/modules/users/users.service';
 
 @Injectable()
@@ -31,7 +31,7 @@ export class RolesGuard implements CanActivate {
     }
     const req = context.switchToHttp().getRequest();
     const authorization = req.headers.authorization;
-    let user: User = null;
+    let user: Profile = null;
     if (
       authorization == undefined ||
       authorization == null ||

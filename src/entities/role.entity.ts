@@ -8,8 +8,8 @@
  * @brief Role entity
  */
 import { Column, Entity, ManyToMany, PrimaryGeneratedColumn } from 'typeorm';
-import { User } from './user.entity';
 import { InitiatorAudit } from 'src/audits/Initiator.audit';
+import { Profile } from './profile.entity';
 
 @Entity('roles')
 export class Role extends InitiatorAudit {
@@ -17,6 +17,6 @@ export class Role extends InitiatorAudit {
   id: number;
   @Column()
   role_name: String;
-  @ManyToMany(() => User)
-  users: User[];
+  @ManyToMany(() => Profile)
+  users: Profile[];
 }

@@ -21,12 +21,12 @@ async function bootstrap() {
     }),
   );
   const config = new DocumentBuilder()
-    .setTitle('KABSTORE BACKEND API')
+    .setTitle('DMIM BACKEND API')
     .setDescription(
-      'This is the inventory management for Kabstore sho, By LEINS',
+      'This is the digital inspection manual, By MHAB Tech Center',
     )
     .setVersion('1.0')
-    .addTag('Kabstore')
+    .addTag('DMIM')
     .addBearerAuth()
     .build();
 
