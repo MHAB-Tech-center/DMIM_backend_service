@@ -25,7 +25,12 @@ export class RoleService {
     private userService: UsersService,
   ) {}
   createRoles() {
-    const roleArray: Array<ERole> = [ERole.ADMIN, ERole.USER];
+    const roleArray: Array<ERole> = [
+      ERole.ADMIN,
+      ERole.USER,
+      ERole.INSPECTOR,
+      ERole.RMB,
+    ];
     roleArray.forEach((role) => {
       const roleEntity = this.roleRepo.create({
         role_name: ERole[role],

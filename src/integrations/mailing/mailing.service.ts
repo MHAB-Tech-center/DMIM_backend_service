@@ -18,7 +18,7 @@ export class MailingService {
         this.options = {
           transporterName: null,
           to: recipient.email,
-          subject: 'KabStore password reset',
+          subject: 'DMIM password reset',
           html: `${headerHTML}
           </div>
           <div class='content'>
@@ -33,11 +33,11 @@ export class MailingService {
         this.options = {
           transporterName: null,
           to: recipient.email,
-          subject: 'Kabstore Email verification',
+          subject: 'DMIM Email verification',
           html: `${headerHTML}
         </div>
         <div class='content'>
-          <p>Hello ${recipient.lastName}, Welcome to Kabstore </p>
+          <p>Hello ${recipient.lastName}, Welcome to DMIM </p>
           <p>Thank you for signing up! Please click the button below to reset  your password :</p>
           <p>Your verification code is  ${recipient.activationCode}</p>
           <p> You can also verify your account by click on this link <a class='button' href='${link}'>Reset your password</a>

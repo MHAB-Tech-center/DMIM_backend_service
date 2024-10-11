@@ -6,6 +6,7 @@ import {
   IsEmail,
   IsStrongPassword,
   IsPhoneNumber,
+  IsDate,
 } from 'class-validator';
 import { EGender } from '../Enum/EGender.enum';
 import { ApiProperty } from '@nestjs/swagger';
@@ -47,15 +48,12 @@ export class CreateUserDto {
   @ApiProperty()
   national_id: string;
 
+  // @IsDate()
+  // dob: Date;
+
   @IsString()
   @IsNotEmpty()
   @ApiProperty()
   @IsPhoneNumber()
   phonenumber: string;
-
-  @IsString()
-  @IsNotEmpty()
-  @ApiProperty()
-  @IsStrongPassword()
-  password: string;
 }

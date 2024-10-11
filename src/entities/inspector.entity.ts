@@ -1,4 +1,4 @@
-import { Entity, JoinColumn, ManyToOne, OneToOne } from 'typeorm';
+import { Entity } from 'typeorm';
 import { Person } from './person.entity';
 
 @Entity('inspectors')

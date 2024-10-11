@@ -7,9 +7,10 @@ import {
 } from 'typeorm';
 import { BaseExceptionFilter } from '@nestjs/core';
 import { Profile } from './profile.entity';
+import { BaseEntity } from 'src/db/base-entity';
 
 @Entity()
-export abstract class Person extends BaseExceptionFilter {
+export abstract class Person extends BaseEntity {
   @PrimaryGeneratedColumn('uuid')
   id: string;
 
