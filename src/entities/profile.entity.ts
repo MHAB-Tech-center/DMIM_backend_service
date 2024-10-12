@@ -28,11 +28,8 @@ export class Profile extends InitiatorAudit {
   @PrimaryGeneratedColumn()
   id: UUID;
 
-  @Column()
+  @Column({ unique: true })
   email: String;
-
-  @Column()
-  username: String;
 
   @Column({
     nullable: true,
@@ -61,10 +58,9 @@ export class Profile extends InitiatorAudit {
   @ManyToMany(() => Role)
   @JoinTable()
   roles: Role[];
-  constructor(email: String, username: String, password: string) {
+  constructor(email: String, password: string) {
     super();
     this.email = email;
-    this.username = username;
     this.password = password;
     // this.profile_pic=this.profile_pic
     this.status = EAccountStatus[EAccountStatus.ACTIVE];

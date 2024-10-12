@@ -56,6 +56,10 @@ export class UsersService {
       );
     return user;
   }
+  async existsByEmail(email: any): Promise<boolean> {
+    const exists = await this.userRepo.exist({ where: { email } });
+    return exists;
+  }
   async getUserByVerificationCode(code: number) {
     const user = await this.userRepo.findOne({
       where: {
@@ -64,6 +68,10 @@ export class UsersService {
       relations: ['roles'],
     });
     return user;
+  }
+
+  async getDefaultPassword() {
+    return await this.utilsService.hashString('Default');
   }
 
   async getOneByEmail(email: any) {
@@ -164,48 +172,19 @@ export class UsersService {
     this.mailingService.sendEmail('', true, account);
   }
   async createUser(body: CreateUserDto) {
-    let {
-      firstName,
-      lastName,
-      email,
-      username,
-      myGender,
-      registercode,
-      national_id,
-      phonenumber,
-    } = body;
-    if (registercode != 'KabstoreKeyAdmin') {
+    let { email, registercode } = body;
+    if (registercode != process.env.ADMIN_KEY) {
       return new UnauthorizedException('Incorrect Registration Key');
     }
-
-    let email2: any = email;
-    const userFetched = await this.userRepo.findOne({
-      where: {
-        email: email2,
-      },
-    });
+    const userFetched = await this.existsByEmail(email);
     if (userFetched) return new UnauthorizedException('Email already exists');
 
-    const status: String =
-      EAccountStatus[EAccountStatus.WAIT_EMAIL_VERIFICATION].toString();
-    let gender;
-    const role = await this.roleService.getRoleByName(ERole[ERole.ADMIN]);
-    switch (myGender.toLowerCase()) {
-      case 'male':
-        gender = EGender[EGender.MALE];
-        break;
-      case 'female':
-        gender = EGender[EGender.FEMALE];
-        break;
-      default:
-        throw new BadRequestException(
-          'The provided gender is invalid, should male or female',
-        );
-    }
-    const password = await this.utilsService.hashString('Default');
-    const userToCreate = new Profile(email, username, password);
-    userToCreate.activationCode = this.generateRandomFourDigitNumber();
+    // let userGender = this.utilsService.getGender(gender);
     try {
+      const role = await this.roleService.getRoleByName(ERole[ERole.ADMIN]);
+      const password = await this.getDefaultPassword();
+      const userToCreate = new Profile(email, password);
+      userToCreate.activationCode = this.generateRandomFourDigitNumber();
       const userEntity = this.userRepo.create(userToCreate);
       const createdEnity = this.userRepo.save({ ...userEntity, roles: [role] });
       await this.mailingService.sendEmail('', false, createdEnity);
@@ -224,14 +203,9 @@ export class UsersService {
     }
   }
 
-  async createProfile(
-    email: string,
-    username: string,
-    password: string,
-    role: any,
-  ) {
+  async createProfile(email: string, password: string, role: any) {
     try {
-      const profile: Profile = new Profile(email, username, password);
+      const profile: Profile = new Profile(email, password);
       const profileEntity = await this.userRepo.create(profile);
       profile.activationCode = this.generateRandomFourDigitNumber();
       return this.userRepo.save({

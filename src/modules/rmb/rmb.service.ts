@@ -1,5 +1,5 @@
 import {
-  BadRequestException,
+  ForbiddenException,
   forwardRef,
   Inject,
   Injectable,
@@ -14,10 +14,9 @@ import { UtilsService } from 'src/utils/utils.service';
 import { Repository } from 'typeorm';
 import { CreateRMBStaffDTO } from './dtos/createRMBStaff.dto';
 import { RoleService } from '../roles/role.service';
-import { ERole } from 'src/common/Enum/ERole.enum';
-import { EGender } from 'src/common/Enum/EGender.enum';
 import { Profile } from 'src/entities/profile.entity';
 import { UsersService } from '../users/users.service';
+import { InviteUser } from 'src/common/dtos/invite-user.dto';
 
 @Injectable()
 export class RmbService {
@@ -42,17 +41,8 @@ export class RmbService {
     });
     return user;
   }
-
   async create(body: CreateRMBStaffDTO) {
-    let {
-      firstName,
-      lastName,
-      email,
-      username,
-      myGender,
-      national_id,
-      phonenumber,
-    } = body;
+    let { firstName, lastName, email, national_id, phonenumber } = body;
 
     const userFetched = await this.rmbRepo.findOne({
       where: {
@@ -61,23 +51,12 @@ export class RmbService {
     });
     if (userFetched)
       return new UnauthorizedException('The RMB member already exists');
-    let gender;
-    const role = await this.roleService.getRoleByName(ERole[ERole.RMB]);
-    switch (myGender.toLowerCase()) {
-      case 'male':
-        gender = EGender[EGender.MALE];
-        break;
-      case 'female':
-        gender = EGender[EGender.FEMALE];
-        break;
-      default:
-        throw new BadRequestException(
-          'The provided gender is invalid, should male or female',
-        );
-    }
-
+    // const userGender = this.utilsService.getGender(gender);
     try {
-      const password = await this.utilsService.hashString('Default');
+      if (!this.userService.existsByEmail(email))
+        throw new NotFoundException(
+          'The profile you are trying to set up is not found',
+        );
       const rmbMember: RMBStaffMember = new RMBStaffMember(
         firstName,
         lastName,
@@ -86,14 +65,8 @@ export class RmbService {
         phonenumber,
         national_id,
       );
-      const profile: Profile = await this.userService.createProfile(
-        email,
-        username,
-        password,
-        role,
-      );
+      const profile: Profile = await this.userService.getOneByEmail(email);
       profile.activationCode = this.userService.generateRandomFourDigitNumber();
-
       rmbMember.profile = profile;
       await this.rmbRepo.save(rmbMember);
       await this.mailingService.sendEmail('', false, profile);
@@ -120,7 +93,6 @@ export class RmbService {
         );
       }
       profile.email = dto.email;
-      profile.username = dto.username;
       const updatedProfile: Profile =
         await this.userService.saveExistingProfile(profile);
       savedMember.firstName = dto.firstName;
@@ -134,7 +106,20 @@ export class RmbService {
       console.log(error);
     }
   }
-  async getById(id: UUID) {
+
+  async inviteRMBStaffMember(dto: InviteUser): Promise<any> {
+    try {
+      if (this.userService.existsByEmail(dto.email))
+        throw new ForbiddenException('The RMB member already exists');
+      const password = await this.userService.getDefaultPassword();
+      let profile = new Profile(dto.email, password);
+      await this.userService.saveExistingProfile(profile);
+      await this.mailingService.sendEmail('', true, profile);
+    } catch (error) {
+      console.log(error);
+    }
+  }
+  async getById(id: UUID): Promise<RMBStaffMember> {
     try {
       const rmbMember = await this.rmbRepo.findOne({
         where: {
@@ -150,7 +135,7 @@ export class RmbService {
       console.log(error);
     }
   }
-  async delete(id: UUID) {
+  async delete(id: UUID): Promise<any> {
     const rmbMember = await this.getById(id);
     if (!rmbMember) {
       throw new NotFoundException('User not found');

@@ -11,6 +11,10 @@ import { InspectorsService } from './inspectors.service';
 import { CreateRMBStaffDTO } from '../rmb/dtos/createRMBStaff.dto';
 import { UUID } from 'crypto';
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
+import { Public } from 'src/decorators/public.decorator';
+import { Roles } from 'src/utils/decorators/roles.decorator';
+import { InviteUser } from 'src/common/dtos/invite-user.dto';
+import { ApiResponse } from 'src/common/payload/ApiResponse';
 
 @Controller('inspectors')
 @ApiTags('inspectors')
@@ -31,15 +35,29 @@ export class InspectorsController {
   }
 
   // Create a new inspector
-  @Post('/create')
+  @Public()
   async create(@Body() body: CreateRMBStaffDTO) {
     return this.inspectorService.create(body);
   }
 
   // Update an inspector's details
   @Put('/update/:id')
+  @Roles('INSPECTOR', 'ADMIN')
   async update(@Param('id') id: UUID, @Body() dto: CreateRMBStaffDTO) {
-    return this.inspectorService.update(id, dto);
+    return new ApiResponse(
+      true,
+      'An inspector was updated successfully',
+      this.inspectorService.update(id, dto),
+    );
+  }
+  @Post('invite')
+  @Roles('ADMIN')
+  async inviteInspector(@Body() dto: InviteUser) {
+    return new ApiResponse(
+      true,
+      'An inspector was invited successfully',
+      this.inspectorService.inviteInspector(dto),
+    );
   }
 
   // Get inspector by ID
