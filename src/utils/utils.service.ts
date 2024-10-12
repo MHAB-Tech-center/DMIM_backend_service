@@ -9,6 +9,7 @@ import { ConfigService } from '@nestjs/config';
 import { JwtService } from '@nestjs/jwt';
 import * as bcrypt from 'bcrypt';
 import { Request } from 'express';
+import { EGender } from 'src/common/Enum/EGender.enum';
 import { Profile } from 'src/entities/profile.entity';
 import { UsersService } from 'src/modules/users/users.service';
 
@@ -75,6 +76,19 @@ export class UtilsService {
       throw new UnauthorizedException(
         'Please you are not authorized to access resource',
       );
+    }
+  }
+
+  getGender(gender: string): string {
+    switch (gender.toLowerCase()) {
+      case 'male':
+        return EGender[EGender.MALE];
+      case 'female':
+        return EGender[EGender.FEMALE];
+      default:
+        throw new BadRequestException(
+          'The provided gender is invalid, should male or female',
+        );
     }
   }
 }

@@ -1,14 +1,5 @@
 /* eslint-disable */
-import {
-  IsString,
-  IsNotEmpty,
-  IsEnum,
-  IsEmail,
-  IsStrongPassword,
-  IsPhoneNumber,
-  IsDate,
-} from 'class-validator';
-import { EGender } from '../Enum/EGender.enum';
+import { IsString, IsNotEmpty, IsEmail, IsPhoneNumber } from 'class-validator';
 import { ApiProperty } from '@nestjs/swagger';
 
 export class CreateUserDto {
@@ -31,17 +22,12 @@ export class CreateUserDto {
   @IsString()
   @IsNotEmpty()
   @ApiProperty()
-  username: string;
+  gender: string;
 
   @IsString()
   @IsNotEmpty()
   @ApiProperty()
-  myGender: string;
-
-  @IsString()
-  @IsNotEmpty()
-  @ApiProperty()
-  registercode: string;
+  registercode: string = 'DMIM232@3$';
 
   @IsString()
   @IsNotEmpty()

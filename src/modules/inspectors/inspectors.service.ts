@@ -1,5 +1,5 @@
 import {
-  BadRequestException,
+  ForbiddenException,
   forwardRef,
   Inject,
   Injectable,
@@ -15,12 +15,10 @@ import { RoleService } from '../roles/role.service';
 import { UsersService } from '../users/users.service';
 import { CreateInspectorDTO } from './dtos/createInspector.dto';
 import { ERole } from 'src/common/Enum/ERole.enum';
-import { EGender } from 'src/common/Enum/EGender.enum';
 import { Profile } from 'src/entities/profile.entity';
-import { EAccountStatus } from 'src/common/Enum/EAccountStatus.enum';
 import { RMBStaffMember } from 'src/entities/RMBStaffMember.entity';
-import { CreateRMBStaffDTO } from '../rmb/dtos/createRMBStaff.dto';
 import { UUID } from 'crypto';
+import { InviteUser } from 'src/common/dtos/invite-user.dto';
 
 @Injectable()
 export class InspectorsService {
@@ -44,42 +42,23 @@ export class InspectorsService {
     });
     return user;
   }
+  async existsByEmail(email: string): Promise<boolean> {
+    const exists = await this.inspectorRepo.exist({ where: { email } });
+    return exists;
+  }
 
   async create(body: CreateInspectorDTO) {
-    let {
-      firstName,
-      lastName,
-      email,
-      username,
-      myGender,
-      national_id,
-      phonenumber,
-    } = body;
+    let { firstName, lastName, email, gender, national_id, phonenumber } = body;
 
-    const userFetched = await this.inspectorRepo.findOne({
-      where: {
-        email: email,
-      },
-    });
-    if (userFetched)
-      return new UnauthorizedException('The RMB member already exists');
-    let gender;
-    const role = await this.roleService.getRoleByName(ERole[ERole.INSPECTOR]);
-    switch (myGender.toLowerCase()) {
-      case 'male':
-        gender = EGender[EGender.MALE];
-        break;
-      case 'female':
-        gender = EGender[EGender.FEMALE];
-        break;
-      default:
-        throw new BadRequestException(
-          'The provided gender is invalid, should male or female',
-        );
-    }
-
+    // const userGender = this.utilsService.getGender(gender);
     try {
-      const password = await this.utilsService.hashString('Default');
+      if (!this.userService.existsByEmail(email))
+        throw new NotFoundException(
+          'The profile you are trying to set up is not found',
+        );
+      const userFetched = await this.existsByEmail(email);
+      if (userFetched)
+        return new UnauthorizedException('The RMB member already exists');
       const inspector: RMBStaffMember = new RMBStaffMember(
         firstName,
         lastName,
@@ -88,15 +67,10 @@ export class InspectorsService {
         phonenumber,
         national_id,
       );
-      const savedProfile = await this.userService.createProfile(
-        email,
-        username,
-        password,
-        role,
-      );
-      inspector.profile = savedProfile;
+      const userProfile = await this.userService.getOneByEmail(email);
+      inspector.profile = userProfile;
       await this.inspectorRepo.save(inspector);
-      await this.mailingService.sendEmail('', false, savedProfile);
+      await this.mailingService.sendEmail('', false, userProfile);
       return {
         success: true,
         message: `We have sent a verification code to the Inspector email for verification`,
@@ -120,7 +94,6 @@ export class InspectorsService {
         );
       }
       profile.email = dto.email;
-      profile.username = dto.username;
       const updatedProfile: Profile =
         await this.userService.saveExistingProfile(profile);
       inspector.firstName = dto.firstName;
@@ -130,6 +103,19 @@ export class InspectorsService {
       inspector.nationalId = dto.national_id;
       inspector.profile = updatedProfile;
       return await this.inspectorRepo.save(inspector);
+    } catch (error) {
+      console.log(error);
+    }
+  }
+
+  async inviteInspector(dto: InviteUser): Promise<any> {
+    try {
+      if (this.userService.existsByEmail(dto.email))
+        throw new ForbiddenException('An inspector already exists');
+      const password = await this.userService.getDefaultPassword();
+      let profile = new Profile(dto.email, password);
+      await this.userService.saveExistingProfile(profile);
+      await this.mailingService.sendEmail('', true, profile);
     } catch (error) {
       console.log(error);
     }
