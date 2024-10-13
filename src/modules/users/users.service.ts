@@ -12,11 +12,11 @@ import { Repository } from 'typeorm';
 import { InjectRepository } from '@nestjs/typeorm/dist';
 import {
   BadRequestException,
+  HttpException,
   NotFoundException,
   UnauthorizedException,
 } from '@nestjs/common/exceptions';
 import { EAccountStatus } from 'src/common/Enum/EAccountStatus.enum';
-import { EGender } from 'src/common/Enum/EGender.enum';
 import { ERole } from 'src/common/Enum/ERole.enum';
 import { UtilsService } from 'src/utils/utils.service';
 import { LoginDTO } from 'src/common/dtos/lodin.dto';
@@ -26,6 +26,10 @@ import { EUserType } from 'src/common/Enum/EUserType.enum';
 import { MailingService } from 'src/integrations/mailing/mailing.service';
 import { RoleService } from '../roles/role.service';
 import { Profile } from 'src/entities/profile.entity';
+import * as bcrypt from 'bcrypt';
+import { VerifyLoginDTO } from 'src/common/dtos/verify-login.dto';
+import { ELoginStatus } from 'src/common/Enum/ELoginStatus.enum';
+import { ApiResponse } from 'src/common/payload/ApiResponse';
 
 @Injectable()
 export class UsersService {
@@ -37,6 +41,8 @@ export class UsersService {
     private utilsService: UtilsService,
     private mailingService: MailingService,
   ) {}
+
+  user: Profile;
 
   async getUsers() {
     const response = await this.userRepo.find({ relations: ['roles'] });
@@ -57,8 +63,8 @@ export class UsersService {
     return user;
   }
   async existsByEmail(email: any): Promise<boolean> {
-    const exists = await this.userRepo.exist({ where: { email } });
-    return exists;
+    const user = await this.getOneByEmail(email);
+    return user != null;
   }
   async getUserByVerificationCode(code: number) {
     const user = await this.userRepo.findOne({
@@ -103,19 +109,48 @@ export class UsersService {
     return Math.floor(Math.random() * (max - min + 1)) + min;
   }
 
-  async login(dto: LoginDTO) {
-    const user = await this.getOneByEmail(dto.email);
-    if (user.status == EAccountStatus[EAccountStatus.WAIT_EMAIL_VERIFICATION])
+  async preLogin(dto: LoginDTO) {
+    this.user = await this.getOneByEmail(dto.email);
+    const arePasswordsMatch = await bcrypt.compare(
+      dto.password.toString(),
+      this.user.password.toString(),
+    );
+    if (!this.user || !arePasswordsMatch)
+      throw new BadRequestException('Invalid email or password');
+    if (
+      this.user.status == EAccountStatus[EAccountStatus.WAIT_EMAIL_VERIFICATION]
+    )
       throw new BadRequestException(
         'This account is not yet verified, please check your gmail inbox for verification details',
       );
-    const tokens = this.utilsService.getTokens(user);
-    delete user.password;
-    return {
+  }
+  async verifyLogin(dto: VerifyLoginDTO) {
+    const loginDTO: LoginDTO = new LoginDTO(dto.email, dto.password);
+    await this.preLogin(loginDTO);
+
+    if (this.user.activationCode != dto.activationCode)
+      throw new BadRequestException('Invalid activation code');
+    const tokens = this.utilsService.getTokens(this.user);
+    this.user.loginStatus = ELoginStatus[ELoginStatus.VERIFIED];
+    await this.userRepo.save(this.user);
+    delete this.user.password;
+    delete this.user.activationCode;
+    return new ApiResponse(true, 'The login was verified successfully', {
       access: (await tokens).accessToken,
       refresh_token: (await tokens).refreshToken,
-      user: user,
-    };
+      user: this.user,
+    });
+  }
+  async login(dto: LoginDTO) {
+    await this.preLogin(dto);
+    this.user.loginStatus = ELoginStatus[ELoginStatus.FOR_VERIFICATION];
+    await this.userRepo.save(this.user);
+    this.mailingService.sendEmail(
+      '',
+      'verify-email-login',
+      this.user.email.toString(),
+      this.user,
+    );
   }
 
   async verifyAccount(code: number) {
@@ -127,11 +162,11 @@ export class UsersService {
     if (verifiedAccount.status === EAccountStatus[EAccountStatus.ACTIVE])
       throw new BadRequestException('This is already verified');
     verifiedAccount.status = EAccountStatus[EAccountStatus.ACTIVE];
+    verifiedAccount.loginStatus = ELoginStatus[ELoginStatus.VERIFIED];
     const updatedAccount = await this.userRepo.save(verifiedAccount);
     const tokens = await this.utilsService.getTokens(updatedAccount);
     delete updatedAccount.password;
     delete updatedAccount.activationCode;
-
     return { tokens, user: updatedAccount };
   }
 
@@ -169,7 +204,7 @@ export class UsersService {
     account.activationCode = this.generateRandomFourDigitNumber();
     if (reset) account.status = EAccountStatus[EAccountStatus.INACTIVE];
     await this.userRepo.save(account);
-    this.mailingService.sendEmail('', true, account);
+    this.mailingService.sendEmail('', 'get-code', email, account);
   }
   async createUser(body: CreateUserDto) {
     let { email, registercode } = body;
@@ -186,14 +221,22 @@ export class UsersService {
       const userToCreate = new Profile(email, password);
       userToCreate.activationCode = this.generateRandomFourDigitNumber();
       const userEntity = this.userRepo.create(userToCreate);
-      const createdEnity = this.userRepo.save({ ...userEntity, roles: [role] });
-      await this.mailingService.sendEmail('', false, createdEnity);
+      const createdEnity: Profile = await this.userRepo.save({
+        ...userEntity,
+        roles: [role],
+      });
+      await this.mailingService.sendEmail(
+        '',
+        'verify-email',
+        email,
+        createdEnity,
+      );
       return {
         success: true,
         message: `We have sent a verification code to your inbox , please verify your account`,
       };
-    } catch (error) {
-      console.log(error);
+    } catch (error: any) {
+      throw error;
     }
   }
   async verifyProfile(code: number) {

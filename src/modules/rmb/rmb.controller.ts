@@ -6,6 +6,7 @@ import {
   Param,
   Post,
   Put,
+  UseFilters,
 } from '@nestjs/common';
 import { UUID } from 'crypto';
 import { CreateRMBStaffDTO } from './dtos/createRMBStaff.dto';
@@ -15,10 +16,12 @@ import { Roles } from 'src/utils/decorators/roles.decorator';
 import { Public } from 'src/decorators/public.decorator';
 import { ApiResponse } from 'src/common/payload/ApiResponse';
 import { InviteUser } from 'src/common/dtos/invite-user.dto';
+import { CustomExceptionFilter } from 'src/exceptions/CustomExceptionFilter';
 
 @Controller('rmb')
 @ApiTags('rmb_members')
 @ApiBearerAuth()
+@UseFilters(CustomExceptionFilter) // Apply filter to the controller
 export class RmbController {
   constructor(private rmbService: RmbService) {}
 
@@ -44,11 +47,7 @@ export class RmbController {
   @Post('invite')
   @Roles('ADMIN')
   async inviteInspector(@Body() dto: InviteUser) {
-    return new ApiResponse(
-      true,
-      'An RMB staff member was invited successfully',
-      this.rmbService.inviteRMBStaffMember(dto),
-    );
+    return this.rmbService.inviteRMBStaffMember(dto);
   }
   // Update an RMB member's details
   @Put('/update/:id')

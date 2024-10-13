@@ -17,6 +17,7 @@ import { RoleService } from '../roles/role.service';
 import { Profile } from 'src/entities/profile.entity';
 import { UsersService } from '../users/users.service';
 import { InviteUser } from 'src/common/dtos/invite-user.dto';
+import { ApiResponse } from 'src/common/payload/ApiResponse';
 
 @Injectable()
 export class RmbService {
@@ -69,7 +70,12 @@ export class RmbService {
       profile.activationCode = this.userService.generateRandomFourDigitNumber();
       rmbMember.profile = profile;
       await this.rmbRepo.save(rmbMember);
-      await this.mailingService.sendEmail('', false, profile);
+      await this.mailingService.sendEmail(
+        '',
+        'verify-email',
+        lastName,
+        profile,
+      );
       return {
         success: true,
         message: `We have sent a verification code to the created RMB member email for verification`,
@@ -107,14 +113,25 @@ export class RmbService {
     }
   }
 
-  async inviteRMBStaffMember(dto: InviteUser): Promise<any> {
+  async inviteRMBStaffMember(dto: InviteUser): Promise<ApiResponse> {
     try {
-      if (this.userService.existsByEmail(dto.email))
+      if (await this.userService.existsByEmail(dto.email)) {
         throw new ForbiddenException('The RMB member already exists');
+      }
       const password = await this.userService.getDefaultPassword();
       let profile = new Profile(dto.email, password);
       await this.userService.saveExistingProfile(profile);
-      await this.mailingService.sendEmail('', true, profile);
+      await this.mailingService.sendEmail(
+        '',
+        'invite-rmb',
+        profile.email.toString(),
+        profile,
+      );
+      return new ApiResponse(
+        true,
+        'The RMB staff member was invited successfully',
+        null,
+      );
     } catch (error) {
       console.log(error);
     }

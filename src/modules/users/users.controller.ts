@@ -51,7 +51,11 @@ export class UsersController {
   @Post('/create')
   @ApiBody({ type: CreateUserDto })
   createAdminAccount(@Body() body: CreateUserDto) {
-    return this.usersService.createUser(body);
+    try {
+      return this.usersService.createUser(body);
+    } catch (error) {
+      console.log(error);
+    }
   }
 
   @Patch('update/:id')

@@ -12,6 +12,7 @@ import { AppModule } from './app.module';
 import { ValidationPipe } from '@nestjs/common';
 import { SwaggerModule, DocumentBuilder } from '@nestjs/swagger';
 import * as cors from 'cors';
+import { CustomExceptionFilter } from './exceptions/CustomExceptionFilter';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
@@ -20,6 +21,7 @@ async function bootstrap() {
       origin: '*',
     }),
   );
+  app.useGlobalFilters(new CustomExceptionFilter());
   const config = new DocumentBuilder()
     .setTitle('DMIM BACKEND API')
     .setDescription(

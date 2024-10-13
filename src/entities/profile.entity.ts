@@ -21,6 +21,7 @@ import { EAccountStatus } from '../common/Enum/EAccountStatus.enum';
 import { Role } from 'src/entities/role.entity';
 import { InitiatorAudit } from 'src/audits/Initiator.audit';
 import { UUID } from 'crypto';
+import { ELoginStatus } from 'src/common/Enum/ELoginStatus.enum';
 
 @Entity('users')
 @TableInheritance({ column: { type: 'varchar', name: 'type' } })
@@ -43,7 +44,7 @@ export class Profile extends InitiatorAudit {
   profile_pic: string;
 
   @Column({
-    nullable: true,
+    nullable: false,
   })
   password: String;
 
@@ -54,6 +55,8 @@ export class Profile extends InitiatorAudit {
 
   @Column()
   status: String;
+  @Column({ nullable: true })
+  loginStatus: String;
 
   @ManyToMany(() => Role)
   @JoinTable()
@@ -62,7 +65,9 @@ export class Profile extends InitiatorAudit {
     super();
     this.email = email;
     this.password = password;
+    this.loginStatus =
+      ELoginStatus.FOR_VERIFICATION[ELoginStatus.FOR_VERIFICATION];
     // this.profile_pic=this.profile_pic
-    this.status = EAccountStatus[EAccountStatus.ACTIVE];
+    this.status = EAccountStatus[EAccountStatus.WAIT_EMAIL_VERIFICATION];
   }
 }

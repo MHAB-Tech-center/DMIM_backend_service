@@ -17,21 +17,24 @@ import {
   Post,
   Put,
   Req,
+  UseFilters,
 } from '@nestjs/common';
 import { LoginDTO } from 'src/common/dtos/lodin.dto';
 import { UsersService } from 'src/modules/users/users.service';
-import * as bcrypt from 'bcrypt';
 import { ApiResponse } from 'src/common/payload/ApiResponse';
 import { VerifyAccountDTO } from 'src/common/dtos/verify-account.dto';
 import { ResetPasswordDTO } from 'src/common/dtos/reset-password.dto';
 import { ApiTags } from '@nestjs/swagger';
 import { AuthService } from './auth.service';
-import { Request, Response } from 'express';
+import { Request } from 'express';
 import { Public } from 'src/decorators/public.decorator';
 import { Profile } from 'src/entities/profile.entity';
+import { VerifyLoginDTO } from 'src/common/dtos/verify-login.dto';
+import { CustomExceptionFilter } from 'src/exceptions/CustomExceptionFilter';
 
 @ApiTags('auth')
 @Controller('auth')
+@UseFilters(CustomExceptionFilter) // Apply filter to the controller
 export class AuthController {
   public isUserAvailable: Profile;
   constructor(
@@ -42,20 +45,21 @@ export class AuthController {
   @Public()
   @Post('/login')
   async login(@Body() dto: LoginDTO): Promise<ApiResponse> {
-    this.isUserAvailable = await this.userService.getOneByEmail(dto.email);
-    if (!this.isUserAvailable)
-      throw new ForbiddenException('Invalid email or password');
-    const arePasswordsMatch = await bcrypt.compare(
-      dto.password.toString(),
-      this.isUserAvailable.password.toString(),
-    );
-    if (!arePasswordsMatch)
-      throw new BadRequestException('Invalid email or password');
-    return new ApiResponse(
-      true,
-      'User loggedInSucccessfully',
-      await this.userService.login(dto),
-    );
+    try {
+      return new ApiResponse(
+        true,
+        'We have sent a verification code to your email',
+        await this.userService.login(dto),
+      );
+    } catch (error) {
+      console.log(error);
+    }
+  }
+  @Public()
+  @Post('/verify-login')
+  async verifyLogin(@Body() dto: VerifyLoginDTO) {
+    const reponse = await this.userService.verifyLogin(dto);
+    return reponse;
   }
   @Put('verify_account')
   @Public()
