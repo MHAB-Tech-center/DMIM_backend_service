@@ -39,6 +39,9 @@ export abstract class Person extends BaseEntity {
   @JoinColumn({ name: 'profile_id' })
   profile: Profile;
 
+  province: string;
+  district: string;
+
   //   @Column({ type: 'enum', enum: EVisibility, default: EVisibility.VISIBLE })
   //   visibility: EVisibility;
 

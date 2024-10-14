@@ -6,6 +6,7 @@ import {
   Param,
   Post,
   Put,
+  UseFilters,
 } from '@nestjs/common';
 import { InspectorsService } from './inspectors.service';
 import { CreateRMBStaffDTO } from '../rmb/dtos/createRMBStaff.dto';
@@ -15,10 +16,13 @@ import { Public } from 'src/decorators/public.decorator';
 import { Roles } from 'src/utils/decorators/roles.decorator';
 import { InviteUser } from 'src/common/dtos/invite-user.dto';
 import { ApiResponse } from 'src/common/payload/ApiResponse';
+import { CustomExceptionFilter } from 'src/exceptions/CustomExceptionFilter';
+import { CreateInspectorDTO } from './dtos/createInspector.dto';
 
 @Controller('inspectors')
 @ApiTags('inspectors')
 @ApiBearerAuth()
+@UseFilters(CustomExceptionFilter) // Apply filter to the controller
 export class InspectorsController {
   constructor(private inspectorService: InspectorsService) {}
 
@@ -35,15 +39,16 @@ export class InspectorsController {
   }
 
   // Create a new inspector
+  @Post('create')
   @Public()
-  async create(@Body() body: CreateRMBStaffDTO) {
+  async create(@Body() body: CreateInspectorDTO) {
     return this.inspectorService.create(body);
   }
 
   // Update an inspector's details
   @Put('/update/:id')
   @Roles('INSPECTOR', 'ADMIN')
-  async update(@Param('id') id: UUID, @Body() dto: CreateRMBStaffDTO) {
+  async update(@Param('id') id: UUID, @Body() dto: CreateInspectorDTO) {
     return new ApiResponse(
       true,
       'An inspector was updated successfully',
@@ -51,7 +56,8 @@ export class InspectorsController {
     );
   }
   @Post('invite')
-  @Roles('ADMIN')
+  @Public()
+  // @Roles('ADMIN')
   async inviteInspector(@Body() dto: InviteUser) {
     return new ApiResponse(
       true,

@@ -128,7 +128,10 @@ export class UsersService {
     const loginDTO: LoginDTO = new LoginDTO(dto.email, dto.password);
     await this.preLogin(loginDTO);
 
-    if (this.user.activationCode != dto.activationCode)
+    if (
+      this.user.activationCode != dto.activationCode ||
+      this.user.activationCode == null
+    )
       throw new BadRequestException('Invalid activation code');
     const tokens = this.utilsService.getTokens(this.user);
     this.user.loginStatus = ELoginStatus[ELoginStatus.VERIFIED];

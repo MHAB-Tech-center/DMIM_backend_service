@@ -8,10 +8,8 @@
  * @brief controller for auth queries
  */
 import {
-  BadRequestException,
   Body,
   Controller,
-  ForbiddenException,
   Get,
   Param,
   Post,

@@ -19,6 +19,7 @@ import { Profile } from 'src/entities/profile.entity';
 import { RMBStaffMember } from 'src/entities/RMBStaffMember.entity';
 import { UUID } from 'crypto';
 import { InviteUser } from 'src/common/dtos/invite-user.dto';
+import { ApiResponse } from 'src/common/payload/ApiResponse';
 
 @Injectable()
 export class InspectorsService {
@@ -48,104 +49,104 @@ export class InspectorsService {
   }
 
   async create(body: CreateInspectorDTO) {
-    let { firstName, lastName, email, gender, national_id, phonenumber } = body;
+    let {
+      firstName,
+      lastName,
+      email,
+      national_id,
+      phonenumber,
+      inspectorRole,
+      province,
+      district,
+    } = body;
 
     // const userGender = this.utilsService.getGender(gender);
-    try {
-      if (!this.userService.existsByEmail(email))
-        throw new NotFoundException(
-          'The profile you are trying to set up is not found',
-        );
-      const userFetched = await this.existsByEmail(email);
-      if (userFetched)
-        return new UnauthorizedException('The RMB member already exists');
-      const inspector: RMBStaffMember = new RMBStaffMember(
-        firstName,
-        lastName,
-        email,
-        new Date(),
-        phonenumber,
-        national_id,
+    if (!(await this.userService.existsByEmail(email)))
+      throw new NotFoundException(
+        'The profile you are trying to set up is not found',
       );
-      const userProfile = await this.userService.getOneByEmail(email);
-      inspector.profile = userProfile;
-      await this.inspectorRepo.save(inspector);
-      await this.mailingService.sendEmail(
-        '',
-        'verify-email',
-        lastName,
-        userProfile,
-      );
-      return {
-        success: true,
-        message: `We have sent a verification code to the Inspector email for verification`,
-      };
-    } catch (error) {
-      console.log(error);
-    }
+
+    let role: string = this.utilsService.getInspectorRole(inspectorRole);
+    const inspector: Inspector = new Inspector(
+      firstName,
+      lastName,
+      email,
+      new Date(),
+      phonenumber,
+      national_id,
+      role,
+      province,
+      district,
+    );
+    const userProfile = await this.userService.getOneByEmail(email);
+    inspector.profile = userProfile;
+    userProfile.activationCode =
+      this.userService.generateRandomFourDigitNumber();
+    await this.userService.saveExistingProfile(userProfile);
+    await this.inspectorRepo.save(inspector);
+    await this.mailingService.sendEmail(
+      '',
+      'verify-email-login',
+      lastName,
+      userProfile,
+    );
+    return new ApiResponse(
+      true,
+      `We have sent a verification code to the Inspector email for verification`,
+      null,
+    );
   }
 
   async update(id: UUID, dto: CreateInspectorDTO) {
-    try {
-      const profile = await this.userService.getUserById(id, 'User');
-      const inspector: Inspector = await this.inspectorRepo.findOne({
-        where: {
-          email: dto.email,
-        },
-      });
-      if (!profile || !inspector) {
-        throw new NotFoundException(
-          'An inspector with the provided email not found',
-        );
-      }
-      profile.email = dto.email;
-      const updatedProfile: Profile =
-        await this.userService.saveExistingProfile(profile);
-      inspector.firstName = dto.firstName;
-      inspector.lastName = dto.lastName;
-      inspector.email = dto.email;
-      inspector.phoneNumber = dto.phonenumber;
-      inspector.nationalId = dto.national_id;
-      inspector.profile = updatedProfile;
-      return await this.inspectorRepo.save(inspector);
-    } catch (error) {
-      console.log(error);
+    const profile = await this.userService.getUserById(id, 'User');
+    const inspector: Inspector = await this.inspectorRepo.findOne({
+      where: {
+        email: dto.email,
+      },
+    });
+    if (!profile || !inspector) {
+      throw new NotFoundException(
+        'An inspector with the provided email not found',
+      );
     }
+    profile.email = dto.email;
+    const updatedProfile: Profile = await this.userService.saveExistingProfile(
+      profile,
+    );
+    inspector.firstName = dto.firstName;
+    inspector.lastName = dto.lastName;
+    inspector.email = dto.email;
+    inspector.phoneNumber = dto.phonenumber;
+    inspector.nationalId = dto.national_id;
+    inspector.profile = updatedProfile;
+    return await this.inspectorRepo.save(inspector);
   }
 
   async inviteInspector(dto: InviteUser): Promise<any> {
-    try {
-      if (await this.userService.existsByEmail(dto.email))
-        throw new ForbiddenException('An inspector already exists');
-      const password = await this.userService.getDefaultPassword();
-      let profile = new Profile(dto.email, password);
-      await this.userService.saveExistingProfile(profile);
-      await this.mailingService.sendEmail(
-        '',
-        'invite-inspector',
-        profile.email.toString(),
-        profile,
-      );
-    } catch (error) {
-      console.log(error);
-    }
+    if (await this.userService.existsByEmail(dto.email))
+      throw new ForbiddenException('An inspector already exists');
+    const password = await this.userService.getDefaultPassword();
+    let profile = new Profile(dto.email, password);
+    await this.userService.saveExistingProfile(profile);
+    await this.mailingService.sendEmail(
+      '',
+      'invite-inspector',
+      profile.email.toString(),
+      profile,
+    );
   }
 
   async getById(id: UUID) {
-    try {
-      const rmbMember = await this.inspectorRepo.findOne({
-        where: {
-          id: id,
-        },
-      });
-      if (!rmbMember)
-        throw new NotFoundException(
-          'The Inspector with the provided id is not found',
-        );
-      return rmbMember;
-    } catch (error) {
-      console.log(error);
-    }
+    const rmbMember = await this.inspectorRepo.findOne({
+      where: {
+        id: id,
+      },
+    });
+    if (!rmbMember)
+      throw new NotFoundException(
+        'The Inspector with the provided id is not found',
+      );
+    return rmbMember;
   }
   async delete(id: UUID) {
     const rmbMember = await this.getById(id);

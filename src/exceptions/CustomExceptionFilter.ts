@@ -18,7 +18,6 @@ export class CustomExceptionFilter implements ExceptionFilter {
 
     let status = HttpStatus.INTERNAL_SERVER_ERROR; // Default status code
     let message = 'Internal server error'; // Default message
-
     if (exception instanceof NotFoundException) {
       status = HttpStatus.NOT_FOUND;
       message = exception.message;
@@ -36,6 +35,7 @@ export class CustomExceptionFilter implements ExceptionFilter {
     response.status(status).json({
       success: false,
       message: message,
+      data: null,
     });
   }
 }

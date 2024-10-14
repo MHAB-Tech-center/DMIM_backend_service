@@ -11,6 +11,7 @@ import { JwtService } from '@nestjs/jwt';
 import * as bcrypt from 'bcrypt';
 import { Request } from 'express';
 import { EGender } from 'src/common/Enum/EGender.enum';
+import { EInspectorRole } from 'src/common/Enum/EInspectorRole.enum';
 import { Profile } from 'src/entities/profile.entity';
 import { UsersService } from 'src/modules/users/users.service';
 
@@ -89,6 +90,20 @@ export class UtilsService {
       default:
         throw new BadRequestException(
           'The provided gender is invalid, should male or female',
+        );
+    }
+  }
+  getInspectorRole(role: string): string {
+    switch (role.toLowerCase()) {
+      case 'inspector':
+        return EInspectorRole[EInspectorRole.INSPECTOR];
+      case 'environmentalist':
+        return EInspectorRole[EInspectorRole.ENVIRONMENTALIST];
+      case 'supervisor':
+        return EInspectorRole[EInspectorRole.INSPECTOR];
+      default:
+        throw new BadRequestException(
+          'The provided role is invalid, should be in [ inspector, environmentalist, supervisor]',
         );
     }
   }
