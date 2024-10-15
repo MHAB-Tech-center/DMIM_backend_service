@@ -21,10 +21,5 @@ export class CreateInspectorDTO extends CreateUserDto {
   @IsString()
   @IsNotEmpty()
   @ApiProperty()
-  password: string;
-
-  @IsString()
-  @IsNotEmpty()
-  @ApiProperty()
   district: string;
 }
