@@ -5,6 +5,7 @@ import { UUID } from 'crypto';
 import { ApiResponse } from 'src/common/payload/ApiResponse';
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 import { CustomExceptionFilter } from 'src/exceptions/CustomExceptionFilter';
+import { Public } from 'src/decorators/public.decorator';
 
 @Controller('minesites')
 @ApiTags('minesites')
@@ -22,6 +23,11 @@ export class MinesiteController {
     @Body() dto: CreateMineSiteDTO,
   ): Promise<ApiResponse> {
     return this.minesiteService.update(id, dto);
+  }
+  @Get('all')
+  @Public()
+  async getAll() {
+    return this.minesiteService.getAll();
   }
   @Get('/:id')
   async getById(@Param('id') id: UUID): Promise<any> {

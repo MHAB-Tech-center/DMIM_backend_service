@@ -52,6 +52,15 @@ export class MinesiteService {
     });
     return mineSite;
   }
+
+  async getAll() {
+    const minesites: MineSite[] = await this.minesiteRepository.find({});
+    return new ApiResponse(
+      true,
+      'All minsites were retrieved successfully',
+      minesites,
+    );
+  }
   async findById(id: UUID) {
     if (!this.existsById(id))
       throw new NotFoundException(
