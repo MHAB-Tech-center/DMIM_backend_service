@@ -1,5 +1,11 @@
 /* eslint-disable */
-import { IsString, IsNotEmpty, IsEmail, IsPhoneNumber } from 'class-validator';
+import {
+  IsString,
+  IsNotEmpty,
+  IsEmail,
+  IsPhoneNumber,
+  IsOptional,
+} from 'class-validator';
 import { ApiProperty } from '@nestjs/swagger';
 
 export class CreateUserDto {
@@ -42,4 +48,12 @@ export class CreateUserDto {
   @ApiProperty()
   @IsPhoneNumber()
   phonenumber: string;
+
+  @IsOptional()
+  @ApiProperty({
+    description: 'Profile picture',
+    type: 'string',
+    format: 'binary',
+  })
+  picture: Express.Multer.File;
 }

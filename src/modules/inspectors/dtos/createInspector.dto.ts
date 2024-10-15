@@ -1,5 +1,6 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { IsNotEmpty, IsString } from 'class-validator';
+import { IsNotEmpty, IsString, IsUUID } from 'class-validator';
+import { UUID } from 'crypto';
 import { CreateUserDto } from 'src/common/dtos/create-user.dto';
 
 export class CreateInspectorDTO extends CreateUserDto {
@@ -11,6 +12,13 @@ export class CreateInspectorDTO extends CreateUserDto {
   @IsNotEmpty()
   @ApiProperty()
   province: string;
+
+  @IsUUID()
+  @IsNotEmpty()
+  @ApiProperty()
+  minesiteId: UUID;
+
+  password: string;
   @IsString()
   @IsNotEmpty()
   @ApiProperty()

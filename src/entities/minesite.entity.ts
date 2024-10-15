@@ -9,6 +9,9 @@ export class MineSite extends InitiatorAudit {
   id: UUID = randomUUID();
 
   @Column()
+  code: string;
+
+  @Column()
   name: string;
 
   //   @ManyToOne(() => Address, (address) => address.mineSites)
@@ -19,8 +22,9 @@ export class MineSite extends InitiatorAudit {
   @JoinColumn({ name: 'company_id' })
   company: Company;
 
-  constructor(name: string) {
+  constructor(name: string, code: string) {
     super();
     this.name = name;
+    this.code = code;
   }
 }

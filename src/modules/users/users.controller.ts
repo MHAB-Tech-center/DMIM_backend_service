@@ -15,6 +15,7 @@ import {
   Body,
   Post,
   Patch,
+  UseFilters,
 } from '@nestjs/common';
 import { UsersService } from './users.service';
 import { NotFoundException } from '@nestjs/common';
@@ -25,9 +26,11 @@ import { ApiResponse } from 'src/common/payload/ApiResponse';
 import { Public } from 'src/decorators/public.decorator';
 import { CreateUserDto } from 'src/common/dtos/create-user.dto';
 import { UpdateUserDto } from 'src/common/dtos/update-user.dto';
+import { CustomExceptionFilter } from 'src/exceptions/CustomExceptionFilter';
 @ApiTags('users')
 @Controller('users')
 @ApiBearerAuth()
+@UseFilters(CustomExceptionFilter) // Apply filter to the controller
 export class UsersController {
   constructor(private usersService: UsersService) {}
 

@@ -8,6 +8,7 @@
  */
 import { Injectable } from '@nestjs/common';
 import { Request, Response } from 'express';
+import { ResetPasswordDTO } from 'src/common/dtos/reset-password.dto';
 import { UtilsService } from 'src/utils/utils.service';
 
 @Injectable()
@@ -24,4 +25,6 @@ export class AuthService {
   async verifyProfile(req: Request) {
     const data: { code: number } = req.body;
   }
+
+  async changePassword(doto: ResetPasswordDTO) {}
 }

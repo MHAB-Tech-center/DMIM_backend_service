@@ -43,15 +43,11 @@ export class AuthController {
   @Public()
   @Post('/login')
   async login(@Body() dto: LoginDTO): Promise<ApiResponse> {
-    try {
-      return new ApiResponse(
-        true,
-        'We have sent a verification code to your email',
-        await this.userService.login(dto),
-      );
-    } catch (error) {
-      console.log(error);
-    }
+    return new ApiResponse(
+      true,
+      'We have sent a verification code to your email',
+      await this.userService.login(dto),
+    );
   }
   @Public()
   @Post('/verify-login')

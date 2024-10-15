@@ -5,11 +5,8 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { Inspector } from 'src/entities/inspector.entity';
 import { UtilsModule } from 'src/utils/utils.module';
 import { RoleModule } from '../roles/role.module';
+import { MinesiteModule } from '../minesite/minesite.module';
 
-@Module({
-  providers: [InspectorsService],
-  controllers: [InspectorsController],
-})
 @Global()
 @Module({
   imports: [TypeOrmModule.forFeature([Inspector]), RoleModule, UtilsModule],

@@ -1,4 +1,5 @@
 import {
+  BadRequestException,
   ForbiddenException,
   forwardRef,
   Inject,
@@ -20,6 +21,8 @@ import { RMBStaffMember } from 'src/entities/RMBStaffMember.entity';
 import { UUID } from 'crypto';
 import { InviteUser } from 'src/common/dtos/invite-user.dto';
 import { ApiResponse } from 'src/common/payload/ApiResponse';
+import { MinesiteService } from '../minesite/minesite.service';
+import { CloudinaryService } from '../cloudinary/cloudinary.service';
 
 @Injectable()
 export class InspectorsService {
@@ -30,6 +33,8 @@ export class InspectorsService {
     private mailingService: MailingService,
     private roleService: RoleService,
     private userService: UsersService,
+    private mineSiteService: MinesiteService,
+    private cloudinary: CloudinaryService,
   ) {}
   async getAll() {
     const response = await this.inspectorRepo.find({});
@@ -48,19 +53,26 @@ export class InspectorsService {
     return exists;
   }
 
-  async create(body: CreateInspectorDTO) {
+  async create(body: CreateInspectorDTO, file: Express.Multer.File) {
     let {
       firstName,
       lastName,
       email,
       national_id,
       phonenumber,
+      minesiteId,
+      password,
       inspectorRole,
       province,
       district,
     } = body;
 
+    const minesite = await this.mineSiteService.findById(minesiteId);
+    const pictureUrl = await this.cloudinary.uploadImage(file).catch(() => {
+      throw new BadRequestException('Invalid file type.');
+    });
     // const userGender = this.utilsService.getGender(gender);
+    password = await this.utilsService.hashString(password);
     if (!(await this.userService.existsByEmail(email)))
       throw new NotFoundException(
         'The profile you are trying to set up is not found',
@@ -80,19 +92,15 @@ export class InspectorsService {
     );
     const userProfile = await this.userService.getOneByEmail(email);
     inspector.profile = userProfile;
-    userProfile.activationCode =
-      this.userService.generateRandomFourDigitNumber();
+    inspector.minesite = minesite;
+    userProfile.activationCode = null;
+    userProfile.password = password;
+    userProfile.profile_pic = pictureUrl.url;
     await this.userService.saveExistingProfile(userProfile);
     await this.inspectorRepo.save(inspector);
-    await this.mailingService.sendEmail(
-      '',
-      'verify-email-login',
-      lastName,
-      userProfile,
-    );
     return new ApiResponse(
       true,
-      `We have sent a verification code to the Inspector email for verification`,
+      `Thank you for setting up your profile, go and login`,
       null,
     );
   }
@@ -127,6 +135,7 @@ export class InspectorsService {
       throw new ForbiddenException('An inspector already exists');
     const password = await this.userService.getDefaultPassword();
     let profile = new Profile(dto.email, password);
+    profile.activationCode = this.userService.generateRandomFourDigitNumber();
     await this.userService.saveExistingProfile(profile);
     await this.mailingService.sendEmail(
       '',
