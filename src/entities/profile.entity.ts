@@ -38,8 +38,9 @@ export class Profile extends InitiatorAudit {
   })
   last_login: Date;
 
-  @JoinColumn({
+  @Column({
     name: 'profile_picture',
+    nullable: true,
   })
   profile_pic: string;
 

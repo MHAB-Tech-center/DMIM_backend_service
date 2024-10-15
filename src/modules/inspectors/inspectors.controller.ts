@@ -6,18 +6,21 @@ import {
   Param,
   Post,
   Put,
+  UploadedFile,
   UseFilters,
+  UseInterceptors,
 } from '@nestjs/common';
 import { InspectorsService } from './inspectors.service';
 import { CreateRMBStaffDTO } from '../rmb/dtos/createRMBStaff.dto';
 import { UUID } from 'crypto';
-import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
+import { ApiBearerAuth, ApiConsumes, ApiTags } from '@nestjs/swagger';
 import { Public } from 'src/decorators/public.decorator';
 import { Roles } from 'src/utils/decorators/roles.decorator';
 import { InviteUser } from 'src/common/dtos/invite-user.dto';
 import { ApiResponse } from 'src/common/payload/ApiResponse';
 import { CustomExceptionFilter } from 'src/exceptions/CustomExceptionFilter';
 import { CreateInspectorDTO } from './dtos/createInspector.dto';
+import { FileInterceptor } from '@nestjs/platform-express';
 
 @Controller('inspectors')
 @ApiTags('inspectors')
@@ -39,10 +42,15 @@ export class InspectorsController {
   }
 
   // Create a new inspector
-  @Post('create')
+  @Post()
+  @UseInterceptors(FileInterceptor('picture'))
+  @ApiConsumes('multipart/form-data')
   @Public()
-  async create(@Body() body: CreateInspectorDTO) {
-    return this.inspectorService.create(body);
+  async create(
+    @Body() body: CreateInspectorDTO,
+    @UploadedFile() file: Express.Multer.File,
+  ) {
+    return this.inspectorService.create(body, file);
   }
 
   // Update an inspector's details

@@ -33,6 +33,8 @@ import { Profile } from './entities/profile.entity';
 import { InspectorsModule } from './modules/inspectors/inspectors.module';
 import { RmbModule } from './modules/rmb/rmb.module';
 import { RMBStaffMember } from './entities/RMBStaffMember.entity';
+import { MinesiteModule } from './modules/minesite/minesite.module';
+import { CloudinaryModule } from './modules/cloudinary/cloudinary.module';
 
 @Module({
   imports: [
@@ -77,7 +79,9 @@ import { RMBStaffMember } from './entities/RMBStaffMember.entity';
     FilesModule,
     UtilsModule,
     RmbModule,
+    CloudinaryModule,
     InspectorsModule,
+    MinesiteModule,
   ],
   controllers: [AuthController, HomeController],
   providers: [{ provide: APP_GUARD, useClass: RolesGuard }],
