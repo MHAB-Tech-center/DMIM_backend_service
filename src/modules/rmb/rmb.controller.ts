@@ -6,17 +6,20 @@ import {
   Param,
   Post,
   Put,
+  UploadedFile,
   UseFilters,
+  UseInterceptors,
 } from '@nestjs/common';
 import { UUID } from 'crypto';
 import { CreateRMBStaffDTO } from './dtos/createRMBStaff.dto';
 import { RmbService } from './rmb.service';
-import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
+import { ApiBearerAuth, ApiConsumes, ApiTags } from '@nestjs/swagger';
 import { Roles } from 'src/utils/decorators/roles.decorator';
 import { Public } from 'src/decorators/public.decorator';
 import { ApiResponse } from 'src/common/payload/ApiResponse';
 import { InviteUser } from 'src/common/dtos/invite-user.dto';
 import { CustomExceptionFilter } from 'src/exceptions/CustomExceptionFilter';
+import { FileInterceptor } from '@nestjs/platform-express';
 
 @Controller('rmb')
 @ApiTags('rmb_members')
@@ -40,8 +43,13 @@ export class RmbController {
   // Create a new RMB staff member
   @Post('/create')
   @Public()
-  async create(@Body() body: CreateRMBStaffDTO) {
-    return this.rmbService.create(body);
+  @UseInterceptors(FileInterceptor('picture'))
+  @ApiConsumes('multipart/form-data')
+  async create(
+    @Body() body: CreateRMBStaffDTO,
+    @UploadedFile() file: Express.Multer.File,
+  ) {
+    return this.rmbService.create(body, file);
   }
 
   @Post('invite')
