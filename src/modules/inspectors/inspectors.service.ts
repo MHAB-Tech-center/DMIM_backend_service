@@ -5,7 +5,6 @@ import {
   Inject,
   Injectable,
   NotFoundException,
-  UnauthorizedException,
 } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Inspector } from 'src/entities/inspector.entity';
@@ -15,9 +14,7 @@ import { UtilsService } from 'src/utils/utils.service';
 import { RoleService } from '../roles/role.service';
 import { UsersService } from '../users/users.service';
 import { CreateInspectorDTO } from './dtos/createInspector.dto';
-import { ERole } from 'src/common/Enum/ERole.enum';
 import { Profile } from 'src/entities/profile.entity';
-import { RMBStaffMember } from 'src/entities/RMBStaffMember.entity';
 import { UUID } from 'crypto';
 import { InviteUser } from 'src/common/dtos/invite-user.dto';
 import { ApiResponse } from 'src/common/payload/ApiResponse';
@@ -52,7 +49,6 @@ export class InspectorsService {
     const exists = await this.inspectorRepo.exist({ where: { email } });
     return exists;
   }
-
   async create(body: CreateInspectorDTO, file: Express.Multer.File) {
     let {
       firstName,

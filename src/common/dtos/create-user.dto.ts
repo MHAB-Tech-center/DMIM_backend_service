@@ -40,6 +40,11 @@ export class CreateUserDto {
   @ApiProperty()
   national_id: string;
 
+  @IsString()
+  @IsNotEmpty()
+  @ApiProperty()
+  password: string;
+
   // @IsDate()
   // dob: Date;
 

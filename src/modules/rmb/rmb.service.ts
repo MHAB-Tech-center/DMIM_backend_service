@@ -1,4 +1,5 @@
 import {
+  BadRequestException,
   ForbiddenException,
   forwardRef,
   Inject,
@@ -18,6 +19,7 @@ import { Profile } from 'src/entities/profile.entity';
 import { UsersService } from '../users/users.service';
 import { InviteUser } from 'src/common/dtos/invite-user.dto';
 import { ApiResponse } from 'src/common/payload/ApiResponse';
+import { CloudinaryService } from '../cloudinary/cloudinary.service';
 
 @Injectable()
 export class RmbService {
@@ -29,7 +31,9 @@ export class RmbService {
     private mailingService: MailingService,
     private roleService: RoleService,
     private userService: UsersService,
+    private cloudinary: CloudinaryService,
   ) {}
+
   async getAll() {
     const response = await this.rmbRepo.find({});
     return response;
@@ -42,8 +46,9 @@ export class RmbService {
     });
     return user;
   }
-  async create(body: CreateRMBStaffDTO) {
-    let { firstName, lastName, email, national_id, phonenumber } = body;
+  async create(body: CreateRMBStaffDTO, file: Express.Multer.File) {
+    let { firstName, lastName, email, national_id, password, phonenumber } =
+      body;
 
     const userFetched = await this.rmbRepo.findOne({
       where: {
@@ -52,6 +57,10 @@ export class RmbService {
     });
     if (userFetched)
       return new UnauthorizedException('The RMB member already exists');
+    const pictureUrl = await this.cloudinary.uploadImage(file).catch(() => {
+      throw new BadRequestException('Invalid file type.');
+    });
+    const userPassword = await this.utilsService.hashString(password);
     // const userGender = this.utilsService.getGender(gender);
     try {
       if (!this.userService.existsByEmail(email))
@@ -67,6 +76,8 @@ export class RmbService {
         national_id,
       );
       const profile: Profile = await this.userService.getOneByEmail(email);
+      profile.profile_pic = pictureUrl.url;
+      profile.password = userPassword;
       profile.activationCode = this.userService.generateRandomFourDigitNumber();
       rmbMember.profile = profile;
       await this.rmbRepo.save(rmbMember);

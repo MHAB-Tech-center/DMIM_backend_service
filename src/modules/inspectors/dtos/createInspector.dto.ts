@@ -18,7 +18,11 @@ export class CreateInspectorDTO extends CreateUserDto {
   @ApiProperty()
   minesiteId: UUID;
 
+  @IsString()
+  @IsNotEmpty()
+  @ApiProperty()
   password: string;
+
   @IsString()
   @IsNotEmpty()
   @ApiProperty()
