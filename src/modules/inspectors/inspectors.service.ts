@@ -20,6 +20,7 @@ import { InviteUser } from 'src/common/dtos/invite-user.dto';
 import { ApiResponse } from 'src/common/payload/ApiResponse';
 import { MinesiteService } from '../minesite/minesite.service';
 import { CloudinaryService } from '../cloudinary/cloudinary.service';
+import { EAccountStatus } from 'src/common/Enum/EAccountStatus.enum';
 
 @Injectable()
 export class InspectorsService {
@@ -92,6 +93,7 @@ export class InspectorsService {
     userProfile.activationCode = null;
     userProfile.password = password;
     userProfile.profile_pic = pictureUrl.url;
+    userProfile.status = EAccountStatus[EAccountStatus.ACTIVE];
     await this.userService.saveExistingProfile(userProfile);
     await this.inspectorRepo.save(inspector);
     return new ApiResponse(
