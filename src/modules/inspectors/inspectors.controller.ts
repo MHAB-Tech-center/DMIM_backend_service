@@ -49,41 +49,35 @@ export class InspectorsController {
   async create(
     @Body() body: CreateInspectorDTO,
     @UploadedFile() file: Express.Multer.File,
-  ) {
+  ): Promise<ApiResponse> {
     return this.inspectorService.create(body, file);
   }
 
   // Update an inspector's details
   @Put('/update/:id')
   @Roles('INSPECTOR', 'ADMIN')
-  async update(@Param('id') id: UUID, @Body() dto: CreateInspectorDTO) {
-    return new ApiResponse(
-      true,
-      'An inspector was updated successfully',
-      this.inspectorService.update(id, dto),
-    );
+  async update(
+    @Param('id') id: UUID,
+    @Body() dto: CreateInspectorDTO,
+  ): Promise<ApiResponse> {
+    return this.inspectorService.update(id, dto);
   }
   @Post('invite')
   @Public()
   // @Roles('ADMIN')
-  async inviteInspector(@Body() dto: InviteUser) {
-    return new ApiResponse(
-      true,
-      'An inspector was invited successfully',
-      this.inspectorService.inviteInspector(dto),
-    );
+  async inviteInspector(@Body() dto: InviteUser): Promise<ApiResponse> {
+    return this.inspectorService.inviteInspector(dto);
   }
 
   // Get inspector by ID
   @Get('/by-id/:id')
-  async getById(@Param('id') id: UUID) {
-    return this.inspectorService.getById(id);
+  async getById(@Param('id') id: UUID): Promise<ApiResponse> {
+    return this.inspectorService.findById(id);
   }
 
   // Delete an inspector
   @Delete('/delete/:id')
-  async delete(@Param('id') id: UUID) {
-    this.inspectorService.delete(id);
-    return 'The RMB staff member was deleted successfully';
+  async delete(@Param('id') id: UUID): Promise<ApiResponse> {
+    return this.inspectorService.delete(id);
   }
 }

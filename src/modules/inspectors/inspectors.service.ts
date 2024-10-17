@@ -125,7 +125,12 @@ export class InspectorsService {
     inspector.phoneNumber = dto.phonenumber;
     inspector.nationalId = dto.national_id;
     inspector.profile = updatedProfile;
-    return await this.inspectorRepo.save(inspector);
+    const savedInspector = await this.inspectorRepo.save(inspector);
+    return new ApiResponse(
+      true,
+      'Inspector was updated successfully',
+      savedInspector,
+    );
   }
 
   async inviteInspector(dto: InviteUser): Promise<any> {
@@ -141,6 +146,11 @@ export class InspectorsService {
       profile.email.toString(),
       profile,
     );
+    return new ApiResponse(
+      true,
+      "We have sent an invitation link to the inspector's email",
+      null,
+    );
   }
 
   async getById(id: UUID) {
@@ -155,11 +165,32 @@ export class InspectorsService {
       );
     return rmbMember;
   }
+  async findById(id: UUID) {
+    const inspector = await this.inspectorRepo.findOne({
+      where: {
+        id: id,
+      },
+    });
+    if (!inspector)
+      throw new NotFoundException(
+        'The Inspector with the provided id is not found',
+      );
+    return new ApiResponse(
+      true,
+      'The inspector was retrieved successfully',
+      inspector,
+    );
+  }
   async delete(id: UUID) {
     const rmbMember = await this.getById(id);
     if (!rmbMember) {
       throw new NotFoundException('The inspector is not found');
     }
     this.inspectorRepo.remove(rmbMember);
+    return new ApiResponse(
+      true,
+      'An inspector was deleted successfully',
+      rmbMember,
+    );
   }
 }
