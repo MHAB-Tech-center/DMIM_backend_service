@@ -36,7 +36,11 @@ export class RmbService {
 
   async getAll() {
     const response = await this.rmbRepo.find({});
-    return response;
+    return new ApiResponse(
+      true,
+      'All RMB staff members were retrieved successfully',
+      response,
+    );
   }
   async getByEmail(email: any) {
     const user = await this.rmbRepo.findOne({
@@ -87,10 +91,11 @@ export class RmbService {
         lastName,
         profile,
       );
-      return {
-        success: true,
-        message: `We have sent a verification code to the created RMB member email for verification`,
-      };
+      return new ApiResponse(
+        true,
+        `We have sent a verification code to the created RMB member email for verification`,
+        null,
+      );
     } catch (error) {
       console.log(error);
     }
@@ -147,7 +152,27 @@ export class RmbService {
       console.log(error);
     }
   }
-  async getById(id: UUID): Promise<RMBStaffMember> {
+  async getById(id: UUID): Promise<ApiResponse> {
+    try {
+      const rmbMember = await this.rmbRepo.findOne({
+        where: {
+          id: id,
+        },
+      });
+      if (!rmbMember)
+        throw new NotFoundException(
+          'The rmb Member with the provided id is not found',
+        );
+      return new ApiResponse(
+        true,
+        'The rmb staff member was deleted successfully',
+        rmbMember,
+      );
+    } catch (error) {
+      console.log(error);
+    }
+  }
+  async findById(id: UUID): Promise<RMBStaffMember> {
     try {
       const rmbMember = await this.rmbRepo.findOne({
         where: {
@@ -164,10 +189,15 @@ export class RmbService {
     }
   }
   async delete(id: UUID): Promise<any> {
-    const rmbMember = await this.getById(id);
+    const rmbMember = await this.findById(id);
     if (!rmbMember) {
       throw new NotFoundException('User not found');
     }
     this.rmbRepo.remove(rmbMember);
+    return new ApiResponse(
+      true,
+      'The rmb staff member was deleted successfully',
+      null,
+    );
   }
 }

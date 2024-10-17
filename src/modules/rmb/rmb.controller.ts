@@ -71,8 +71,7 @@ export class RmbController {
 
   // Delete an RMB member
   @Delete('/delete/:id')
-  async delete(@Param('id') id: UUID) {
-    this.rmbService.delete(id);
-    return 'The RMB staff member was deleted successfully';
+  async delete(@Param('id') id: UUID): Promise<ApiResponse> {
+    return this.rmbService.delete(id);
   }
 }
