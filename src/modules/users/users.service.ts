@@ -148,7 +148,6 @@ export class UsersService {
     await this.preLogin(dto);
     this.user.loginStatus = ELoginStatus[ELoginStatus.FOR_VERIFICATION];
     this.user.activationCode = this.generateRandomFourDigitNumber();
-    this.user.activationCode = null;
     await this.userRepo.save(this.user);
 
     this.mailingService.sendEmail(
