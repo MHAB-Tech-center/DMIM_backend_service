@@ -147,7 +147,10 @@ export class UsersService {
   async login(dto: LoginDTO) {
     await this.preLogin(dto);
     this.user.loginStatus = ELoginStatus[ELoginStatus.FOR_VERIFICATION];
+    this.user.activationCode = this.generateRandomFourDigitNumber();
+    this.user.activationCode = null;
     await this.userRepo.save(this.user);
+
     this.mailingService.sendEmail(
       '',
       'verify-email-login',
@@ -166,6 +169,7 @@ export class UsersService {
       throw new BadRequestException('This is already verified');
     verifiedAccount.status = EAccountStatus[EAccountStatus.ACTIVE];
     verifiedAccount.loginStatus = ELoginStatus[ELoginStatus.VERIFIED];
+
     const updatedAccount = await this.userRepo.save(verifiedAccount);
     const tokens = await this.utilsService.getTokens(updatedAccount);
     delete updatedAccount.password;
