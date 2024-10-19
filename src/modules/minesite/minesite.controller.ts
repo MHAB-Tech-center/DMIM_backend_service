@@ -14,6 +14,7 @@ import { Public } from 'src/decorators/public.decorator';
 export class MinesiteController {
   constructor(private minesiteService: MinesiteService) {}
   @Post('create')
+  @Public()
   async create(@Body() dto: CreateMineSiteDTO): Promise<ApiResponse> {
     return this.minesiteService.create(dto);
   }

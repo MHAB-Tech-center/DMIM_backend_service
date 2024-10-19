@@ -7,12 +7,13 @@
  * @file
  * @brief module for role queries
  */
-import { Module, forwardRef } from '@nestjs/common';
+import { Global, Module, forwardRef } from '@nestjs/common';
 import { RoleService } from './role.service';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { UsersModule } from 'src/modules/users/users.module';
 import { Role } from 'src/entities/role.entity';
 
+@Global()
 @Module({
   providers: [RoleService],
   imports: [TypeOrmModule.forFeature([Role]), forwardRef(() => UsersModule)],

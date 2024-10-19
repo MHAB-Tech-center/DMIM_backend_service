@@ -12,7 +12,10 @@ import * as bcrypt from 'bcrypt';
 import { Request } from 'express';
 import { EGender } from 'src/common/Enum/EGender.enum';
 import { EInspectorRole } from 'src/common/Enum/EInspectorRole.enum';
+import { ERole } from 'src/common/Enum/ERole.enum';
 import { Profile } from 'src/entities/profile.entity';
+import { Role } from 'src/entities/role.entity';
+import { RoleService } from 'src/modules/roles/role.service';
 import { UsersService } from 'src/modules/users/users.service';
 
 @Injectable()
@@ -22,6 +25,7 @@ export class UtilsService {
     private jwt: JwtService,
     @Inject(forwardRef(() => UsersService))
     private userService: UsersService,
+    private roleService: RoleService,
   ) {}
 
   async getTokens(
@@ -79,6 +83,32 @@ export class UtilsService {
         'Please you are not authorized to access resource',
       );
     }
+  }
+  async getRole(role: string): Promise<Role> {
+    let availableRole: Role;
+    switch (role.toLowerCase()) {
+      case 'inspector':
+        availableRole = await this.roleService.getRoleByName(
+          ERole[ERole.INSPECTOR],
+        );
+        break;
+      case 'rmb':
+        availableRole = await this.roleService.getRoleByName(ERole[ERole.RMB]);
+        break;
+      case 'environomist':
+        availableRole = await this.roleService.getRoleByName(
+          ERole[ERole.ENVIRONOMIST],
+        );
+        break;
+      case 'superviosr':
+        availableRole = await this.roleService.getRoleByName(
+          ERole[ERole.SUPERVISOR],
+        );
+        break;
+      default:
+        throw new BadRequestException('The provided role is invalid');
+    }
+    return availableRole;
   }
 
   getGender(gender: string): string {

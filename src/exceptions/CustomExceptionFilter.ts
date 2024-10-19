@@ -13,6 +13,7 @@ import { Response } from 'express';
 @Catch()
 export class CustomExceptionFilter implements ExceptionFilter {
   catch(exception: any, host: ArgumentsHost) {
+    console.log(exception);
     const ctx = host.switchToHttp();
     const response = ctx.getResponse<Response>();
     let status = HttpStatus.INTERNAL_SERVER_ERROR; // Default status code
@@ -28,7 +29,7 @@ export class CustomExceptionFilter implements ExceptionFilter {
       status = HttpStatus.BAD_REQUEST;
     } else if (exception instanceof UnauthorizedException) {
       status = HttpStatus.UNAUTHORIZED;
-      message = 'You are not allowed to access this resource';
+      message = exception.message;
     } else if (exception instanceof HttpException) {
       status = exception.getStatus();
     }

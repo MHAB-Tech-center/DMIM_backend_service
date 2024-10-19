@@ -5,7 +5,6 @@ import {
   OneToOne,
   JoinColumn,
 } from 'typeorm';
-import { BaseExceptionFilter } from '@nestjs/core';
 import { Profile } from './profile.entity';
 import { BaseEntity } from 'src/db/base-entity';
 

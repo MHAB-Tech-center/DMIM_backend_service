@@ -20,6 +20,7 @@ import { UsersService } from '../users/users.service';
 import { InviteUser } from 'src/common/dtos/invite-user.dto';
 import { ApiResponse } from 'src/common/payload/ApiResponse';
 import { CloudinaryService } from '../cloudinary/cloudinary.service';
+import { Role } from 'src/entities/role.entity';
 
 @Injectable()
 export class RmbService {
@@ -116,7 +117,7 @@ export class RmbService {
       }
       profile.email = dto.email;
       const updatedProfile: Profile =
-        await this.userService.saveExistingProfile(profile);
+        await this.userService.saveExistingProfile(profile, profile.roles[0]);
       savedMember.firstName = dto.firstName;
       savedMember.lastName = dto.lastName;
       savedMember.email = dto.email;
@@ -136,7 +137,8 @@ export class RmbService {
       }
       const password = await this.userService.getDefaultPassword();
       let profile = new Profile(dto.email, password);
-      await this.userService.saveExistingProfile(profile);
+      const role: Role = await this.utilsService.getRole('rmb');
+      await this.userService.saveExistingProfile(profile, role);
       await this.mailingService.sendEmail(
         '',
         'invite-rmb',

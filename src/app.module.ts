@@ -35,6 +35,12 @@ import { RmbModule } from './modules/rmb/rmb.module';
 import { RMBStaffMember } from './entities/RMBStaffMember.entity';
 import { MinesiteModule } from './modules/minesite/minesite.module';
 import { CloudinaryModule } from './modules/cloudinary/cloudinary.module';
+import { InspectionsModule } from './modules/inspections/inspections.module';
+import { CategoriesModule } from './modules/categories/categories.module';
+import { SectionsModule } from './modules/sections/sections.module';
+import { Section } from './entities/section.entity';
+import { Category } from './entities/category.entity';
+import { InspectionRecord } from './entities/inspection-record.entity';
 
 @Module({
   imports: [
@@ -57,6 +63,9 @@ import { CloudinaryModule } from './modules/cloudinary/cloudinary.module';
           MineSite,
           Notification,
           InspectionPlan,
+          Section,
+          Category,
+          InspectionRecord,
         ],
         synchronize: true,
       }),
@@ -82,6 +91,9 @@ import { CloudinaryModule } from './modules/cloudinary/cloudinary.module';
     CloudinaryModule,
     InspectorsModule,
     MinesiteModule,
+    InspectionsModule,
+    CategoriesModule,
+    SectionsModule,
   ],
   controllers: [AuthController, HomeController],
   providers: [{ provide: APP_GUARD, useClass: RolesGuard }],
