@@ -30,6 +30,7 @@ import * as bcrypt from 'bcrypt';
 import { VerifyLoginDTO } from 'src/common/dtos/verify-login.dto';
 import { ELoginStatus } from 'src/common/Enum/ELoginStatus.enum';
 import { ApiResponse } from 'src/common/payload/ApiResponse';
+import { Role } from 'src/entities/role.entity';
 
 @Injectable()
 export class UsersService {
@@ -304,9 +305,12 @@ export class UsersService {
     return user;
   }
 
-  async saveExistingProfile(profile: Profile) {
+  async saveExistingProfile(profile: Profile, role: Role) {
     try {
-      return await this.userRepo.save(profile);
+      return await this.userRepo.save({
+        ...profile,
+        roles: [role],
+      });
     } catch (error) {
       console.log(error);
     }

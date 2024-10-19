@@ -50,6 +50,10 @@ export class MinesiteService {
     const mineSite = await this.minesiteRepository.findOne({
       where: { id: id },
     });
+    if (!mineSite)
+      throw new NotFoundException(
+        'The mine site with the provided id is not found',
+      );
     return mineSite;
   }
 

@@ -11,7 +11,6 @@ import {
   UseInterceptors,
 } from '@nestjs/common';
 import { InspectorsService } from './inspectors.service';
-import { CreateRMBStaffDTO } from '../rmb/dtos/createRMBStaff.dto';
 import { UUID } from 'crypto';
 import { ApiBearerAuth, ApiConsumes, ApiTags } from '@nestjs/swagger';
 import { Public } from 'src/decorators/public.decorator';
@@ -24,7 +23,6 @@ import { FileInterceptor } from '@nestjs/platform-express';
 
 @Controller('inspectors')
 @ApiTags('inspectors')
-@ApiBearerAuth()
 @UseFilters(CustomExceptionFilter) // Apply filter to the controller
 export class InspectorsController {
   constructor(private inspectorService: InspectorsService) {}

@@ -4,4 +4,6 @@ export enum ERole {
   RMB,
   INSPECTOR,
   USER,
+  ENVIRONOMIST,
+  SUPERVISOR,
 }

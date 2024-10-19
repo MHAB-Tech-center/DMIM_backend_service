@@ -5,12 +5,12 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { Inspector } from 'src/entities/inspector.entity';
 import { UtilsModule } from 'src/utils/utils.module';
 import { RoleModule } from '../roles/role.module';
-import { MinesiteModule } from '../minesite/minesite.module';
 
 @Global()
 @Module({
   imports: [TypeOrmModule.forFeature([Inspector]), RoleModule, UtilsModule],
   providers: [InspectorsService],
   controllers: [InspectorsController],
+  exports: [InspectorsService],
 })
 export class InspectorsModule {}

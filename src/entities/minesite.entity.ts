@@ -14,6 +14,8 @@ export class MineSite extends InitiatorAudit {
   @Column()
   name: string;
 
+  mineType: string;
+
   //   @ManyToOne(() => Address, (address) => address.mineSites)
   //   @JoinColumn({ name: 'address_id' })
   //   address: Address;

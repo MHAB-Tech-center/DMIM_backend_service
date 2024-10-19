@@ -21,6 +21,7 @@ import { ApiResponse } from 'src/common/payload/ApiResponse';
 import { MinesiteService } from '../minesite/minesite.service';
 import { CloudinaryService } from '../cloudinary/cloudinary.service';
 import { EAccountStatus } from 'src/common/Enum/EAccountStatus.enum';
+import { ERole } from 'src/common/Enum/ERole.enum';
 
 @Injectable()
 export class InspectorsService {
@@ -94,7 +95,10 @@ export class InspectorsService {
     userProfile.password = password;
     userProfile.profile_pic = pictureUrl.url;
     userProfile.status = EAccountStatus[EAccountStatus.ACTIVE];
-    await this.userService.saveExistingProfile(userProfile);
+    await this.userService.saveExistingProfile(
+      userProfile,
+      userProfile.roles[0],
+    );
     await this.inspectorRepo.save(inspector);
     return new ApiResponse(
       true,
@@ -118,6 +122,7 @@ export class InspectorsService {
     profile.email = dto.email;
     const updatedProfile: Profile = await this.userService.saveExistingProfile(
       profile,
+      profile.roles[0],
     );
     inspector.firstName = dto.firstName;
     inspector.lastName = dto.lastName;
@@ -137,9 +142,10 @@ export class InspectorsService {
     if (await this.userService.existsByEmail(dto.email))
       throw new ForbiddenException('An inspector already exists');
     const password = await this.userService.getDefaultPassword();
+    const role = await this.roleService.getRoleByName(ERole[ERole.INSPECTOR]);
     let profile = new Profile(dto.email, password);
     profile.activationCode = this.userService.generateRandomFourDigitNumber();
-    await this.userService.saveExistingProfile(profile);
+    await this.userService.saveExistingProfile(profile, role);
     await this.mailingService.sendEmail(
       '',
       'invite-inspector',
@@ -180,6 +186,18 @@ export class InspectorsService {
       'The inspector was retrieved successfully',
       inspector,
     );
+  }
+  async findByEmail(email: string): Promise<Inspector> {
+    const inspector = await this.inspectorRepo.findOne({
+      where: {
+        email: email,
+      },
+    });
+    if (!inspector)
+      throw new NotFoundException(
+        'The Inspector with the available profile is not found',
+      );
+    return inspector;
   }
   async delete(id: UUID) {
     const rmbMember = await this.getById(id);
