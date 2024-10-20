@@ -5,7 +5,6 @@ import { ApiResponse } from 'src/common/payload/ApiResponse';
 import { InspectionPlan } from 'src/entities/InspectionPlan.entity';
 import { Repository } from 'typeorm';
 import { MinesiteService } from '../minesite/minesite.service';
-import { UsersService } from '../users/users.service';
 import { UtilsService } from 'src/utils/utils.service';
 import { Request } from 'express';
 import { Inspector } from 'src/entities/inspector.entity';
@@ -16,6 +15,8 @@ import { CreateRecordDTO } from 'src/common/dtos/inspections/create-record.dto';
 import { Category } from 'src/entities/category.entity';
 import { InspectionRecord } from 'src/entities/inspection-record.entity';
 import { CreateInspectionPlanDTO } from 'src/common/dtos/inspections/create-inspection-plan.dto';
+import { UUID } from 'crypto';
+import { CategoriesService } from '../categories/categories.service';
 
 @Injectable()
 export class InspectionsService {
@@ -26,6 +27,7 @@ export class InspectionsService {
     private readonly categoryRepository: Repository<Category>,
     @InjectRepository(InspectionRecord)
     private readonly recordRepository: Repository<InspectionRecord>,
+    private categoryService: CategoriesService,
     private minesiteService: MinesiteService,
     private utilService: UtilsService,
     private inspectorService: InspectorsService,
@@ -69,7 +71,21 @@ export class InspectionsService {
         inspectionPlan,
         section,
       );
-      const category = await this.categoryRepository.save(categoryEntity);
+      let category;
+      if (
+        !(await this.categoryService.existsByTitleInspectionPlan(
+          record.category.title,
+          dto.inspectionPlanId,
+        ))
+      ) {
+        category = await this.categoryRepository.save(categoryEntity);
+      } else {
+        category = await this.categoryService.findByTitleInspectionPlan(
+          record.category.title,
+          dto.inspectionPlanId,
+        );
+      }
+
       const inspectionRecord = new InspectionRecord(
         record.title,
         record.boxValue,
@@ -92,6 +108,52 @@ export class InspectionsService {
       inspectionPlan,
     );
   }
+  async getInspectionPlan(planId: UUID) {
+    const inspectionPlan = await this.inspectionPlanRepository.findOne({
+      where: { id: planId },
+    });
+    if (!inspectionPlan)
+      throw new NotFoundException(
+        'The inspection plan witht the provided Id is not found',
+      );
+    return inspectionPlan;
+  }
+  async getCategory(categoryId: UUID) {
+    const category = await this.categoryRepository.findOne({
+      where: { id: categoryId },
+      relations: ['inspectionPlan'],
+    });
+    if (!category)
+      throw new NotFoundException(
+        'The category with the provided Id is not found',
+      );
+    return category;
+  }
+
+  async getCategoriesInspectionPlan(planId: UUID): Promise<Category[]> {
+    const inspectionPlan: any = await this.getInspectionPlan(planId);
+    const categoryList: Category[] = await this.categoryRepository.find({
+      where: {
+        inspectionPlan: { id: inspectionPlan.id },
+      },
+      relations: ['inspectionPlan'],
+    });
+    return categoryList;
+  }
+  async getRecordsByCategory(categoryId: UUID): Promise<ApiResponse> {
+    const category: any = await this.getCategory(categoryId);
+    const records: InspectionRecord[] = await this.recordRepository.find({
+      where: {
+        category: { id: category.id },
+      },
+      relations: ['category'],
+    });
+    return new ApiResponse(
+      true,
+      'Records were retrieved successfully',
+      records,
+    );
+  }
 
   // Retrieve all inspection plans
   async findAll(): Promise<InspectionPlan[]> {
@@ -111,7 +173,6 @@ export class InspectionsService {
     }
     return inspectionPlan;
   }
-
   // Update an existing inspection plan
   async update(
     id: number,
