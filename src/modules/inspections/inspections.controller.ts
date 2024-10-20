@@ -78,7 +78,7 @@ export class InspectionsController {
   ): Promise<ApiResponse> {
     return await this.inspectionsService.getRecordsByCategory(categoryId);
   }
-  @Get('all')
+  @Get('/inspection-plans/all')
   async getAllInspectionPlans() {
     return new ApiResponse(
       true,
