@@ -76,14 +76,14 @@ export class InspectionsController {
   async getRecordsByCategory(
     @Param('categoryId') categoryId: UUID,
   ): Promise<ApiResponse> {
-    return this.inspectionsService.getRecordsByCategory(categoryId);
+    return await this.inspectionsService.getRecordsByCategory(categoryId);
   }
   @Get('all')
   async getAllInspectionPlans() {
     return new ApiResponse(
       true,
       'All inspection plans were retrieved successfully',
-      this.inspectionsService.findAll(),
+      await this.inspectionsService.findAll(),
     );
   }
 }
