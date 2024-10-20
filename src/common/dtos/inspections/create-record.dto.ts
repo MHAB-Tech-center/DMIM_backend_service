@@ -16,8 +16,5 @@ export class CreateRecordDTO {
   @IsString()
   flagValue: string;
   @ApiProperty()
-  @IsOptional()
-  marks: number;
-  @ApiProperty()
   category: CreateCategoryDTO;
 }

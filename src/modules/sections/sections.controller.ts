@@ -22,4 +22,12 @@ export class SectionsController {
   async getSectionByTitle(@Param('title') title: string): Promise<ApiResponse> {
     return this.sectionService.getSectionByTitle(title);
   }
+  @Get('all')
+  async getAllSections() {
+    return new ApiResponse(
+      true,
+      'All sections are retrieved successfully',
+      this.sectionService.getAllSections(),
+    );
+  }
 }

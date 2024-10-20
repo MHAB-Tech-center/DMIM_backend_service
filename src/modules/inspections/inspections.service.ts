@@ -85,7 +85,6 @@ export class InspectionsService {
           dto.inspectionPlanId,
         );
       }
-
       const inspectionRecord = new InspectionRecord(
         record.title,
         record.boxValue,
@@ -129,7 +128,6 @@ export class InspectionsService {
       );
     return category;
   }
-
   async getCategoriesInspectionPlan(planId: UUID): Promise<Category[]> {
     const inspectionPlan: any = await this.getInspectionPlan(planId);
     const categoryList: Category[] = await this.categoryRepository.find({
@@ -153,6 +151,10 @@ export class InspectionsService {
       'Records were retrieved successfully',
       records,
     );
+  }
+  async getInspectionPlans() {
+    const inspectionplans = await this.inspectionPlanRepository.find({});
+    return inspectionplans;
   }
 
   // Retrieve all inspection plans
