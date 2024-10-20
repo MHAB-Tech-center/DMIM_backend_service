@@ -27,7 +27,7 @@ export class SectionsController {
     return new ApiResponse(
       true,
       'All sections are retrieved successfully',
-      this.sectionService.getAllSections(),
+      await this.sectionService.getAllSections(),
     );
   }
 }
