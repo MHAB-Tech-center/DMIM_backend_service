@@ -78,4 +78,12 @@ export class InspectionsController {
   ): Promise<ApiResponse> {
     return this.inspectionsService.getRecordsByCategory(categoryId);
   }
+  @Get('all')
+  async getAllInspectionPlans() {
+    return new ApiResponse(
+      true,
+      'All inspection plans were retrieved successfully',
+      this.inspectionsService.findAll(),
+    );
+  }
 }

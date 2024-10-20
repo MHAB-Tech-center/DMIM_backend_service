@@ -74,6 +74,11 @@ export class SectionsService {
     return section;
   }
 
+  async getAllSections() {
+    const sections = await this.sectionRepository.find({});
+    return sections;
+  }
+
   async existsByTitle(title: any): Promise<boolean> {
     const section = await this.sectionRepository.findOne({
       where: {

@@ -12,7 +12,7 @@ import {
 } from '@nestjs/common';
 import { InspectorsService } from './inspectors.service';
 import { UUID } from 'crypto';
-import { ApiBearerAuth, ApiConsumes, ApiTags } from '@nestjs/swagger';
+import { ApiConsumes, ApiTags } from '@nestjs/swagger';
 import { Public } from 'src/decorators/public.decorator';
 import { Roles } from 'src/utils/decorators/roles.decorator';
 import { InviteUser } from 'src/common/dtos/invite-user.dto';
