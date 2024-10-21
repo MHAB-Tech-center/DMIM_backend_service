@@ -23,6 +23,7 @@ export class SectionsController {
     return this.sectionService.getSectionByTitle(title);
   }
   @Get('all')
+  @Public()
   async getAllSections() {
     return new ApiResponse(
       true,
