@@ -1,7 +1,8 @@
-import { Column, Entity, JoinColumn, ManyToOne } from 'typeorm';
+import { Column, Entity, JoinColumn, ManyToOne, OneToMany } from 'typeorm';
 import { Section } from './section.entity';
 import { InspectionPlan } from './InspectionPlan.entity';
 import { BaseEntity } from 'src/db/base-entity';
+import { InspectionRecord } from './inspection-record.entity';
 
 @Entity('categories')
 export class Category extends BaseEntity {
@@ -15,6 +16,11 @@ export class Category extends BaseEntity {
   @ManyToOne(() => Section)
   @JoinColumn({ name: 'section_id' })
   section: Section;
+  // @OneToMany(() => Notification, (notification) => notification.miningCompany)
+  // notifications: Notification[];
+
+  @OneToMany(() => InspectionRecord, (record) => record.category)
+  records: InspectionRecord[];
 
   constructor(title: string, inspectionPlan: InspectionPlan, section: Section) {
     super();
