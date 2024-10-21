@@ -110,6 +110,7 @@ export class InspectionsService {
   async getInspectionPlan(planId: UUID) {
     const inspectionPlan = await this.inspectionPlanRepository.findOne({
       where: { id: planId },
+      relations: ['minesiteInfo', 'inspectorInfo'],
     });
     if (!inspectionPlan)
       throw new NotFoundException(
@@ -151,10 +152,6 @@ export class InspectionsService {
       'Records were retrieved successfully',
       records,
     );
-  }
-  async getInspectionPlans() {
-    const inspectionplans = await this.inspectionPlanRepository.find({});
-    return inspectionplans;
   }
 
   // Retrieve all inspection plans
