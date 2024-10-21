@@ -153,10 +153,6 @@ export class InspectionsService {
       records,
     );
   }
-  async getInspectionPlans() {
-    const inspectionplans = await this.inspectionPlanRepository.find({});
-    return inspectionplans;
-  }
 
   // Retrieve all inspection plans
   async findAll(): Promise<InspectionPlan[]> {

@@ -78,7 +78,8 @@ export class InspectionsController {
   ): Promise<ApiResponse> {
     return await this.inspectionsService.getRecordsByCategory(categoryId);
   }
-  @Get('/inspection-plans/all')
+  @Get('/plans/all')
+  @Public()
   async getAllInspectionPlans() {
     return new ApiResponse(
       true,
