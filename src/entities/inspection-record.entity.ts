@@ -1,6 +1,7 @@
 import { BaseEntity } from 'src/db/base-entity';
 import { Column, Entity, JoinColumn, ManyToOne } from 'typeorm';
 import { Category } from './category.entity';
+import { Exclude } from 'class-transformer';
 
 @Entity('inspection_records')
 export class InspectionRecord extends BaseEntity {
@@ -14,6 +15,7 @@ export class InspectionRecord extends BaseEntity {
   marks: number;
 
   @ManyToOne(() => Category)
+  // @Exclude()
   @JoinColumn({ name: 'category_id' })
   category: Category;
 

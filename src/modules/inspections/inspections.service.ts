@@ -135,7 +135,7 @@ export class InspectionsService {
       where: {
         inspectionPlan: { id: inspectionPlan.id },
       },
-      relations: ['inspectionPlan'],
+      relations: ['section', 'records'],
     });
     return categoryList;
   }
