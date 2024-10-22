@@ -91,6 +91,7 @@ export class InspectionsService {
         record.flagValue,
         category,
       );
+      inspectionRecord.pseudoName = record.pseudoName;
       if (record.flagValue) {
         record.flagValue.toLowerCase() == 'red'
           ? (inspectionRecord.marks = 40)

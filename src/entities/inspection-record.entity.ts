@@ -5,7 +5,7 @@ import { Exclude } from 'class-transformer';
 
 @Entity('inspection_records')
 export class InspectionRecord extends BaseEntity {
-  @JoinColumn({ name: 'title' })
+  @Column({ nullable: true })
   title: string;
   @Column({ nullable: true })
   boxValue: string;
@@ -18,6 +18,8 @@ export class InspectionRecord extends BaseEntity {
   // @Exclude()
   @JoinColumn({ name: 'category_id' })
   category: Category;
+  @Column({ nullable: true })
+  pseudoName: string;
 
   constructor(
     title: string,

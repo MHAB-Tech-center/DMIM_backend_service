@@ -17,4 +17,8 @@ export class CreateRecordDTO {
   flagValue: string;
   @ApiProperty()
   category: CreateCategoryDTO;
+
+  @ApiProperty()
+  @IsOptional()
+  pseudoName: string;
 }
