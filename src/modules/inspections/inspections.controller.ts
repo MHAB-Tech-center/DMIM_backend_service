@@ -4,6 +4,8 @@ import {
   Get,
   Param,
   Post,
+  Put,
+  Query,
   Req,
   UseFilters,
 } from '@nestjs/common';
@@ -11,11 +13,14 @@ import { InspectionsService } from './inspections.service';
 import { ApiResponse } from 'src/common/payload/ApiResponse';
 import { CreateInspectionDTO } from 'src/common/dtos/inspections/create-inspection.dto';
 import { Request } from 'express';
-import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
+import { ApiBearerAuth, ApiQuery, ApiTags } from '@nestjs/swagger';
 import { CustomExceptionFilter } from 'src/exceptions/CustomExceptionFilter';
 import { CreateInspectionPlanDTO } from 'src/common/dtos/inspections/create-inspection-plan.dto';
 import { Public } from 'src/decorators/public.decorator';
 import { UUID } from 'crypto';
+import { EditInspectionRecordDTO } from 'src/common/dtos/inspections/edit-inspection.dto';
+import { EditManyInspectionRecordsDTO } from 'src/common/dtos/inspections/edit-many-inspections-records.dto';
+import { ReviewInspectionPlanDTO } from 'src/common/dtos/inspections/review-inspection-plan.dto';
 
 @Controller('inspections')
 @ApiTags('inspections')
@@ -48,15 +53,40 @@ export class InspectionsController {
       await this.inspectionsService.getInspectionPlan(planId),
     );
   }
-  @Get('categories/:categoryId')
-  @Public()
-  async getCategory(
-    @Param('categoryId') categoryId: UUID,
-  ): Promise<ApiResponse> {
+  @Put('/records/update')
+  async editInspectionRecord(@Body() dto: EditInspectionRecordDTO) {
     return new ApiResponse(
       true,
-      'The category was retrieved successfully',
-      await this.inspectionsService.getCategory(categoryId),
+      'The inspection record was updated successfully',
+      await this.inspectionsService.editInspectionRecord(dto),
+    );
+  }
+  @Put('/records/update-bulk')
+  async editManyInspectionRecords(@Body() dto: EditManyInspectionRecordsDTO) {
+    return new ApiResponse(
+      true,
+      'All records were updated successfully',
+      await this.inspectionsService.editManyInspectionRecords(dto),
+    );
+  }
+
+  @Put('review/')
+  async reviewInspectionPlan(@Body() dto: ReviewInspectionPlanDTO) {
+    return new ApiResponse(
+      true,
+      'The inspection plan was reviewed successfully',
+      await this.inspectionsService.reviewInspectionPlan(dto),
+    );
+  }
+  @Put('all/by-status')
+  @ApiQuery({ name: 'status', required: true, example: 'submitted' })
+  async getInspectionPlanByStatus(
+    @Query('status') status: string = 'submitted',
+  ) {
+    return new ApiResponse(
+      true,
+      'The inspection plan were retrieved successfully',
+      await this.inspectionsService.getInspectionPlanByStatus(status),
     );
   }
 

@@ -2,6 +2,7 @@ import { BaseEntity } from 'src/db/base-entity';
 import { MineSite } from './minesite.entity';
 import { Column, Entity, JoinColumn, ManyToOne } from 'typeorm';
 import { Inspector } from './inspector.entity';
+import { EInspectionStatus } from 'src/common/Enum/EInspectionStatus.enum';
 
 @Entity('inspection_plans')
 export class InspectionPlan extends BaseEntity {
@@ -15,6 +16,9 @@ export class InspectionPlan extends BaseEntity {
   startDate: Date;
   @Column({ nullable: true })
   endDate: Date;
+
+  @Column({ name: 'status', nullable: true })
+  status: EInspectionStatus = EInspectionStatus.SUBMITTED;
 
   constructor(
     startDate: Date,
