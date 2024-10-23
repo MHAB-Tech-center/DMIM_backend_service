@@ -41,6 +41,7 @@ import { SectionsModule } from './modules/sections/sections.module';
 import { Section } from './entities/section.entity';
 import { Category } from './entities/category.entity';
 import { InspectionRecord } from './entities/inspection-record.entity';
+import { ReportingModule } from './modules/reporting/reporting.module';
 
 @Module({
   imports: [
@@ -94,6 +95,7 @@ import { InspectionRecord } from './entities/inspection-record.entity';
     InspectionsModule,
     CategoriesModule,
     SectionsModule,
+    ReportingModule,
   ],
   controllers: [AuthController, HomeController],
   providers: [{ provide: APP_GUARD, useClass: RolesGuard }],

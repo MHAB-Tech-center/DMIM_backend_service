@@ -11,6 +11,7 @@ import { JwtService } from '@nestjs/jwt';
 import * as bcrypt from 'bcrypt';
 import { Request } from 'express';
 import { EGender } from 'src/common/Enum/EGender.enum';
+import { EInspectionStatus } from 'src/common/Enum/EInspectionStatus.enum';
 import { EInspectorRole } from 'src/common/Enum/EInspectorRole.enum';
 import { ERole } from 'src/common/Enum/ERole.enum';
 import { Profile } from 'src/entities/profile.entity';
@@ -121,6 +122,31 @@ export class UtilsService {
         throw new BadRequestException(
           'The provided gender is invalid, should male or female',
         );
+    }
+  }
+
+  getInspectionStatus(inspectionStatus: string): EInspectionStatus {
+    switch (inspectionStatus.toLowerCase()) {
+      case 'submitted':
+        return EInspectionStatus.SUBMITTED;
+      case 'concluded':
+        return EInspectionStatus.CONCLUDED;
+      case 'reviewed':
+        return EInspectionStatus.REVIEWED;
+      default:
+        throw new BadRequestException(
+          'The provided inspection status is invalid, should be in  [ submitted, concluded, reviewed]',
+        );
+    }
+  }
+  getRecordRank(flag: string): number {
+    switch (flag.toLowerCase()) {
+      case 'red':
+        return 40;
+      case 'green':
+        92;
+      case 'yellow':
+        return 0;
     }
   }
   getInspectorRole(role: string): string {
