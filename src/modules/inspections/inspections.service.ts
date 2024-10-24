@@ -26,6 +26,8 @@ import { EditInspectionRecordDTO } from 'src/common/dtos/inspections/edit-inspec
 import { EditManyInspectionRecordsDTO } from 'src/common/dtos/inspections/edit-many-inspections-records.dto';
 import { ReviewInspectionPlanDTO } from 'src/common/dtos/inspections/review-inspection-plan.dto';
 import { MailingService } from 'src/integrations/mailing/mailing.service';
+import { InspectionReview } from 'src/entities/inspection-review.entity';
+import { ReviewsService } from '../reviews/reviews.service';
 
 @Injectable()
 export class InspectionsService {
@@ -42,6 +44,7 @@ export class InspectionsService {
     private inspectorService: InspectorsService,
     private sectionService: SectionsService,
     private mailingService: MailingService,
+    private reviewService: ReviewsService,
   ) {}
 
   async createInspectionPlan(request: Request, dto: CreateInspectionPlanDTO) {
@@ -200,16 +203,22 @@ export class InspectionsService {
     if (inspectionPlan.status == EInspectionStatus[EInspectionStatus.REVIEWED])
       throw new BadRequestException('The inspection plan is alreay reviewed');
     inspectionPlan.status = EInspectionStatus[EInspectionStatus.REVIEWED];
-    inspectionPlan.reviewMessage = dto.reviewMessage;
-    const updatedPlan = await this.inspectionPlanRepository.save(
+    const reviews: InspectionReview[] = inspectionPlan.reviews;
+
+    const review: InspectionReview = await this.reviewService.saveReview(
+      dto.reviewMessage,
       inspectionPlan,
     );
-    this.mailingService.sendEmail(
+    reviews.push(review);
+    inspectionPlan.reviews = reviews;
+    await this.inspectionPlanRepository.save(inspectionPlan);
+    // sednd an email
+    await this.mailingService.sendEmail(
       '',
       'review',
       inspectionPlan.inspectorInfo.lastName,
       inspectionPlan.inspectorInfo.profile,
-      updatedPlan.reviewMessage,
+      review.comment,
       inspectionPlan.inspectorInfo.email,
     );
   }
