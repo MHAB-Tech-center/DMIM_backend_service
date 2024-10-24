@@ -18,6 +18,7 @@ export class MailingService {
     name: string,
     user: Profile,
     data?: any,
+    email?: string,
   ) {
     const recipient = await user;
     switch (type) {
@@ -145,6 +146,26 @@ export class MailingService {
                 <li>Action 1: [Details]</li>
                 <li>Action 2: [Details]</li>
                 <li>Action 3: [Details]</li>
+            </ul>
+            <p>If you have any questions, please do not hesitate to contact us.</p>
+            <p>Best regards,<br>The RMB Team</p>
+         </div>
+
+          ${footerHTML}  
+          `,
+        };
+        break;
+      case 'review':
+        this.options = {
+          transporterName: null,
+          to: email,
+          subject: 'Inspection Reviewed by RMB',
+          html: `${headerHTML}
+         <div class="content">
+            <p>Dear ${name},</p>
+            <p>We just wanted to let you know that your inspection has been reviewed with the following reviews:</p>
+            <ul>
+                <li>${data}</li>
             </ul>
             <p>If you have any questions, please do not hesitate to contact us.</p>
             <p>Best regards,<br>The RMB Team</p>
