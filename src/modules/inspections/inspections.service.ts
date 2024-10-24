@@ -135,7 +135,7 @@ export class InspectionsService {
       await this.recordRepository.save(inspectionRecord);
     });
     // Change the status to submitted
-    inspectionPlan.status = EInspectionStatus.SUBMITTED;
+    inspectionPlan.status = EInspectionStatus[EInspectionStatus.SUBMITTED];
     await this.inspectionPlanRepository.save(inspectionPlan);
     return new ApiResponse(
       true,
@@ -192,16 +192,19 @@ export class InspectionsService {
     return 'All records were updated successfully';
   }
   async reviewInspectionPlan(dto: ReviewInspectionPlanDTO) {
-    const inspectionPlan = await this.getInspectionPlan(dto.planId);
-    if ((inspectionPlan.status = EInspectionStatus.REVIEWED))
+    const inspectionPlan: InspectionPlan = await this.getInspectionPlan(
+      dto.planId,
+    );
+    if (inspectionPlan.status == EInspectionStatus[EInspectionStatus.REVIEWED])
       throw new BadRequestException('The inspection plan is alreay reviewed');
-    inspectionPlan.status = EInspectionStatus.REVIEWED;
+    inspectionPlan.status = EInspectionStatus[EInspectionStatus.REVIEWED];
     inspectionPlan.reviewMessage = dto.reviewMessage;
     return await this.inspectionPlanRepository.save(inspectionPlan);
   }
   async getInspectionPlanByStatus(status: string) {
-    const inspectionStatus: EInspectionStatus =
-      await this.utilService.getInspectionStatus(status);
+    const inspectionStatus: string = await this.utilService.getInspectionStatus(
+      status,
+    );
     const inspectionPlans = await this.inspectionPlanRepository.find({
       where: { status: inspectionStatus },
     });
