@@ -25,6 +25,7 @@ import { EInspectionStatus } from 'src/common/Enum/EInspectionStatus.enum';
 import { EditInspectionRecordDTO } from 'src/common/dtos/inspections/edit-inspection.dto';
 import { EditManyInspectionRecordsDTO } from 'src/common/dtos/inspections/edit-many-inspections-records.dto';
 import { ReviewInspectionPlanDTO } from 'src/common/dtos/inspections/review-inspection-plan.dto';
+import { MailingService } from 'src/integrations/mailing/mailing.service';
 
 @Injectable()
 export class InspectionsService {
@@ -40,6 +41,7 @@ export class InspectionsService {
     private utilService: UtilsService,
     private inspectorService: InspectorsService,
     private sectionService: SectionsService,
+    private mailingService: MailingService,
   ) {}
 
   async createInspectionPlan(request: Request, dto: CreateInspectionPlanDTO) {
@@ -199,7 +201,17 @@ export class InspectionsService {
       throw new BadRequestException('The inspection plan is alreay reviewed');
     inspectionPlan.status = EInspectionStatus[EInspectionStatus.REVIEWED];
     inspectionPlan.reviewMessage = dto.reviewMessage;
-    return await this.inspectionPlanRepository.save(inspectionPlan);
+    const updatedPlan = await this.inspectionPlanRepository.save(
+      inspectionPlan,
+    );
+    this.mailingService.sendEmail(
+      '',
+      'review',
+      inspectionPlan.inspectorInfo.lastName,
+      inspectionPlan.inspectorInfo.profile,
+      updatedPlan.reviewMessage,
+      inspectionPlan.inspectorInfo.email,
+    );
   }
   async getInspectionPlanByStatus(status: string) {
     const inspectionStatus: string = await this.utilService.getInspectionStatus(
