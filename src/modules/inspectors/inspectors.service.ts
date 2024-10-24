@@ -66,9 +66,6 @@ export class InspectorsService {
     } = body;
 
     const minesite = await this.mineSiteService.findById(minesiteId);
-    const pictureUrl = await this.cloudinary.uploadImage(file).catch(() => {
-      throw new BadRequestException('Invalid file type.');
-    });
     // const userGender = this.utilsService.getGender(gender);
     password = await this.utilsService.hashString(password);
     if (!(await this.userService.existsByEmail(email)))
@@ -93,7 +90,13 @@ export class InspectorsService {
     inspector.minesite = minesite;
     userProfile.activationCode = null;
     userProfile.password = password;
-    userProfile.profile_pic = pictureUrl.url;
+    if (file) {
+      const pictureUrl = await this.cloudinary.uploadImage(file).catch(() => {
+        throw new BadRequestException('Invalid file type.');
+      });
+      userProfile.profile_pic = pictureUrl.url;
+    }
+
     userProfile.status = EAccountStatus[EAccountStatus.ACTIVE];
     await this.userService.saveExistingProfile(
       userProfile,
@@ -158,7 +161,6 @@ export class InspectorsService {
       null,
     );
   }
-
   async getById(id: UUID) {
     const rmbMember = await this.inspectorRepo.findOne({
       where: {

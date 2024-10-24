@@ -10,13 +10,14 @@
 import { Global, Module, forwardRef } from '@nestjs/common';
 import { RoleService } from './role.service';
 import { TypeOrmModule } from '@nestjs/typeorm';
-import { UsersModule } from 'src/modules/users/users.module';
 import { Role } from 'src/entities/role.entity';
+import { RolesController } from './roles.controller';
 
 @Global()
 @Module({
   providers: [RoleService],
-  imports: [TypeOrmModule.forFeature([Role]), forwardRef(() => UsersModule)],
+  imports: [TypeOrmModule.forFeature([Role])],
   exports: [RoleService],
+  controllers: [RolesController],
 })
 export class RoleModule {}
