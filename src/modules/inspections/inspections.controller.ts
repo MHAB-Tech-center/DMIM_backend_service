@@ -71,6 +71,7 @@ export class InspectionsController {
   }
 
   @Put('review/')
+  @Public()
   async reviewInspectionPlan(@Body() dto: ReviewInspectionPlanDTO) {
     return new ApiResponse(
       true,

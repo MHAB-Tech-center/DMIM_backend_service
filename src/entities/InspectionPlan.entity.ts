@@ -16,16 +16,11 @@ export class InspectionPlan extends BaseEntity {
   startDate: Date;
   @Column({ nullable: true })
   endDate: Date;
-
   @Column({
     name: 'status',
     nullable: true,
-    enumName: 'status',
-    type: 'enum',
-    enum: EInspectionStatus,
-    default: EInspectionStatus.IN_PROGRESS,
   })
-  status: EInspectionStatus;
+  status: string;
   @Column({ nullable: true })
   reviewMessage: string;
 

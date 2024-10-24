@@ -125,14 +125,14 @@ export class UtilsService {
     }
   }
 
-  getInspectionStatus(inspectionStatus: string): EInspectionStatus {
+  getInspectionStatus(inspectionStatus: string): string {
     switch (inspectionStatus.toLowerCase()) {
       case 'submitted':
-        return EInspectionStatus.SUBMITTED;
+        return EInspectionStatus[EInspectionStatus.SUBMITTED];
       case 'concluded':
-        return EInspectionStatus.CONCLUDED;
+        return EInspectionStatus[EInspectionStatus.CONCLUDED];
       case 'reviewed':
-        return EInspectionStatus.REVIEWED;
+        return EInspectionStatus[EInspectionStatus.REVIEWED];
       default:
         throw new BadRequestException(
           'The provided inspection status is invalid, should be in  [ submitted, concluded, reviewed]',
