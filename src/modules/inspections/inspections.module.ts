@@ -5,12 +5,20 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { InspectionPlan } from 'src/entities/InspectionPlan.entity';
 import { Category } from 'src/entities/category.entity';
 import { InspectionRecord } from 'src/entities/inspection-record.entity';
+import { InspectionIdentification } from 'src/entities/inspection-identification.entity';
+import { SummaryReport } from 'src/entities/summary-report.entity';
 
 @Global()
 @Module({
   providers: [InspectionsService],
   imports: [
-    TypeOrmModule.forFeature([InspectionPlan, Category, InspectionRecord]),
+    TypeOrmModule.forFeature([
+      InspectionPlan,
+      Category,
+      InspectionRecord,
+      InspectionIdentification,
+      SummaryReport,
+    ]),
   ],
   controllers: [InspectionsController],
   exports: [InspectionsService],

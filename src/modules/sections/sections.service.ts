@@ -6,7 +6,8 @@ import {
 import { InjectRepository } from '@nestjs/typeorm';
 import { UUID } from 'crypto';
 import { dot } from 'node:test/reporters';
-import { CreateSectionDTO } from 'src/common/dtos/create-section.dto';
+import { CreateSectionDTO } from 'src/common/dtos/sections/create-section.dto';
+import { UpdateSectionFlagDTO } from 'src/common/dtos/sections/update-flag.dto';
 import { ApiResponse } from 'src/common/payload/ApiResponse';
 import { Section } from 'src/entities/section.entity';
 import { Repository } from 'typeorm';
@@ -24,13 +25,41 @@ export class SectionsService {
         'The section with the provided Id already exists',
       );
 
-    const sectionEntity = new Section(dto.title);
+    const sectionEntity = new Section(dto.title, dto.flagStandard);
     const section = await this.sectionRepository.save(sectionEntity);
     return new ApiResponse(
       true,
       'The section was created successfully',
       section,
     );
+  }
+
+  async update(id: UUID, dto: CreateSectionDTO): Promise<Section> {
+    const sectionEntity = await this.findSectionById(id);
+    sectionEntity.flagStandard = dto.flagStandard;
+    sectionEntity.title = dto.title;
+    const section = await this.sectionRepository.save(sectionEntity);
+    return section;
+  }
+  async updateFlagStandard(
+    id: UUID,
+    dto: UpdateSectionFlagDTO,
+  ): Promise<Section> {
+    const sectionEntity = await this.findSectionById(id);
+    switch (dto.flagStandard.toUpperCase()) {
+      case 'RED':
+        sectionEntity.flagStandard = 'RED';
+        break;
+      case 'YELLOW':
+        sectionEntity.flagStandard = 'YELLOW';
+        break;
+      default:
+        throw new BadRequestException(
+          'The flag provided is invalid; It should be red or yellow',
+        );
+    }
+    const section = await this.sectionRepository.save(sectionEntity);
+    return section;
   }
 
   async getSectionByTitle(title: string): Promise<ApiResponse> {
