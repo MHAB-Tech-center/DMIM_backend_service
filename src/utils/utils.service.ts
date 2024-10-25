@@ -186,7 +186,6 @@ export class UtilsService {
       dto.identification.district,
       dto.identification.sector,
       dto.identification.cell,
-      dto.identification.coordinates,
       dto.identification.responsiblePersonNames,
       dto.identification.responsiblePersonTitle,
       dto.identification.responsiblePersonContact,
@@ -195,9 +194,8 @@ export class UtilsService {
   getSummaryReportEntity(dto: CreateInspectionDTO) {
     return new SummaryReport(
       dto.summaryReport.mainProblems,
-      dto.summaryReport.observations,
-      dto.summaryReport.recommendations,
-      dto.summaryReport.certificationStaus,
+      dto.summaryReport.proposedRemedialActions,
+      dto.summaryReport.certificationStatus,
       dto.summaryReport.gracePeriodEndon,
     );
   }

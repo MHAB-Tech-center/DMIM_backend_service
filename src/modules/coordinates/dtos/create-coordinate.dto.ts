@@ -1,20 +1,21 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { IsDate, IsNotEmpty, IsString } from 'class-validator';
+import { IsNotEmpty, IsString } from 'class-validator';
 
-export class SummaryReportDTO {
+export class CreateCoordinateDTO {
   @IsString()
   @IsNotEmpty()
   @ApiProperty()
-  mainProblems: string;
+  utm_east: string;
   @IsString()
   @IsNotEmpty()
   @ApiProperty()
-  proposedRemedialActions: string;
+  dms_east: string;
   @IsString()
   @IsNotEmpty()
   @ApiProperty()
-  certificationStatus: string;
+  utm_south: string;
+  @IsString()
   @IsNotEmpty()
   @ApiProperty()
-  gracePeriodEndon: Date;
+  dms_south: string;
 }

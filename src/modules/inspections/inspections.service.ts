@@ -30,6 +30,7 @@ import { InspectionReview } from 'src/entities/inspection-review.entity';
 import { ReviewsService } from '../reviews/reviews.service';
 import { InspectionIdentification } from 'src/entities/inspection-identification.entity';
 import { SummaryReport } from 'src/entities/summary-report.entity';
+import { CoordinatesService } from 'src/modules/coordinates/coordinates.service';
 
 @Injectable()
 export class InspectionsService {
@@ -51,6 +52,7 @@ export class InspectionsService {
     private sectionService: SectionsService,
     private mailingService: MailingService,
     private reviewService: ReviewsService,
+    private coordinateService: CoordinatesService,
   ) {}
 
   async createInspectionPlan(request: Request, dto: CreateInspectionPlanDTO) {
@@ -149,9 +151,13 @@ export class InspectionsService {
       }
       await this.recordRepository.save(inspectionRecord);
     });
-    const identification = await this.identificationRepository.save(
+    let identification = await this.identificationRepository.save(
       this.utilService.getIdentificationIdentity(dto),
     );
+    identification.coordinates = await this.coordinateService.saveCoordinate(
+      dto.identification.coordinates,
+    );
+    identification = await this.identificationRepository.save(identification);
     const summaryReport = await this.summaryReportRepository.save(
       this.utilService.getSummaryReportEntity(dto),
     );

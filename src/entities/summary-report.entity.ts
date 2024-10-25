@@ -4,21 +4,18 @@ import { Entity } from 'typeorm';
 @Entity('summary-reports')
 export class SummaryReport extends BaseEntity {
   mainProblems: string;
-  observations: string;
-  recommendations: string;
+  proposedRemedialActions: string;
   certificationStaus: string;
   gracePeriodEndon: Date;
   constructor(
     mainProblems: string,
-    observations: string,
-    recommendations: string,
+    proposedRemedialActions: string,
     certificationStaus: string,
     gracePeriodEndon: Date,
   ) {
     super();
     this.mainProblems = mainProblems;
-    this.observations = observations;
-    this.recommendations = recommendations;
+    this.proposedRemedialActions = proposedRemedialActions;
     this.certificationStaus = certificationStaus;
     this.gracePeriodEndon = gracePeriodEndon;
   }

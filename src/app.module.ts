@@ -46,6 +46,8 @@ import { ReviewsModule } from './modules/reviews/reviews.module';
 import { InspectionIdentification } from './entities/inspection-identification.entity';
 import { InspectionReview } from './entities/inspection-review.entity';
 import { SummaryReport } from './entities/summary-report.entity';
+import { CoordinatesModule } from './modules/coordinates/coordinates.module';
+import { Coordinate } from './entities/coordinate.entity';
 
 @Module({
   imports: [
@@ -73,6 +75,7 @@ import { SummaryReport } from './entities/summary-report.entity';
           InspectionRecord,
           InspectionIdentification,
           InspectionReview,
+          Coordinate,
           SummaryReport,
         ],
         synchronize: true,
@@ -104,6 +107,7 @@ import { SummaryReport } from './entities/summary-report.entity';
     SectionsModule,
     ReportingModule,
     ReviewsModule,
+    CoordinatesModule,
   ],
   controllers: [AuthController, HomeController],
   providers: [{ provide: APP_GUARD, useClass: RolesGuard }],

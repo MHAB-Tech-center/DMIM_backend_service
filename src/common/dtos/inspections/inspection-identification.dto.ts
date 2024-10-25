@@ -1,5 +1,6 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { IsDate, IsNotEmpty, IsString } from 'class-validator';
+import { CreateCoordinateDTO } from 'src/modules/coordinates/dtos/create-coordinate.dto';
 
 export class InspectionIdentificationDTO {
   @IsString()
@@ -52,10 +53,9 @@ export class InspectionIdentificationDTO {
   @IsNotEmpty()
   @ApiProperty()
   cell: string;
-  @IsString()
   @IsNotEmpty()
   @ApiProperty()
-  coordinates: string;
+  coordinates: CreateCoordinateDTO;
   @IsString()
   @IsNotEmpty()
   @ApiProperty()
