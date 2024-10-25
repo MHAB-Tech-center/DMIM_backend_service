@@ -12,6 +12,7 @@ import { Inspector } from './inspector.entity';
 import { InspectionReview } from './inspection-review.entity';
 import { InspectionIdentification } from './inspection-identification.entity';
 import { SummaryReport } from './summary-report.entity';
+import { EInspectionStatus } from 'src/common/Enum/EInspectionStatus.enum';
 
 @Entity('inspection_plans')
 export class InspectionPlan extends BaseEntity {
@@ -51,5 +52,6 @@ export class InspectionPlan extends BaseEntity {
     this.endDate = endDate;
     this.inspectorInfo = inspector;
     this.minesiteInfo = minesite;
+    this.status = EInspectionStatus[EInspectionStatus.IN_PROGRESS];
   }
 }
