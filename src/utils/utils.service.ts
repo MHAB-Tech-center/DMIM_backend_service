@@ -194,7 +194,6 @@ export class UtilsService {
       dto.summaryReport.mainProblems,
       dto.summaryReport.proposedRemedialActions,
       dto.summaryReport.certificationStatus,
-      dto.summaryReport.gracePeriodEndon,
     );
   }
 
