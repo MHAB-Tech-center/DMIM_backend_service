@@ -42,6 +42,10 @@ import { Section } from './entities/section.entity';
 import { Category } from './entities/category.entity';
 import { InspectionRecord } from './entities/inspection-record.entity';
 import { ReportingModule } from './modules/reporting/reporting.module';
+import { ReviewsModule } from './modules/reviews/reviews.module';
+import { InspectionIdentification } from './entities/inspection-identification.entity';
+import { InspectionReview } from './entities/inspection-review.entity';
+import { SummaryReport } from './entities/summary-report.entity';
 
 @Module({
   imports: [
@@ -67,6 +71,9 @@ import { ReportingModule } from './modules/reporting/reporting.module';
           Section,
           Category,
           InspectionRecord,
+          InspectionIdentification,
+          InspectionReview,
+          SummaryReport,
         ],
         synchronize: true,
       }),
@@ -96,6 +103,7 @@ import { ReportingModule } from './modules/reporting/reporting.module';
     CategoriesModule,
     SectionsModule,
     ReportingModule,
+    ReviewsModule,
   ],
   controllers: [AuthController, HomeController],
   providers: [{ provide: APP_GUARD, useClass: RolesGuard }],
