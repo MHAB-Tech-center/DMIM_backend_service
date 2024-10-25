@@ -14,14 +14,6 @@ export class InspectionIdentificationDTO {
   @IsString()
   @IsNotEmpty()
   @ApiProperty()
-  perimeter: string;
-  @IsString()
-  @IsNotEmpty()
-  @ApiProperty()
-  subsitesName: string;
-  @IsString()
-  @IsNotEmpty()
-  @ApiProperty()
   licenseNumber: string;
   @IsString()
   @IsNotEmpty()
