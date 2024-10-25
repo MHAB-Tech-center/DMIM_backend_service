@@ -9,5 +9,6 @@ import { InspectionReview } from 'src/entities/inspection-review.entity';
   providers: [ReviewsService],
   imports: [TypeOrmModule.forFeature([InspectionReview])],
   controllers: [ReviewsController],
+  exports: [ReviewsService],
 })
 export class ReviewsModule {}

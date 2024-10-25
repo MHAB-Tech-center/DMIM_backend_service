@@ -28,6 +28,8 @@ import { ReviewInspectionPlanDTO } from 'src/common/dtos/inspections/review-insp
 import { MailingService } from 'src/integrations/mailing/mailing.service';
 import { InspectionReview } from 'src/entities/inspection-review.entity';
 import { ReviewsService } from '../reviews/reviews.service';
+import { InspectionIdentification } from 'src/entities/inspection-identification.entity';
+import { SummaryReport } from 'src/entities/summary-report.entity';
 
 @Injectable()
 export class InspectionsService {
@@ -36,6 +38,10 @@ export class InspectionsService {
     private readonly inspectionPlanRepository: Repository<InspectionPlan>,
     @InjectRepository(Category)
     private readonly categoryRepository: Repository<Category>,
+    @InjectRepository(InspectionIdentification)
+    private readonly identificationRepository: Repository<InspectionIdentification>,
+    @InjectRepository(SummaryReport)
+    private readonly summaryReportRepository: Repository<SummaryReport>,
     @InjectRepository(InspectionRecord)
     private readonly recordRepository: Repository<InspectionRecord>,
     private categoryService: CategoriesService,
@@ -94,7 +100,7 @@ export class InspectionsService {
         inspectionPlan,
         section,
       );
-      let category;
+      let category: Category;
       if (
         !(await this.categoryService.existsByTitleInspectionPlan(
           record.category.title,
@@ -130,6 +136,10 @@ export class InspectionsService {
       // Check the pseudoName
 
       inspectionRecord.pseudoName = record.pseudoName;
+      inspectionRecord = this.utilService.rankInspectionRecord(
+        inspectionRecord,
+        category,
+      );
       if (record.flagValue) {
         record.flagValue.toLowerCase() == 'red'
           ? (inspectionRecord.marks = 40)
@@ -139,8 +149,16 @@ export class InspectionsService {
       }
       await this.recordRepository.save(inspectionRecord);
     });
+    const identification = await this.identificationRepository.save(
+      this.utilService.getIdentificationIdentity(dto),
+    );
+    const summaryReport = await this.summaryReportRepository.save(
+      this.utilService.getSummaryReportEntity(dto),
+    );
     // Change the status to submitted
     inspectionPlan.status = EInspectionStatus[EInspectionStatus.SUBMITTED];
+    inspectionPlan.summaryReport = summaryReport;
+    inspectionPlan.identification = identification;
     await this.inspectionPlanRepository.save(inspectionPlan);
     return new ApiResponse(
       true,
