@@ -10,12 +10,17 @@ import { ConfigService } from '@nestjs/config';
 import { JwtService } from '@nestjs/jwt';
 import * as bcrypt from 'bcrypt';
 import { Request } from 'express';
+import { CreateInspectionDTO } from 'src/common/dtos/inspections/create-inspection.dto';
 import { EGender } from 'src/common/Enum/EGender.enum';
 import { EInspectionStatus } from 'src/common/Enum/EInspectionStatus.enum';
 import { EInspectorRole } from 'src/common/Enum/EInspectorRole.enum';
 import { ERole } from 'src/common/Enum/ERole.enum';
+import { Category } from 'src/entities/category.entity';
+import { InspectionIdentification } from 'src/entities/inspection-identification.entity';
+import { InspectionRecord } from 'src/entities/inspection-record.entity';
 import { Profile } from 'src/entities/profile.entity';
 import { Role } from 'src/entities/role.entity';
+import { SummaryReport } from 'src/entities/summary-report.entity';
 import { RoleService } from 'src/modules/roles/role.service';
 import { UsersService } from 'src/modules/users/users.service';
 
@@ -162,5 +167,58 @@ export class UtilsService {
           'The provided role is invalid, should be in [ inspector, environmentalist, supervisor]',
         );
     }
+  }
+
+  getIdentificationIdentity(
+    dto: CreateInspectionDTO,
+  ): InspectionIdentification {
+    return new InspectionIdentification(
+      dto.identification.mineOwner,
+      dto.identification.mineOperator,
+      dto.identification.perimeter,
+      dto.identification.subsitesName,
+      dto.identification.licenseNumber,
+      dto.identification.mainBuyers,
+      dto.identification.licenseCategory,
+      dto.identification.licenseIssueDate,
+      dto.identification.licenseExpirationDate,
+      dto.identification.province,
+      dto.identification.district,
+      dto.identification.sector,
+      dto.identification.cell,
+      dto.identification.coordinates,
+      dto.identification.responsiblePersonNames,
+      dto.identification.responsiblePersonTitle,
+      dto.identification.responsiblePersonContact,
+    );
+  }
+  getSummaryReportEntity(dto: CreateInspectionDTO) {
+    return new SummaryReport(
+      dto.summaryReport.mainProblems,
+      dto.summaryReport.observations,
+      dto.summaryReport.recommendations,
+      dto.summaryReport.certificationStaus,
+      dto.summaryReport.gracePeriodEndon,
+    );
+  }
+
+  rankInspectionRecord(
+    inspectionRecord: InspectionRecord,
+    category: Category,
+  ): InspectionRecord {
+    if (
+      inspectionRecord.boxValue == 'yes' &&
+      category.section.flagStandard.toUpperCase() == 'RED'
+    ) {
+      inspectionRecord.flagValue = 'RED';
+    } else if (
+      inspectionRecord.boxValue == 'yes' &&
+      category.section.flagStandard.toUpperCase() == 'YELLOW'
+    ) {
+      inspectionRecord.flagValue = 'YELLOW';
+    } else {
+      inspectionRecord.flagValue = 'NO';
+    }
+    return inspectionRecord;
   }
 }

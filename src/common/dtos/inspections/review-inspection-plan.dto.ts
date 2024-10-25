@@ -7,8 +7,8 @@ export class ReviewInspectionPlanDTO {
   @IsUUID()
   @IsNotEmpty()
   planId: UUID;
-  @ApiProperty()
   @IsString()
+  @ApiProperty()
   @IsNotEmpty()
   reviewMessage: string;
 }

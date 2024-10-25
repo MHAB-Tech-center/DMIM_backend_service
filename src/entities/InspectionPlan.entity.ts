@@ -1,8 +1,17 @@
 import { BaseEntity } from 'src/db/base-entity';
 import { MineSite } from './minesite.entity';
-import { Column, Entity, JoinColumn, ManyToOne } from 'typeorm';
+import {
+  Column,
+  Entity,
+  JoinColumn,
+  ManyToOne,
+  OneToMany,
+  OneToOne,
+} from 'typeorm';
 import { Inspector } from './inspector.entity';
-import { EInspectionStatus } from 'src/common/Enum/EInspectionStatus.enum';
+import { InspectionReview } from './inspection-review.entity';
+import { InspectionIdentification } from './inspection-identification.entity';
+import { SummaryReport } from './summary-report.entity';
 
 @Entity('inspection_plans')
 export class InspectionPlan extends BaseEntity {
@@ -12,6 +21,12 @@ export class InspectionPlan extends BaseEntity {
   @JoinColumn({ name: 'inspector_id' })
   inspectorInfo: Inspector;
 
+  @OneToOne(() => InspectionIdentification)
+  @JoinColumn({ name: 'identification_id' })
+  identification: InspectionIdentification;
+  @OneToOne(() => SummaryReport)
+  @JoinColumn({ name: 'summary_id' })
+  summaryReport: SummaryReport;
   @Column({ nullable: true })
   startDate: Date;
   @Column({ nullable: true })
@@ -21,8 +36,9 @@ export class InspectionPlan extends BaseEntity {
     nullable: true,
   })
   status: string;
-  @Column({ nullable: true })
-  reviewMessage: string;
+
+  @OneToMany(() => InspectionReview, (review) => review.inspectionPlan)
+  reviews: InspectionReview[];
 
   constructor(
     startDate: Date,
