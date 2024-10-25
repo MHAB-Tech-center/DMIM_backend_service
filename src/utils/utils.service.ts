@@ -175,8 +175,6 @@ export class UtilsService {
     return new InspectionIdentification(
       dto.identification.mineOwner,
       dto.identification.mineOperator,
-      dto.identification.perimeter,
-      dto.identification.subsitesName,
       dto.identification.licenseNumber,
       dto.identification.mainBuyers,
       dto.identification.licenseCategory,

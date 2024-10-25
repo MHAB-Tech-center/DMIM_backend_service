@@ -6,8 +6,6 @@ import { Coordinate } from './coordinate.entity';
 export class InspectionIdentification extends BaseEntity {
   mineOwner: string;
   mineOperator: string;
-  perimeter: string;
-  subsitesName: string;
   licenseNumber: string;
   mainBuyers: string;
   licenseCategory: string;
@@ -26,8 +24,6 @@ export class InspectionIdentification extends BaseEntity {
   constructor(
     mineOwner: string,
     mineOperator: string,
-    perimeter: string,
-    subsitesName: string,
     licenseNumber: string,
     mainBuyers: string,
     licenseCategory: string,
@@ -44,8 +40,6 @@ export class InspectionIdentification extends BaseEntity {
     super();
     this.mineOwner = mineOwner;
     this.mineOperator = mineOperator;
-    this.perimeter = perimeter;
-    this.subsitesName = subsitesName;
     this.licenseNumber = licenseNumber;
     this.mainBuyers = mainBuyers;
     this.licenseCategory = licenseCategory;
