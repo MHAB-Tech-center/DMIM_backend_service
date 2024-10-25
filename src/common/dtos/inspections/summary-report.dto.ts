@@ -14,7 +14,4 @@ export class SummaryReportDTO {
   @IsNotEmpty()
   @ApiProperty()
   certificationStatus: string;
-  @IsNotEmpty()
-  @ApiProperty()
-  gracePeriodEndon: Date;
 }
