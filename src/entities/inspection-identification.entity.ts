@@ -1,5 +1,6 @@
 import { BaseEntity } from 'src/db/base-entity';
-import { Entity } from 'typeorm';
+import { Entity, ManyToOne } from 'typeorm';
+import { Coordinate } from './coordinate.entity';
 
 @Entity('inspection-identifications')
 export class InspectionIdentification extends BaseEntity {
@@ -16,10 +17,11 @@ export class InspectionIdentification extends BaseEntity {
   district: string;
   sector: string;
   cell: string;
-  coordinates: string;
   responsiblePersonNames: string;
   responsiblePersonTitle: string;
   responsiblePersonContact: string;
+  @ManyToOne(() => Coordinate)
+  coordinates: Coordinate;
 
   constructor(
     mineOwner: string,
@@ -35,7 +37,6 @@ export class InspectionIdentification extends BaseEntity {
     district: string,
     sector: string,
     cell: string,
-    coordinates: string,
     responsiblePersonNames: string,
     responsiblePersonTitle: string,
     responsiblePersonContact: string,
@@ -54,7 +55,6 @@ export class InspectionIdentification extends BaseEntity {
     this.district = district;
     this.sector = sector;
     this.cell = cell;
-    this.coordinates = coordinates;
     this.responsiblePersonNames = responsiblePersonNames;
     this.responsiblePersonTitle = responsiblePersonTitle;
     this.responsiblePersonContact = responsiblePersonContact;
