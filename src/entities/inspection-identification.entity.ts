@@ -1,22 +1,36 @@
 import { BaseEntity } from 'src/db/base-entity';
-import { Entity, ManyToOne } from 'typeorm';
+import { Column, Entity, ManyToOne } from 'typeorm';
 import { Coordinate } from './coordinate.entity';
 
 @Entity('inspection-identifications')
 export class InspectionIdentification extends BaseEntity {
+  @Column({ nullable: true })
   mineOwner: string;
+  @Column({ nullable: true })
   mineOperator: string;
+  @Column({ nullable: true })
   licenseNumber: string;
+  @Column({ nullable: true })
   mainBuyers: string;
+  @Column({ nullable: true })
   licenseCategory: string;
+  @Column({ nullable: true })
   licenseIssueDate: Date;
+  @Column({ nullable: true })
   licenseExpirationDate: Date;
+  @Column({ nullable: true })
   province: string;
+  @Column({ nullable: true })
   district: string;
+  @Column({ nullable: true })
   sector: string;
+  @Column({ nullable: true })
   cell: string;
+  @Column({ nullable: true })
   responsiblePersonNames: string;
+  @Column({ nullable: true })
   responsiblePersonTitle: string;
+  @Column({ nullable: true })
   responsiblePersonContact: string;
   @ManyToOne(() => Coordinate)
   coordinates: Coordinate;

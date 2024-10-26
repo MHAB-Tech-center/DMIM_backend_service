@@ -284,7 +284,13 @@ export class InspectionsService {
       where: {
         inspectionPlan: { id: inspectionPlan.id },
       },
-      relations: ['section', 'records'],
+      relations: [
+        'section',
+        'records',
+        'inspectionPlan',
+        'inspectionPlan.identification',
+        'inspectionPlan.summaryReport',
+      ],
     });
     return categoryList;
   }
