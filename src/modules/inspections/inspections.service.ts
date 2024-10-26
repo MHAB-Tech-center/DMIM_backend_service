@@ -31,6 +31,7 @@ import { ReviewsService } from '../reviews/reviews.service';
 import { InspectionIdentification } from 'src/entities/inspection-identification.entity';
 import { SummaryReport } from 'src/entities/summary-report.entity';
 import { CoordinatesService } from 'src/modules/coordinates/coordinates.service';
+import { InspectionsResponseDTO } from 'src/common/dtos/responses/inspections-response.dto';
 
 @Injectable()
 export class InspectionsService {
@@ -278,7 +279,7 @@ export class InspectionsService {
       );
     return inspectionPlan;
   }
-  async getCategoriesInspectionPlan(planId: UUID): Promise<Category[]> {
+  async getCategoriesReportInspectionPlan(planId: UUID): Promise<Category[]> {
     const inspectionPlan: any = await this.getInspectionPlan(planId);
     const categoryList: Category[] = await this.categoryRepository.find({
       where: {
@@ -292,7 +293,31 @@ export class InspectionsService {
         'inspectionPlan.summaryReport',
       ],
     });
+    categoryList.forEach((category: Category) => {
+      category.inspectionPlan = null;
+    });
     return categoryList;
+  }
+  async getCategoriesInspectionPlan(
+    planId: UUID,
+  ): Promise<InspectionsResponseDTO> {
+    const inspectionPlan: any = await this.getInspectionPlan(planId);
+    const categoryList: Category[] = await this.categoryRepository.find({
+      where: {
+        inspectionPlan: { id: inspectionPlan.id },
+      },
+      relations: ['section', 'records'],
+    });
+    // categoryList.forEach((category: Category) => {
+    //   delete category.inspectionPlan;
+    // });
+    const inspectionsResponse = new InspectionsResponseDTO(
+      inspectionPlan.identification,
+      categoryList,
+      inspectionPlan.id,
+      inspectionPlan.summaryReport,
+    );
+    return inspectionsResponse;
   }
   async getRecordsByCategory(categoryId: UUID): Promise<ApiResponse> {
     const category: any = await this.categoryService.findById(categoryId);
