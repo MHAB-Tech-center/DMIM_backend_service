@@ -90,7 +90,7 @@ export class InspectionsService {
   }
   // Create a new inspection plan
   async create(dto: CreateInspectionDTO): Promise<ApiResponse> {
-    const inspectionPlan = await this.inspectionPlanRepository.findOne({
+    let inspectionPlan = await this.inspectionPlanRepository.findOne({
       where: { id: dto.inspectionPlanId },
     });
     dto.records.forEach(async (record: CreateRecordDTO) => {
@@ -171,6 +171,7 @@ export class InspectionsService {
     inspectionPlan.summaryReport = summaryReport;
     inspectionPlan.identification = identification;
     await this.inspectionPlanRepository.save(inspectionPlan);
+    inspectionPlan = await this.getInspectionPlan(inspectionPlan.id);
     return new ApiResponse(
       true,
       'The inspection records were created successfully',
@@ -260,11 +261,17 @@ export class InspectionsService {
     });
     return inspectionPlans;
   }
-  async getInspectionPlan(planId: UUID) {
-    const inspectionPlan = await this.inspectionPlanRepository.findOne({
-      where: { id: planId },
-      relations: ['minesiteInfo', 'inspectorInfo'],
-    });
+  async getInspectionPlan(planId: any) {
+    const inspectionPlan: InspectionPlan =
+      await this.inspectionPlanRepository.findOne({
+        where: { id: planId },
+        relations: [
+          'minesiteInfo',
+          'inspectorInfo',
+          'identification',
+          'summaryReport',
+        ],
+      });
     if (!inspectionPlan)
       throw new NotFoundException(
         'The inspection plan witht the provided Id is not found',
