@@ -97,10 +97,15 @@ export class InspectionsService {
       const section = await this.sectionService.findSectionById(
         record.category.sectionId,
       );
+      if (!section) {
+        throw new NotFoundException(
+          'Make sure the section is not null or undefined on all categories',
+        );
+      }
       const categoryEntity = new Category(
         record.category.title,
         inspectionPlan,
-        section,
+        null,
       );
       let category: Category;
       if (

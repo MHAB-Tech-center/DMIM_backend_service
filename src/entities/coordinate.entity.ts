@@ -1,11 +1,15 @@
 import { BaseEntity } from 'src/db/base-entity';
-import { Entity } from 'typeorm';
+import { Column, Entity } from 'typeorm';
 
 @Entity('coordinates')
 export class Coordinate extends BaseEntity {
+  @Column()
   utm_east: string;
+  @Column()
   dms_east: string;
+  @Column()
   utm_south: string;
+  @Column()
   dms_south: string;
   constructor(
     utm_east: string,

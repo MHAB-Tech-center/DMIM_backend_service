@@ -8,11 +8,13 @@ import {
   UnauthorizedException,
   BadRequestException,
 } from '@nestjs/common';
+import { TokenExpiredError } from '@nestjs/jwt';
 import { Response } from 'express';
 
 @Catch()
 export class CustomExceptionFilter implements ExceptionFilter {
   catch(exception: any, host: ArgumentsHost) {
+    console.log(exception);
     const ctx = host.switchToHttp();
     const response = ctx.getResponse<Response>();
     let status = HttpStatus.INTERNAL_SERVER_ERROR; // Default status code
@@ -31,6 +33,9 @@ export class CustomExceptionFilter implements ExceptionFilter {
       message = exception.message;
     } else if (exception instanceof HttpException) {
       status = exception.getStatus();
+    } else if (exception instanceof TokenExpiredError) {
+      status = 401;
+      message = exception.message;
     }
 
     response.status(status).json({

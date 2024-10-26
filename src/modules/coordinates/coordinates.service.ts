@@ -11,7 +11,7 @@ export class CoordinatesService {
     private readonly coordinateRepository: Repository<Coordinate>,
   ) {}
 
-  async coordinateExists(coordinate: Coordinate) {
+  async coordinateExists(coordinate: CreateCoordinateDTO) {
     const coordinateAvailable = await this.coordinateRepository.findOne({
       where: {
         utm_east: coordinate.utm_east,
@@ -23,6 +23,7 @@ export class CoordinatesService {
     return !!coordinateAvailable;
   }
   async getAvailableCoordinate(coordinate: Coordinate) {
+    console.log(coordinate);
     const coordinateAvailable = await this.coordinateRepository.findOne({
       where: {
         utm_east: coordinate.utm_east,
@@ -35,7 +36,8 @@ export class CoordinatesService {
   }
   async saveCoordinate(dto: CreateCoordinateDTO) {
     let coordinates: Coordinate;
-    if (await this.coordinateExists(coordinates)) {
+
+    if (await this.coordinateExists(dto)) {
       coordinates = await this.getAvailableCoordinate(coordinates);
     } else {
       coordinates = new Coordinate(

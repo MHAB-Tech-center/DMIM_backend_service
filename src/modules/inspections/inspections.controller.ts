@@ -30,10 +30,11 @@ export class InspectionsController {
   constructor(private inspectionsService: InspectionsService) {}
 
   @Post('inspection-records/create')
+  @Public()
   async createInspectionRecords(
     @Body() dto: CreateInspectionDTO,
   ): Promise<ApiResponse> {
-    return this.inspectionsService.create(dto);
+    return await this.inspectionsService.create(dto);
   }
   @Public()
   @Post('inspection-plan/create')
