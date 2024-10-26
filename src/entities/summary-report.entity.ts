@@ -1,10 +1,13 @@
 import { BaseEntity } from 'src/db/base-entity';
-import { Entity } from 'typeorm';
+import { Column, Entity } from 'typeorm';
 
 @Entity('summary-reports')
 export class SummaryReport extends BaseEntity {
+  @Column({ nullable: true })
   mainProblems: string;
+  @Column({ nullable: true })
   proposedRemedialActions: string;
+  @Column({ nullable: true })
   certificationStaus: string;
   constructor(
     mainProblems: string,
