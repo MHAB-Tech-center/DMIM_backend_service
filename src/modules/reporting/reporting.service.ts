@@ -13,7 +13,7 @@ export class ReportingService {
 
   async getInspectionsReport(planId: UUID, response: Response) {
     const categories =
-      await this.inspectionsService.getCategoriesInspectionPlan(planId);
+      await this.inspectionsService.getCategoriesReportInspectionPlan(planId);
     const inspectionPlan = await this.inspectionsService.getInspectionPlan(
       planId,
     );
