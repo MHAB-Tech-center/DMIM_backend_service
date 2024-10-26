@@ -2,6 +2,7 @@ import {
   BadRequestException,
   Injectable,
   NotFoundException,
+  UseFilters,
 } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { UUID } from 'crypto';
@@ -91,16 +92,11 @@ export class SectionsService {
     });
   }
   async findSectionById(id: UUID) {
-    const section = await this.sectionRepository.findOne({
+    return await this.sectionRepository.findOne({
       where: {
         id: id,
       },
     });
-    if (!section)
-      throw new NotFoundException(
-        'The section with the provided id is not found',
-      );
-    return section;
   }
 
   async getAllSections() {
