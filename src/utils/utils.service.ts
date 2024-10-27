@@ -21,7 +21,7 @@ import { InspectionRecord } from 'src/entities/inspection-record.entity';
 import { Profile } from 'src/entities/profile.entity';
 import { Role } from 'src/entities/role.entity';
 import { SummaryReport } from 'src/entities/summary-report.entity';
-import { RoleService } from 'src/modules/roles/role.service';
+import { RoleService } from 'src/modules/roles/roles.service';
 import { UsersService } from 'src/modules/users/users.service';
 
 @Injectable()

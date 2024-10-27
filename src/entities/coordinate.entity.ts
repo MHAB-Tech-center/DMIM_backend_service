@@ -1,5 +1,6 @@
 import { BaseEntity } from 'src/db/base-entity';
-import { Column, Entity } from 'typeorm';
+import { Column, Entity, OneToMany } from 'typeorm';
+import { InspectionIdentification } from './inspection-identification.entity';
 
 @Entity('coordinates')
 export class Coordinate extends BaseEntity {
@@ -11,6 +12,12 @@ export class Coordinate extends BaseEntity {
   utm_south: string;
   @Column()
   dms_south: string;
+  @OneToMany(
+    () => InspectionIdentification,
+    (identification) => identification.coordinates,
+    { eager: false },
+  )
+  identifications: InspectionIdentification[];
   constructor(
     utm_east: string,
     dms_east: string,

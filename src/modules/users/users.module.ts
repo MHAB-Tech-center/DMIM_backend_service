@@ -13,8 +13,8 @@ import { UsersService } from './users.service';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { UtilsModule } from 'src/utils/utils.module';
 import { JwtModule } from '@nestjs/jwt';
-import { RoleModule } from '../roles/role.module';
 import { Profile } from 'src/entities/profile.entity';
+import { RoleModule } from '../roles/roles.module';
 
 @Global()
 @Module({

@@ -5,7 +5,7 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { JwtModule } from '@nestjs/jwt';
 import { UtilsModule } from 'src/utils/utils.module';
 import { RMBStaffMember } from 'src/entities/RMBStaffMember.entity';
-import { RoleModule } from '../roles/role.module';
+import { RoleModule } from '../roles/roles.module';
 
 @Module({
   providers: [RmbService],

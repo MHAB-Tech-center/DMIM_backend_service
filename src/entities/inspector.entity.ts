@@ -2,6 +2,7 @@ import { Entity, JoinColumn, ManyToOne } from 'typeorm';
 import { Person } from './person.entity';
 import { MineSite } from './minesite.entity';
 import { EInspectorRole } from 'src/common/Enum/EInspectorRole.enum';
+import { docs } from 'googleapis/build/src/apis/docs';
 
 @Entity('inspectors')
 export class Inspector extends Person {
@@ -23,9 +24,16 @@ export class Inspector extends Person {
     province: string,
     district: string,
   ) {
-    super(firstName, lastName, email, dob, phoneNumber, nationalId);
+    super(
+      firstName,
+      lastName,
+      email,
+      dob,
+      phoneNumber,
+      nationalId,
+      province,
+      district,
+    );
     this.role = role;
-    this.province = province;
-    this.district = district;
   }
 }

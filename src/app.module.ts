@@ -22,8 +22,6 @@ import { UtilsModule } from './utils/utils.module';
 import { RolesGuard } from './modules/auth/guards/roles.guard';
 import { APP_GUARD } from '@nestjs/core';
 import { JwtModule } from '@nestjs/jwt';
-import { RoleService } from './modules/roles/role.service';
-import { RoleModule } from './modules/roles/role.module';
 import { Inspector } from './entities/inspector.entity';
 import { Company } from './entities/company.entity';
 import { MineSite } from './entities/minesite.entity';
@@ -48,6 +46,12 @@ import { InspectionReview } from './entities/inspection-review.entity';
 import { SummaryReport } from './entities/summary-report.entity';
 import { CoordinatesModule } from './modules/coordinates/coordinates.module';
 import { Coordinate } from './entities/coordinate.entity';
+import { RoleModule } from './modules/roles/roles.module';
+import { RoleService } from './modules/roles/roles.service';
+import { RMBRole } from './entities/RMBRole.entity';
+import { SystemFeature } from './entities/system-feature.entity';
+import { FeaturesModule } from './modules/features/features.module';
+import { RmbStaffModule } from './modules/rmb-staff/rmb-staff.module';
 
 @Module({
   imports: [
@@ -77,6 +81,8 @@ import { Coordinate } from './entities/coordinate.entity';
           InspectionReview,
           Coordinate,
           SummaryReport,
+          RMBRole,
+          SystemFeature,
         ],
         synchronize: true,
       }),
@@ -108,6 +114,8 @@ import { Coordinate } from './entities/coordinate.entity';
     ReportingModule,
     ReviewsModule,
     CoordinatesModule,
+    FeaturesModule,
+    RmbStaffModule,
   ],
   controllers: [AuthController, HomeController],
   providers: [{ provide: APP_GUARD, useClass: RolesGuard }],
