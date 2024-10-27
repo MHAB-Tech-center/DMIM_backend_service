@@ -50,6 +50,12 @@ export class InspectorsController {
   ): Promise<ApiResponse> {
     return this.inspectorService.create(body, file);
   }
+  @Post('invite')
+  @Public()
+  // @Roles('ADMIN')
+  async inviteInspector(@Body() dto: InviteUser): Promise<ApiResponse> {
+    return this.inspectorService.inviteInspector(dto);
+  }
 
   // Update an inspector's details
   @Put('/update/:id')
@@ -59,12 +65,6 @@ export class InspectorsController {
     @Body() dto: CreateInspectorDTO,
   ): Promise<ApiResponse> {
     return this.inspectorService.update(id, dto);
-  }
-  @Post('invite')
-  @Public()
-  // @Roles('ADMIN')
-  async inviteInspector(@Body() dto: InviteUser): Promise<ApiResponse> {
-    return this.inspectorService.inviteInspector(dto);
   }
 
   // Get inspector by ID

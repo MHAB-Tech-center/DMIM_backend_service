@@ -14,13 +14,13 @@ import { MailingService } from 'src/integrations/mailing/mailing.service';
 import { UtilsService } from 'src/utils/utils.service';
 import { Repository } from 'typeorm';
 import { CreateRMBStaffDTO } from './dtos/createRMBStaff.dto';
-import { RoleService } from '../roles/role.service';
 import { Profile } from 'src/entities/profile.entity';
 import { UsersService } from '../users/users.service';
 import { InviteUser } from 'src/common/dtos/invite-user.dto';
 import { ApiResponse } from 'src/common/payload/ApiResponse';
 import { CloudinaryService } from '../cloudinary/cloudinary.service';
 import { Role } from 'src/entities/role.entity';
+import { RoleService } from '../roles/roles.service';
 
 @Injectable()
 export class RmbService {
@@ -30,7 +30,6 @@ export class RmbService {
     @Inject(forwardRef(() => UtilsService))
     private utilsService: UtilsService,
     private mailingService: MailingService,
-    private roleService: RoleService,
     private userService: UsersService,
     private cloudinary: CloudinaryService,
   ) {}
@@ -52,8 +51,16 @@ export class RmbService {
     return user;
   }
   async create(body: CreateRMBStaffDTO, file: Express.Multer.File) {
-    let { firstName, lastName, email, national_id, password, phonenumber } =
-      body;
+    let {
+      firstName,
+      lastName,
+      email,
+      national_id,
+      password,
+      phonenumber,
+      province,
+      district,
+    } = body;
 
     const userFetched = await this.rmbRepo.findOne({
       where: {
@@ -79,6 +86,8 @@ export class RmbService {
         new Date(),
         phonenumber,
         national_id,
+        province,
+        district,
       );
       const profile: Profile = await this.userService.getOneByEmail(email);
       profile.profile_pic = pictureUrl.url;

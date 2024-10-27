@@ -11,7 +11,6 @@ import { Inspector } from 'src/entities/inspector.entity';
 import { Repository } from 'typeorm';
 import { MailingService } from 'src/integrations/mailing/mailing.service';
 import { UtilsService } from 'src/utils/utils.service';
-import { RoleService } from '../roles/role.service';
 import { UsersService } from '../users/users.service';
 import { CreateInspectorDTO } from './dtos/createInspector.dto';
 import { Profile } from 'src/entities/profile.entity';
@@ -22,6 +21,7 @@ import { MinesiteService } from '../minesite/minesite.service';
 import { CloudinaryService } from '../cloudinary/cloudinary.service';
 import { EAccountStatus } from 'src/common/Enum/EAccountStatus.enum';
 import { ERole } from 'src/common/Enum/ERole.enum';
+import { RoleService } from '../roles/roles.service';
 
 @Injectable()
 export class InspectorsService {
