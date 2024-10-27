@@ -32,7 +32,9 @@ export class InspectionIdentification extends BaseEntity {
   responsiblePersonTitle: string;
   @Column({ nullable: true })
   responsiblePersonContact: string;
-  @ManyToOne(() => Coordinate)
+  @ManyToOne(() => Coordinate, (coordinates) => coordinates.identifications, {
+    eager: true,
+  })
   coordinates: Coordinate;
 
   constructor(

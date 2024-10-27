@@ -126,7 +126,7 @@ export class RMBStaffService {
     profile.activationCode = this.userService.generateRandomFourDigitNumber();
     profile = await this.userService.saveExistingProfile(profile, role);
     await this.mailingService.sendEmail(
-      '',
+      `rmb-dmim://signup?email=${profile.email.toString()}`,
       'invite-rmb',
       profile.email.toString(),
       profile,

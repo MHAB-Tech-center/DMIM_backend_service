@@ -150,7 +150,7 @@ export class InspectorsService {
     profile.activationCode = this.userService.generateRandomFourDigitNumber();
     await this.userService.saveExistingProfile(profile, role);
     await this.mailingService.sendEmail(
-      '',
+      profile.email.toString(),
       'invite-inspector',
       profile.email.toString(),
       profile,
