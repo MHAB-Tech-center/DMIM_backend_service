@@ -30,8 +30,9 @@ export class ReportingService {
     ];
     let data: any = [];
     let id = 1;
-    categories.forEach((category: Category) => {
+    categories.forEach((category: any) => {
       category.records.forEach((record: InspectionRecord) => {
+        console.log(category.section.title);
         id++;
         data = [
           id,

@@ -294,9 +294,6 @@ export class InspectionsService {
         'inspectionPlan.summaryReport',
       ],
     });
-    categoryList.forEach((category: Category) => {
-      category.inspectionPlan = null;
-    });
     return categoryList;
   }
   async getCategoriesInspectionPlan(

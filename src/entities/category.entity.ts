@@ -16,8 +16,6 @@ export class Category extends BaseEntity {
   @ManyToOne(() => Section)
   @JoinColumn({ name: 'section_id' })
   section: Section;
-  // @OneToMany(() => Notification, (notification) => notification.miningCompany)
-  // notifications: Notification[];
 
   @OneToMany(() => InspectionRecord, (record) => record.category)
   records: InspectionRecord[];
