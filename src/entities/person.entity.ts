@@ -25,9 +25,6 @@ export abstract class Person extends BaseEntity {
   @Column({ type: 'date', name: 'dob' })
   dob: Date;
 
-  //   @Column({ type: 'enum', enum: EGender })
-  //   gender: EGender;
-
   @Column({ name: 'phone_number' })
   phoneNumber: string;
 
@@ -42,28 +39,24 @@ export abstract class Person extends BaseEntity {
   @Column({ nullable: true })
   district: string;
 
-  //   @Column({ type: 'enum', enum: EVisibility, default: EVisibility.VISIBLE })
-  //   visibility: EVisibility;
-
-  //   @Column({ type: 'enum', enum: ERecordStatus, default: ERecordStatus.ACTIVE })
-  //   status: ERecordStatus;
-
   constructor(
     firstName: string,
     lastName: string,
     email: string,
     dob: Date,
-    // gender: EGender,
     phoneNumber: string,
     nationalId: string,
+    province: string,
+    district: string,
   ) {
     super();
     this.firstName = firstName;
     this.lastName = lastName;
     this.email = email;
     this.dob = dob;
-    // this.gender = gender;
     this.phoneNumber = phoneNumber;
     this.nationalId = nationalId;
+    this.province = province;
+    this.district = district;
   }
 }

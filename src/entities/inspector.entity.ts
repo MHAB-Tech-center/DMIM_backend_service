@@ -22,9 +22,16 @@ export class Inspector extends Person {
     province: string,
     district: string,
   ) {
-    super(firstName, lastName, email, dob, phoneNumber, nationalId);
+    super(
+      firstName,
+      lastName,
+      email,
+      dob,
+      phoneNumber,
+      nationalId,
+      province,
+      district,
+    );
     this.role = role;
-    this.province = province;
-    this.district = district;
   }
 }

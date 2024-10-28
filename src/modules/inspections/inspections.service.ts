@@ -269,6 +269,7 @@ export class InspectionsService {
           'minesiteInfo',
           'inspectorInfo',
           'identification',
+          'identification.coordinates',
           'summaryReport',
         ],
       });
@@ -307,9 +308,6 @@ export class InspectionsService {
       },
       relations: ['section', 'records'],
     });
-    // categoryList.forEach((category: Category) => {
-    //   delete category.inspectionPlan;
-    // });
     const inspectionsResponse = new InspectionsResponseDTO(
       inspectionPlan.identification,
       categoryList,

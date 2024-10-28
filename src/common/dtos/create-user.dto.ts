@@ -59,6 +59,7 @@ export class CreateUserDto {
     description: 'Profile picture',
     type: 'string',
     format: 'binary',
+    required: false,
   })
   picture: Express.Multer.File;
 }

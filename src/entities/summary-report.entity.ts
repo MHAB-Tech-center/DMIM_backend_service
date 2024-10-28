@@ -8,7 +8,7 @@ export class SummaryReport extends BaseEntity {
   @Column({ nullable: true })
   proposedRemedialActions: string;
   @Column({ nullable: true })
-  certificationStaus: string;
+  certificationStatus: string;
   constructor(
     mainProblems: string,
     proposedRemedialActions: string,
@@ -17,6 +17,6 @@ export class SummaryReport extends BaseEntity {
     super();
     this.mainProblems = mainProblems;
     this.proposedRemedialActions = proposedRemedialActions;
-    this.certificationStaus = certificationStaus;
+    this.certificationStatus = certificationStaus;
   }
 }

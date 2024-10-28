@@ -4,7 +4,7 @@ import { InspectorsController } from './inspectors.controller';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { Inspector } from 'src/entities/inspector.entity';
 import { UtilsModule } from 'src/utils/utils.module';
-import { RoleModule } from '../roles/role.module';
+import { RoleModule } from '../roles/roles.module';
 
 @Global()
 @Module({

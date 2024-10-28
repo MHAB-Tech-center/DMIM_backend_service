@@ -24,13 +24,13 @@ import { CreateUserDto } from 'src/common/dtos/create-user.dto';
 import { UUID } from 'crypto';
 import { EUserType } from 'src/common/Enum/EUserType.enum';
 import { MailingService } from 'src/integrations/mailing/mailing.service';
-import { RoleService } from '../roles/role.service';
 import { Profile } from 'src/entities/profile.entity';
 import * as bcrypt from 'bcrypt';
 import { VerifyLoginDTO } from 'src/common/dtos/verify-login.dto';
 import { ELoginStatus } from 'src/common/Enum/ELoginStatus.enum';
 import { ApiResponse } from 'src/common/payload/ApiResponse';
 import { Role } from 'src/entities/role.entity';
+import { RoleService } from '../roles/roles.service';
 
 @Injectable()
 export class UsersService {
