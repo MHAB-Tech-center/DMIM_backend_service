@@ -254,9 +254,8 @@ export class InspectionsService {
     );
   }
   async getInspectionPlanByStatus(status: string) {
-    const inspectionStatus: string = await this.utilService.getInspectionStatus(
-      status,
-    );
+    const inspectionStatus: EInspectionStatus =
+      await this.utilService.getInspectionStatus(status);
     const inspectionPlans = await this.inspectionPlanRepository.find({
       where: { status: inspectionStatus },
     });
@@ -319,6 +318,160 @@ export class InspectionsService {
     );
     return inspectionsResponse;
   }
+
+  async countAllPlansByProvince(province: string): Promise<number> {
+    return await this.inspectionPlanRepository.count({
+      where: { minesiteInfo: { province: province } },
+    });
+  }
+  async getCategoriesFilteredByAll(
+    status: EInspectionStatus,
+    district: string,
+    province: string,
+    year: number,
+    planId: UUID,
+  ): Promise<InspectionsResponseDTO> {
+    const inspectionPlan: any = await this.getInspectionPlan(planId);
+    const categoryList: Category[] = await this.categoryRepository.find({
+      where: {
+        inspectionPlan: {
+          id: inspectionPlan.id,
+          year: year,
+          status: status,
+          minesiteInfo: { province: province, district: district },
+        },
+      },
+      relations: ['section', 'records'],
+    });
+    const inspectionsResponse = new InspectionsResponseDTO(
+      inspectionPlan.identification,
+      categoryList,
+      inspectionPlan.id,
+      inspectionPlan.summaryReport,
+    );
+    return inspectionsResponse;
+  }
+
+  async getReportsFilteredByAllPaginated(
+    status: EInspectionStatus,
+    district: string,
+    province: string,
+    year: number,
+    page: number,
+    limit: number,
+  ): Promise<any> {
+    page = Math.max(1, page);
+    const inspectionPlans: InspectionPlan[] =
+      await this.inspectionPlanRepository.find({
+        where: {
+          year: year,
+          status: status,
+          minesiteInfo: { province: province, district: district },
+        },
+        take: limit,
+        skip: (page - 1) * limit,
+        relations: ['minesiteInfo', 'inspectorInfo'],
+      });
+    const meta = this.utilService.paginator({
+      page,
+      limit,
+      total: inspectionPlans.length,
+    });
+    return { inspectionPlans, meta };
+  }
+
+  async getReportsFilteredByAllForLoggedInInspector(
+    status: EInspectionStatus,
+    request: Request,
+  ): Promise<any> {
+    const inspector = await this.inspectorService.getLoggedInInspector(request);
+    const inspectionPlans: InspectionPlan[] =
+      await this.inspectionPlanRepository.find({
+        where: {
+          status: status,
+          inspectorInfo: { id: inspector.id },
+        },
+        relations: ['minesiteInfo', 'inspectorInfo'],
+      });
+    return inspectionPlans;
+  }
+  async countReportsForLoggedInInspector(request: Request): Promise<number> {
+    const inspector = await this.inspectorService.getLoggedInInspector(request);
+    return await this.inspectionPlanRepository.count({
+      where: { inspectorInfo: { id: inspector.id } },
+    });
+  }
+  async getCurrentPlanForLoggedInInspector(
+    request: Request,
+  ): Promise<InspectionPlan> {
+    const inspector = await this.inspectorService.getLoggedInInspector(request);
+    return await this.inspectionPlanRepository.findOne({
+      where: {
+        inspectorInfo: { id: inspector.id },
+        status: EInspectionStatus.IN_PROGRESS,
+      },
+    });
+  }
+
+  async getMyCategoriesFilteredByAll(
+    status: EInspectionStatus,
+    district: string,
+    province: string,
+    year: number,
+    planId: UUID,
+    request: Request,
+  ): Promise<InspectionsResponseDTO> {
+    const inspectionPlan: any = await this.getInspectionPlan(planId);
+    const inspector: Inspector =
+      await this.inspectorService.getLoggedInInspector(request);
+    const categoryList: Category[] = await this.categoryRepository.find({
+      where: {
+        inspectionPlan: {
+          id: inspectionPlan.id,
+          year: year,
+          status: status,
+          minesiteInfo: { province: province, district: district },
+          inspectorInfo: { id: inspector.id },
+        },
+      },
+      relations: ['section', 'records'],
+    });
+    const inspectionsResponse = new InspectionsResponseDTO(
+      inspectionPlan.identification,
+      categoryList,
+      inspectionPlan.id,
+      inspectionPlan.summaryReport,
+    );
+    return inspectionsResponse;
+  }
+
+  async getMyCategoriesFilteredByStatus(
+    status: EInspectionStatus,
+    planId: UUID,
+    request: Request,
+  ): Promise<InspectionsResponseDTO> {
+    const inspectionPlan: any = await this.getInspectionPlan(planId);
+    const inspector: Inspector =
+      await this.inspectorService.getLoggedInInspector(request);
+    const categoryList: Category[] = await this.categoryRepository.find({
+      where: {
+        inspectionPlan: {
+          id: inspectionPlan.id,
+          status: status,
+          inspectorInfo: { id: inspector.id },
+        },
+      },
+      relations: ['section', 'records'],
+    });
+    const inspectionsResponse = new InspectionsResponseDTO(
+      inspectionPlan.identification,
+      categoryList,
+      inspectionPlan.id,
+      inspectionPlan.summaryReport,
+    );
+    return inspectionsResponse;
+  }
+
   async getRecordsByCategory(categoryId: UUID): Promise<ApiResponse> {
     const category: any = await this.categoryService.findById(categoryId);
     const records: InspectionRecord[] = await this.recordRepository.find({

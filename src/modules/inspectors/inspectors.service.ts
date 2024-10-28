@@ -22,6 +22,7 @@ import { MinesiteService } from '../minesite/minesite.service';
 import { CloudinaryService } from '../cloudinary/cloudinary.service';
 import { EAccountStatus } from 'src/common/Enum/EAccountStatus.enum';
 import { ERole } from 'src/common/Enum/ERole.enum';
+import { Request } from 'express';
 
 @Injectable()
 export class InspectorsService {
@@ -161,6 +162,13 @@ export class InspectorsService {
       null,
     );
   }
+
+  async getLoggedInInspector(request: Request) {
+    const loggedInUser: Profile = await this.utilsService.getLoggedInProfile(
+      request,
+    );
+    return await this.findByEmail(loggedInUser.email.toString());
+  }
   async getById(id: UUID) {
     const rmbMember = await this.inspectorRepo.findOne({
       where: {
@@ -172,6 +180,11 @@ export class InspectorsService {
         'The Inspector with the provided id is not found',
       );
     return rmbMember;
+  }
+  async countAllByProvince(province: string): Promise<number> {
+    return await this.inspectorRepo.count({
+      where: { province: province },
+    });
   }
   async findById(id: UUID) {
     const inspector = await this.inspectorRepo.findOne({

@@ -23,7 +23,12 @@ export class MinesiteService {
       throw new BadRequestException(
         'The minesite with the provided Id is already registered',
       );
-    const minesite = new MineSite(dto.name, dto.code);
+    const minesite = new MineSite(
+      dto.name,
+      dto.code,
+      dto.province,
+      dto.district,
+    );
     const createdMinesite = await this.minesiteRepository.save(minesite);
     return new ApiResponse(
       true,
