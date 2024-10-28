@@ -134,6 +134,7 @@ export class UsersService {
       this.user.activationCode == null
     )
       throw new BadRequestException('Invalid activation code');
+
     const tokens = this.utilsService.getTokens(this.user);
     this.user.loginStatus = ELoginStatus[ELoginStatus.VERIFIED];
     await this.userRepo.save(this.user);

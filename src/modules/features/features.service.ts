@@ -28,11 +28,11 @@ export class SystemFeatureService {
   }
 
   async createSystemFeature(
-    createSystemFeatureDto: CreateSystemFeatureDTO,
+    dto: CreateSystemFeatureDTO,
   ): Promise<SystemFeature> {
-    const systemFeature = this.systemFeatureRepository.create(
-      createSystemFeatureDto,
-    );
+    const systemFeature = this.systemFeatureRepository.create({
+      name: dto.name,
+    });
     return await this.systemFeatureRepository.save(systemFeature);
   }
 
@@ -67,7 +67,16 @@ export class SystemFeatureService {
 
     return 'System feature deleted successfully';
   }
-
+  async findFeatureById(id: UUID) {
+    const feature = await this.systemFeatureRepository.findOne({
+      where: { id: id },
+    });
+    if (!feature)
+      throw new NotFoundException(
+        'The system feature with the provided id is not found',
+      );
+    return feature;
+  }
   async getSystemFeatures(): Promise<SystemFeature[]> {
     return await this.systemFeatureRepository.find({});
   }

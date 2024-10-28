@@ -15,12 +15,14 @@ import { UUID } from 'crypto';
 import { CreateMultipleFeaturesDTO } from './dtos/ceratee-features.dto';
 import { ApiTags } from '@nestjs/swagger';
 import { CustomExceptionFilter } from 'src/exceptions/CustomExceptionFilter';
+import { Public } from 'src/decorators/public.decorator';
 @Controller('features')
 @ApiTags('features')
 @UseFilters(CustomExceptionFilter)
 export class FeaturesController {
   constructor(private featureService: SystemFeatureService) {}
   @Get('all')
+  @Public()
   async getSystemFeatures(): Promise<ApiResponse> {
     return new ApiResponse(
       true,
@@ -50,7 +52,7 @@ export class FeaturesController {
   }
   @Put('update/:id')
   async updateSystemFeature(
-    id: UUID,
+    @Param('id') id: UUID,
     @Body() dto: CreateSystemFeatureDTO,
   ): Promise<ApiResponse> {
     return new ApiResponse(
@@ -59,7 +61,7 @@ export class FeaturesController {
       await this.featureService.updateSystemFeature(id, dto),
     );
   }
-  @Delete('/:id')
+  @Delete('delete/:id')
   async deleteSystemFeature(@Param('id') id: UUID): Promise<ApiResponse> {
     return new ApiResponse(
       true,

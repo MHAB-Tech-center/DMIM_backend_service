@@ -38,14 +38,14 @@ export class UtilsService {
     user: Profile,
   ): Promise<{ accessToken: String; refreshToken: String }> {
     const accessToken: String = await this.jwt.signAsync(
-      { roles: user.roles, id: user.id },
+      { roles: user.roles, email: user.email },
       {
         expiresIn: '3h',
         secret: this.config.get('SECRET_KEY'),
       },
     );
     const refreshToken: String = await this.jwt.signAsync(
-      { roles: user.roles, id: user.id },
+      { roles: user.roles, email: user.email },
       {
         expiresIn: '1d',
         secret: this.config.get('SECRET_KEY'),
