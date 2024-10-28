@@ -1,14 +1,6 @@
-import {
-  Entity,
-  Column,
-  PrimaryGeneratedColumn,
-  ManyToMany,
-  JoinTable,
-  BaseEntity,
-} from 'typeorm';
-import { SystemFeature } from './system-feature.entity';
+import { Entity, Column, PrimaryGeneratedColumn, BaseEntity } from 'typeorm';
 
-@Entity({ name: 'rtb_roles' })
+@Entity({ name: 'rmb_roles' })
 export class RMBRole extends BaseEntity {
   @PrimaryGeneratedColumn('uuid')
   id: string;
@@ -20,17 +12,8 @@ export class RMBRole extends BaseEntity {
 
   @Column({ name: 'role_description', nullable: true })
   roleDescription: string;
-
-  @ManyToMany(() => SystemFeature, { cascade: true, eager: true })
-  @JoinTable({
-    name: 'rtb_role_system_features',
-    joinColumn: { name: 'rtb_role_id', referencedColumnName: 'id' },
-    inverseJoinColumn: {
-      name: 'system_feature_id',
-      referencedColumnName: 'id',
-    },
-  })
-  systemFeatures: SystemFeature[];
+  @Column()
+  systemFeatures: string;
 
   constructor(rtbRoleName: string, roleDescription: string) {
     super();

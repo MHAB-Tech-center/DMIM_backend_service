@@ -19,8 +19,10 @@ import { InviteUser } from 'src/common/dtos/invite-user.dto';
 import { ERole } from 'src/common/Enum/ERole.enum';
 import { Profile } from 'src/entities/profile.entity';
 import { UtilsService } from 'src/utils/utils.service';
-import { CreateRMBStaffDTO } from '../rmb/dtos/createRMBStaff.dto';
 import { CloudinaryService } from '../cloudinary/cloudinary.service';
+import { CreateRMBStaffMemberDTO } from './dtos/create-rmb-member.dto';
+import { AssignFeaturesDTO } from './dtos/assignFeatures.dto';
+import { SystemFeatureService } from '../features/features.service';
 
 @Injectable()
 export class RMBStaffService {
@@ -55,22 +57,17 @@ export class RMBStaffService {
   }
 
   async findById(id: UUID): Promise<RMBStaffMember> {
-    return this.rmbStaffRepository
-      .findOne({ where: { id: id } })
-      .then((member) => {
-        if (!member) throw new NotFoundException(`RTB Staff Member not found`);
-        return member;
-      });
+    const member: RMBStaffMember = await this.rmbStaffRepository.findOne({
+      where: { id: id },
+      relations: ['rmbRole'],
+    });
+    if (!member) throw new NotFoundException(`RTB Staff Member not found`);
+    return member;
   }
-
-  async findByUser(userId: UUID): Promise<RMBStaffMember> {
-    return this.findById(userId);
-  }
-
   async save(member: RMBStaffMember): Promise<RMBStaffMember> {
     return await this.rmbStaffRepository.save(member);
   }
-  async create(body: CreateRMBStaffDTO, file: Express.Multer.File) {
+  async create(body: CreateRMBStaffMemberDTO, file: Express.Multer.File) {
     let {
       firstName,
       lastName,
@@ -142,11 +139,12 @@ export class RMBStaffService {
   async addRMBRole(
     roleName: string,
     roleDescription: string,
-    featureIds: string[],
+    features: string[],
   ): Promise<RMBRole> {
-    const systemFeatures = await this.systemFeatureRepository.findByIds(
-      featureIds,
-    );
+    let systemFeatures: string = '';
+    features.forEach((feature: string) => {
+      systemFeatures += `,${feature}`;
+    });
     const rtbRole = this.rmbRoleRepository.create({
       rtbRoleName: roleName,
       roleDescription,
@@ -163,16 +161,19 @@ export class RMBStaffService {
     id: UUID,
     roleName: string,
     roleDescription: string,
-    featureIds: string[],
+    features: string[],
   ): Promise<RMBRole> {
     const rtbRole = await this.rmbRoleRepository.findOne({ where: { id: id } });
     if (!rtbRole) throw new NotFoundException('RTB Role not found');
-
+    let systemFeatures: string = rtbRole.systemFeatures;
+    features.forEach((feature: string) => {
+      if (!systemFeatures.split(',').includes(feature)) {
+        systemFeatures += `,${feature}`;
+      }
+    });
     rtbRole.rtbRoleName = roleName;
     rtbRole.roleDescription = roleDescription;
-    rtbRole.systemFeatures = await this.systemFeatureRepository.findByIds(
-      featureIds,
-    );
+    rtbRole.systemFeatures = systemFeatures;
     return this.rmbRoleRepository.save(rtbRole);
   }
 
@@ -196,6 +197,24 @@ export class RMBStaffService {
 
     rtbStaffMember.rmbRole = rtbRole;
     return this.rmbStaffRepository.save(rtbStaffMember);
+  }
+  async findRoleById(id: UUID) {
+    const rmbRole = await this.rmbRoleRepository.findOne({ where: { id: id } });
+    if (!rmbRole)
+      throw new NotFoundException('The role with the provided Id is not found');
+    return rmbRole;
+  }
+
+  async assignFeaturesToRole(dto: AssignFeaturesDTO): Promise<RMBRole> {
+    const rmbRole = await this.findRoleById(dto.roleId);
+    let features: string = rmbRole.systemFeatures;
+    dto.features.forEach((feature: string) => {
+      if (!features.split(',').includes(feature)) {
+        features += `,${feature}`;
+      }
+    });
+    rmbRole.systemFeatures = features;
+    return this.rmbRoleRepository.save(rmbRole);
   }
 
   async updateRMBStaffRole(

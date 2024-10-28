@@ -19,9 +19,9 @@ import { CreateRMBRoleDTO } from './dtos/create-rmb-role.dto';
 import { ApiConsumes, ApiQuery, ApiTags } from '@nestjs/swagger';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { Public } from 'src/decorators/public.decorator';
-import { CreateRMBStaffDTO } from '../rmb/dtos/createRMBStaff.dto';
 import { InviteUser } from 'src/common/dtos/invite-user.dto';
 import { CustomExceptionFilter } from 'src/exceptions/CustomExceptionFilter';
+import { CreateRMBStaffMemberDTO } from './dtos/create-rmb-member.dto';
 
 @Controller('rmb-staff')
 @ApiTags('rmb-staff')
@@ -34,7 +34,7 @@ export class RmbStaffController {
   @ApiConsumes('multipart/form-data')
   @Public()
   async create(
-    @Body() body: CreateRMBStaffDTO,
+    @Body() body: CreateRMBStaffMemberDTO,
     @UploadedFile() file: Express.Multer.File,
   ): Promise<ApiResponse> {
     return new ApiResponse(
@@ -43,9 +43,8 @@ export class RmbStaffController {
       await this.rmbStaffService.create(body, file),
     );
   }
-  @Post('invite')
   @Public()
-  // @Roles('ADMIN')
+  @Post('invite')
   async inviteInspector(@Body() dto: InviteUser): Promise<ApiResponse> {
     return new ApiResponse(
       true,
@@ -97,13 +96,13 @@ export class RmbStaffController {
     );
   }
 
-  @Get('by-profile')
+  @Get()
   @ApiQuery({ name: 'userId', required: true })
-  async findByUser(@Query('userId') userId: UUID): Promise<ApiResponse> {
+  async findByUser(@Query('userId') userId: any): Promise<ApiResponse> {
     return new ApiResponse(
       true,
-      'All rmb staff members were retrieved successfully',
-      await this.rmbStaffService.findByUser(userId),
+      'All rmb staff member was retrieved successfully',
+      await this.rmbStaffService.findById(userId),
     );
   }
   @Delete('/:id')
@@ -115,6 +114,7 @@ export class RmbStaffController {
     );
   }
   @Post('/roles/create')
+  @Public()
   async addRMBRole(@Body() dto: CreateRMBRoleDTO): Promise<ApiResponse> {
     return new ApiResponse(
       true,
@@ -160,6 +160,7 @@ export class RmbStaffController {
     );
   }
   @Put('assign-roles')
+  @Public()
   @ApiQuery({ name: 'rmbRoleId', required: true })
   @ApiQuery({ name: 'rmbStaffId', required: true })
   async assignRMBRole(
@@ -185,6 +186,7 @@ export class RmbStaffController {
   }
 
   @Patch('dissociate-role')
+  @Public()
   @ApiQuery({ name: 'rmbStaffId', required: true })
   async dissociateRMBRole(
     @Query('rmbStaffId') rmbStaffId: UUID,

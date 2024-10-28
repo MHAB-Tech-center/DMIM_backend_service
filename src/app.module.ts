@@ -29,7 +29,6 @@ import { Notification } from './entities/notification.entity';
 import { InspectionPlan } from './entities/InspectionPlan.entity';
 import { Profile } from './entities/profile.entity';
 import { InspectorsModule } from './modules/inspectors/inspectors.module';
-import { RmbModule } from './modules/rmb/rmb.module';
 import { RMBStaffMember } from './entities/RMBStaffMember.entity';
 import { MinesiteModule } from './modules/minesite/minesite.module';
 import { CloudinaryModule } from './modules/cloudinary/cloudinary.module';
@@ -105,7 +104,6 @@ import { AnalyticsModule } from './modules/analytics/analytics.module';
     AuthModule,
     FilesModule,
     UtilsModule,
-    RmbModule,
     CloudinaryModule,
     InspectorsModule,
     MinesiteModule,

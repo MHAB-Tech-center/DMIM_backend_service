@@ -11,12 +11,10 @@ import {
   Entity,
   PrimaryGeneratedColumn,
   Column,
-  JoinColumn,
   TableInheritance,
   ManyToMany,
   JoinTable,
 } from 'typeorm';
-import { EGender } from '../common/Enum/EGender.enum';
 import { EAccountStatus } from '../common/Enum/EAccountStatus.enum';
 import { Role } from 'src/entities/role.entity';
 import { InitiatorAudit } from 'src/audits/Initiator.audit';
@@ -26,7 +24,7 @@ import { ELoginStatus } from 'src/common/Enum/ELoginStatus.enum';
 @Entity('users')
 @TableInheritance({ column: { type: 'varchar', name: 'type' } })
 export class Profile extends InitiatorAudit {
-  @PrimaryGeneratedColumn()
+  @PrimaryGeneratedColumn('uuid')
   id: UUID;
 
   @Column({ unique: true })
@@ -45,7 +43,7 @@ export class Profile extends InitiatorAudit {
   profile_pic: string;
 
   @Column({
-    nullable: false,
+    nullable: true,
   })
   password: String;
 
