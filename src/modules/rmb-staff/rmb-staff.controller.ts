@@ -22,6 +22,7 @@ import { Public } from 'src/decorators/public.decorator';
 import { InviteUser } from 'src/common/dtos/invite-user.dto';
 import { CustomExceptionFilter } from 'src/exceptions/CustomExceptionFilter';
 import { CreateRMBStaffMemberDTO } from './dtos/create-rmb-member.dto';
+import { AssignFeaturesDTO } from './dtos/assignFeatures.dto';
 
 @Controller('rmb-staff')
 @ApiTags('rmb-staff')
@@ -171,6 +172,16 @@ export class RmbStaffController {
       true,
       'The roles have been assigned successfully',
       await this.rmbStaffService.assignRMBRole(rmbRoleId, rmbStaffId),
+    );
+  }
+  @Put('assign-featues')
+  async assignFeaturesToRole(
+    @Body() dto: AssignFeaturesDTO,
+  ): Promise<ApiResponse> {
+    return new ApiResponse(
+      true,
+      'Features have been assigned successfully',
+      await this.rmbStaffService.assignFeaturesToRole(dto),
     );
   }
   @Put('roles/update/:id')
