@@ -1,7 +1,7 @@
 import { Controller, Get, Req, UseFilters } from '@nestjs/common';
 import { AnalyticsService } from './analytics.service';
 import { ApiResponse } from 'src/common/payload/ApiResponse';
-import { ApiTags } from '@nestjs/swagger';
+import { ApiOperation, ApiTags } from '@nestjs/swagger';
 import { Request } from 'express';
 import { CustomExceptionFilter } from 'src/exceptions/CustomExceptionFilter';
 import { Public } from 'src/decorators/public.decorator';
@@ -12,6 +12,9 @@ import { Public } from 'src/decorators/public.decorator';
 export class AnalyticsController {
   constructor(private analyticsService: AnalyticsService) {}
   @Get('/inspector')
+  @ApiOperation({
+    description: 'This is or loggedIn inspectors only',
+  })
   @Public()
   async getInspectorDashBoard(@Req() request: Request): Promise<ApiResponse> {
     return new ApiResponse(
