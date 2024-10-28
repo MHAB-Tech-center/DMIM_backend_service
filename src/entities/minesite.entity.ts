@@ -15,18 +15,16 @@ export class MineSite extends InitiatorAudit {
   name: string;
 
   mineType: string;
+  @Column({ nullable: true })
+  province: string;
+  @Column({ nullable: true })
+  district: string;
 
-  //   @ManyToOne(() => Address, (address) => address.mineSites)
-  //   @JoinColumn({ name: 'address_id' })
-  //   address: Address;
-
-  @ManyToOne(() => Company)
-  @JoinColumn({ name: 'company_id' })
-  company: Company;
-
-  constructor(name: string, code: string) {
+  constructor(name: string, code: string, province: string, district: string) {
     super();
     this.name = name;
     this.code = code;
+    this.province = province;
+    this.district = district;
   }
 }

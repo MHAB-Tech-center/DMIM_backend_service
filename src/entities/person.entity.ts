@@ -37,8 +37,9 @@ export abstract class Person extends BaseEntity {
   @OneToOne(() => Profile)
   @JoinColumn({ name: 'profile_id' })
   profile: Profile;
-
+  @Column({ nullable: true })
   province: string;
+  @Column({ nullable: true })
   district: string;
 
   //   @Column({ type: 'enum', enum: EVisibility, default: EVisibility.VISIBLE })

@@ -32,11 +32,13 @@ export class InspectionPlan extends BaseEntity {
   startDate: Date;
   @Column({ nullable: true })
   endDate: Date;
+  @Column({ nullable: true })
+  year: number;
   @Column({
     name: 'status',
     nullable: true,
   })
-  status: string;
+  status: EInspectionStatus;
 
   @OneToMany(() => InspectionReview, (review) => review.inspectionPlan)
   reviews: InspectionReview[];

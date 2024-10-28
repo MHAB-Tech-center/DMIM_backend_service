@@ -48,6 +48,7 @@ import { InspectionReview } from './entities/inspection-review.entity';
 import { SummaryReport } from './entities/summary-report.entity';
 import { CoordinatesModule } from './modules/coordinates/coordinates.module';
 import { Coordinate } from './entities/coordinate.entity';
+import { AnalyticsModule } from './modules/analytics/analytics.module';
 
 @Module({
   imports: [
@@ -108,6 +109,7 @@ import { Coordinate } from './entities/coordinate.entity';
     ReportingModule,
     ReviewsModule,
     CoordinatesModule,
+    AnalyticsModule,
   ],
   controllers: [AuthController, HomeController],
   providers: [{ provide: APP_GUARD, useClass: RolesGuard }],

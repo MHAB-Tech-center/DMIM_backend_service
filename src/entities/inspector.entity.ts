@@ -1,7 +1,6 @@
 import { Entity, JoinColumn, ManyToOne } from 'typeorm';
 import { Person } from './person.entity';
 import { MineSite } from './minesite.entity';
-import { EInspectorRole } from 'src/common/Enum/EInspectorRole.enum';
 
 @Entity('inspectors')
 export class Inspector extends Person {

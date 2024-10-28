@@ -130,14 +130,14 @@ export class UtilsService {
     }
   }
 
-  getInspectionStatus(inspectionStatus: string): string {
+  getInspectionStatus(inspectionStatus: string): EInspectionStatus {
     switch (inspectionStatus.toLowerCase()) {
       case 'submitted':
-        return EInspectionStatus[EInspectionStatus.SUBMITTED];
+        return EInspectionStatus.SUBMITTED;
       case 'concluded':
-        return EInspectionStatus[EInspectionStatus.CONCLUDED];
+        return EInspectionStatus.CONCLUDED;
       case 'reviewed':
-        return EInspectionStatus[EInspectionStatus.REVIEWED];
+        return EInspectionStatus.REVIEWED;
       default:
         throw new BadRequestException(
           'The provided inspection status is invalid, should be in  [ submitted, concluded, reviewed]',
@@ -215,5 +215,17 @@ export class UtilsService {
       inspectionRecord.flagValue = 'NO';
     }
     return inspectionRecord;
+  }
+  paginator({ page, limit, total }: any) {
+    const lastPage = Math.ceil(total / limit);
+
+    return {
+      total,
+      lastPage,
+      currentPage: page,
+      perPage: limit,
+      prev: page > 1 ? page - 1 : null,
+      next: page < lastPage ? page + 1 : null,
+    };
   }
 }

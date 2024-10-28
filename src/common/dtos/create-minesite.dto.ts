@@ -11,4 +11,12 @@ export class CreateMineSiteDTO {
   @IsNotEmpty()
   @ApiProperty()
   code: string;
+  @IsString()
+  @IsNotEmpty()
+  @ApiProperty()
+  province: string;
+  @IsString()
+  @IsNotEmpty()
+  @ApiProperty()
+  district: string;
 }
