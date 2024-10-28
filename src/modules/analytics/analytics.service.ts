@@ -17,7 +17,7 @@ export class AnalyticsService {
     request: Request,
   ): Promise<InspectorDashBoardResponseDTO> {
     const inspections: number =
-    //   await await this.inspectionsService.countReportsForLoggedInInspector(
+      await await this.inspectionsService.countReportsForLoggedInInspector(
         request,
       );
     const currentInspection =
