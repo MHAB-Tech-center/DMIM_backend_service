@@ -66,7 +66,7 @@ jobs:
           fingerprint: ${{ secrets.DEPLOY_FINGERPRINT }}
           script: |
             echo "${{ secrets.DOCKER_PASSWORD }}" | docker login -u "${{ secrets.DOCKER_USERNAME }}" --password-stdin docker.io
-            sudo docker pull docker.io/valens2003/dmim
+            sudo docker pull docker.io/valens200/dmim
             sudo docker stop dmim || true
             sudo docker rm dmim || true
             sudo docker run -d --name dmim -p 3000:3000 -v /educable-dir/images/test:/opt/uploads/educapp-backend/images docker.io/valens200/dmim
