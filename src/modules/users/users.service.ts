@@ -112,6 +112,7 @@ export class UsersService {
 
   async preLogin(dto: LoginDTO) {
     this.user = await this.getOneByEmail(dto.email);
+    if (!this.user) throw new BadRequestException('Invalid email or password');
     const arePasswordsMatch = await bcrypt.compare(
       dto.password.toString(),
       this.user.password.toString(),

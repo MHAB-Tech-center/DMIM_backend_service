@@ -17,6 +17,7 @@ export class LoginDTO {
   @IsNotEmpty()
   @IsString()
   @ApiProperty()
+  // @IsStrongPassword()
   password: string;
 
   constructor(email: string, password: string) {

@@ -28,7 +28,7 @@ jobs:
         run: docker build -t dmim .
 
       - name: Tag Docker Image
-        run: docker tag educable-app:latest docker.io/bruno2006/educable-app:latest
+        run: docker tag dmim:latest docker.io/valens200/dmim:latest
 
       - name: Docker Login and Push
         run: |
@@ -51,7 +51,7 @@ jobs:
 
       - name: Add and Display Updated Host Key
         run: |
-          HOST_KEY=$(ssh-keyscan -t rsa 194.163.167.131)
+          HOST_KEY=$(ssh-keyscan -t rsa 10.10.82.249)
           echo "$HOST_KEY"
           echo "$HOST_KEY" >> $HOME/.ssh/known_hosts
 
