@@ -128,6 +128,7 @@ export class RmbStaffController {
     );
   }
   @Get('roles/all')
+  @Public()
   async getAllRMBRoles(): Promise<ApiResponse> {
     return new ApiResponse(
       true,
