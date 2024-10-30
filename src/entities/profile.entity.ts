@@ -20,6 +20,7 @@ import { Role } from 'src/entities/role.entity';
 import { InitiatorAudit } from 'src/audits/Initiator.audit';
 import { UUID } from 'crypto';
 import { ELoginStatus } from 'src/common/Enum/ELoginStatus.enum';
+import { RMBRole } from './RMBRole.entity';
 
 @Entity('users')
 @TableInheritance({ column: { type: 'varchar', name: 'type' } })

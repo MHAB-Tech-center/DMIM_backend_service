@@ -31,6 +31,7 @@ import { ELoginStatus } from 'src/common/Enum/ELoginStatus.enum';
 import { ApiResponse } from 'src/common/payload/ApiResponse';
 import { Role } from 'src/entities/role.entity';
 import { RoleService } from '../roles/roles.service';
+import { RMBStaffService } from '../rmb-staff/rmb-staff.service';
 
 @Injectable()
 export class UsersService {
@@ -41,6 +42,8 @@ export class UsersService {
     @Inject(forwardRef(() => UtilsService))
     private utilsService: UtilsService,
     private mailingService: MailingService,
+    @Inject(forwardRef(() => RMBStaffService))
+    private rmbService: RMBStaffService,
   ) {}
 
   user: Profile;
@@ -137,14 +140,22 @@ export class UsersService {
       throw new BadRequestException('Invalid activation code');
 
     const tokens = this.utilsService.getTokens(this.user);
+
     this.user.loginStatus = ELoginStatus[ELoginStatus.VERIFIED];
     await this.userRepo.save(this.user);
+    const rmbMember = await this.rmbService.findByEmail(
+      this.user.email.toString(),
+    );
+    let rmbRole = null;
+    if (rmbMember) {
+      rmbRole = rmbMember.rmbRole;
+    }
     delete this.user.password;
     delete this.user.activationCode;
     return new ApiResponse(true, 'The login was verified successfully', {
       access: (await tokens).accessToken,
       refresh_token: (await tokens).refreshToken,
-      user: this.user,
+      user: { ...this.user, rmbRole: rmbRole },
     });
   }
   async login(dto: LoginDTO) {
@@ -172,7 +183,8 @@ export class UsersService {
     verifiedAccount.status = EAccountStatus[EAccountStatus.ACTIVE];
     verifiedAccount.loginStatus = ELoginStatus[ELoginStatus.VERIFIED];
 
-    const updatedAccount = await this.userRepo.save(verifiedAccount);
+    const updatedAccount: Profile = await this.userRepo.save(verifiedAccount);
+
     const tokens = await this.utilsService.getTokens(updatedAccount);
     delete updatedAccount.password;
     delete updatedAccount.activationCode;

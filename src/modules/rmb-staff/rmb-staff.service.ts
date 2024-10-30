@@ -1,6 +1,8 @@
 import {
   BadRequestException,
   ForbiddenException,
+  forwardRef,
+  Inject,
   Injectable,
   NotFoundException,
 } from '@nestjs/common';
@@ -22,7 +24,6 @@ import { UtilsService } from 'src/utils/utils.service';
 import { CloudinaryService } from '../cloudinary/cloudinary.service';
 import { CreateRMBStaffMemberDTO } from './dtos/create-rmb-member.dto';
 import { AssignFeaturesDTO } from './dtos/assignFeatures.dto';
-import { SystemFeatureService } from '../features/features.service';
 
 @Injectable()
 export class RMBStaffService {
@@ -31,8 +32,7 @@ export class RMBStaffService {
     private rmbStaffRepository: Repository<RMBStaffMember>,
     @InjectRepository(RMBRole)
     private rmbRoleRepository: Repository<RMBRole>,
-    @InjectRepository(SystemFeature)
-    private systemFeatureRepository: Repository<SystemFeature>,
+    @Inject(forwardRef(() => UsersService))
     private userService: UsersService,
     private roleService: RoleService,
     private mailingService: MailingService,
@@ -47,6 +47,14 @@ export class RMBStaffService {
   async getAllPending() {
     return this.rmbStaffRepository.findAndCount({
       where: { status: EUserStatus[EUserStatus.PENDING] },
+    });
+  }
+
+  async findByEmail(email: string) {
+    return await this.rmbStaffRepository.findOne({
+      where: {
+        email: email,
+      },
     });
   }
 
