@@ -59,4 +59,4 @@ jobs:
             git stash
             git pull origin main
             npm i
-            pm2 restart main.ts
+            pm2 restart backend_test
