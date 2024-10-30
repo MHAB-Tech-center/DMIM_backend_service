@@ -12,7 +12,7 @@ import {
 } from '@nestjs/common';
 import { InspectorsService } from './inspectors.service';
 import { UUID } from 'crypto';
-import { ApiConsumes, ApiTags } from '@nestjs/swagger';
+import { ApiBearerAuth, ApiConsumes, ApiTags } from '@nestjs/swagger';
 import { Public } from 'src/decorators/public.decorator';
 import { Roles } from 'src/utils/decorators/roles.decorator';
 import { InviteUser } from 'src/common/dtos/invite-user.dto';
@@ -24,6 +24,7 @@ import { FileInterceptor } from '@nestjs/platform-express';
 @Controller('inspectors')
 @ApiTags('inspectors')
 @UseFilters(CustomExceptionFilter) // Apply filter to the controller
+@ApiBearerAuth()
 export class InspectorsController {
   constructor(private inspectorService: InspectorsService) {}
 

@@ -13,10 +13,11 @@ import { ApiResponse } from 'src/common/payload/ApiResponse';
 import { CreateSystemFeatureDTO } from './dtos/create-feature.dto';
 import { UUID } from 'crypto';
 import { CreateMultipleFeaturesDTO } from './dtos/ceratee-features.dto';
-import { ApiTags } from '@nestjs/swagger';
+import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 import { CustomExceptionFilter } from 'src/exceptions/CustomExceptionFilter';
 import { Public } from 'src/decorators/public.decorator';
 @Controller('features')
+@ApiBearerAuth()
 @ApiTags('features')
 @UseFilters(CustomExceptionFilter)
 export class FeaturesController {

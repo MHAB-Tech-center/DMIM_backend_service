@@ -1,13 +1,14 @@
 import { Controller, Get, Req, UseFilters } from '@nestjs/common';
 import { AnalyticsService } from './analytics.service';
 import { ApiResponse } from 'src/common/payload/ApiResponse';
-import { ApiOperation, ApiTags } from '@nestjs/swagger';
+import { ApiBearerAuth, ApiOperation, ApiTags } from '@nestjs/swagger';
 import { Request } from 'express';
 import { CustomExceptionFilter } from 'src/exceptions/CustomExceptionFilter';
 import { Public } from 'src/decorators/public.decorator';
 
 @Controller('analytics')
 @ApiTags('analytics')
+@ApiBearerAuth()
 @UseFilters(CustomExceptionFilter) // Apply filter to the controller
 export class AnalyticsController {
   constructor(private analyticsService: AnalyticsService) {}

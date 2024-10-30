@@ -16,7 +16,7 @@ import { RMBStaffService } from './rmb-staff.service';
 import { ApiResponse } from 'src/common/payload/ApiResponse';
 import { UUID } from 'crypto';
 import { CreateRMBRoleDTO } from './dtos/create-rmb-role.dto';
-import { ApiConsumes, ApiQuery, ApiTags } from '@nestjs/swagger';
+import { ApiBearerAuth, ApiConsumes, ApiQuery, ApiTags } from '@nestjs/swagger';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { Public } from 'src/decorators/public.decorator';
 import { InviteUser } from 'src/common/dtos/invite-user.dto';
@@ -26,6 +26,7 @@ import { AssignFeaturesDTO } from './dtos/assignFeatures.dto';
 
 @Controller('rmb-staff')
 @ApiTags('rmb-staff')
+@ApiBearerAuth()
 @UseFilters(CustomExceptionFilter) // Apply filter to the controller
 export class RmbStaffController {
   constructor(private rmbStaffService: RMBStaffService) {}
