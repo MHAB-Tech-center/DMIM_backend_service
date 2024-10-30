@@ -36,8 +36,8 @@ jobs:
 
       - name: Create environment variables
         run: |
-          chmod +x scripts/create_prod_env.sh
-          ./scripts/create_prod_env.sh
+          chmod +x scripts/create_test_env.sh
+          ./scripts/create_test_env.sh
 
       - name: Build Nest app
         run: npm run build
