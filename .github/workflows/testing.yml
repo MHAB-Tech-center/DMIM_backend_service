@@ -41,14 +41,6 @@ jobs:
 
       - name: Build Nest app
         run: npm run build
-        with:
-          host: ${{ secrets.SSH_HOST }}
-          port: ${{ secrets.SSH_PORT }}
-          username: ${{ secrets.SSH_USERNAME }}
-          password: ${{ secrets.SSH_PASSWORD }}
-          key: ${{ secrets.SSH_PRIVATE_KEY }}
-          source: mis-prod-build.tar.gz
-          target: ~/nextjs-builds
 
       - name: Connect to Server and Deploy
         uses: appleboy/ssh-action@v0.1.10
