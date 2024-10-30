@@ -1,72 +1,76 @@
-name: Build, Test and Deploy Educable App
+name: Prod Deploy to SSH Server
 
 on:
   push:
     branches:
       - main
+    paths-ignore: ['.vscode/**']
 
 jobs:
-  build:
-    runs-on: ubuntu-latest
-    defaults:
-      run:
-        shell: bash
-
-    steps:
-      - name: Checkout Code
-        uses: actions/checkout@v2
-
-      - name: Set up QEMU
-        uses: docker/setup-qemu-action@v3
-
-      - name: Set up Docker Buildx
-        uses: docker/setup-buildx-action@v1
-        with:
-          version: v0.7.0
-
-      - name: Build Docker Image
-        run: docker build -t dmim .
-
-      - name: Tag Docker Image
-        run: docker tag dmim:latest docker.io/valens200/dmim:latest
-
-      - name: Docker Login and Push
-        run: |
-          echo "${{ secrets.DOCKER_PASSWORD }}" | docker login -u ${{ secrets.DOCKER_USERNAME }} --password-stdin docker.io
-          docker push docker.io/valens200/dmim:latest
-
   deploy:
-    needs: build
     runs-on: ubuntu-latest
 
     steps:
-      - name: Create .ssh Directory
-        run: mkdir -p $HOME/.ssh
+      - name: Checkout code
+        uses: actions/checkout@v4
 
-      - name: Create known_hosts File
-        run: touch $HOME/.ssh/known_hosts
+      - uses: pnpm/action-setup@v4
+        name: Install pnpm
+        with:
+          version: 9
+          run_install: false
 
-      - name: Remove Old Host Key
-        run: ssh-keygen -R ${{ secrets.DEPLOY_HOST }}
+      - name: Install Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: 'pnpm'
 
-      - name: Add and Display Updated Host Key
+      - name: Get pnpm store directory
+        shell: bash
         run: |
-          HOST_KEY=$(ssh-keyscan -t rsa 10.10.82.249)
-          echo "$HOST_KEY"
-          echo "$HOST_KEY" >> $HOME/.ssh/known_hosts
+          echo "STORE_PATH=$(pnpm store path --silent)" >> $GITHUB_ENV
 
-      - name: Deploy to server
+      - name: Install dependencies
+        run: pnpm install
+
+      - name: Create environment variables
+        run: |
+          chmod +x scripts/create_prod_env.sh
+          ./scripts/create_prod_env.sh
+
+      - name: Build Next.js app
+        run: pnpm run build
+
+      - name: Archive .next folder
+        run: tar -czf mis-prod-build.tar.gz .next
+
+      - name: Upload .next folder to SSH server
+        uses: appleboy/scp-action@master
+        with:
+          host: ${{ secrets.SSH_HOST }}
+          port: ${{ secrets.SSH_PORT }}
+          username: ${{ secrets.SSH_USERNAME }}
+          password: ${{ secrets.SSH_PASSWORD }}
+          key: ${{ secrets.SSH_PRIVATE_KEY }}
+          source: mis-prod-build.tar.gz
+          target: ~/nextjs-builds
+
+      - name: Deploy and restart application
         uses: appleboy/ssh-action@master
         with:
-          host: ${{ secrets.DEPLOY_HOST }}
-          port: ${{ secrets.DEPLOY_PORT }}
-          username: ${{ secrets.DEPLOY_USER }}
-          key: ${{ secrets.DEPLOY_PRIVATE_KEY }}
-          password: ${{ secrets.DEPLOY_PASSWORD }}
-          fingerprint: ${{ secrets.DEPLOY_FINGERPRINT }}
+          host: ${{ secrets.SSH_HOST }}
+          port: ${{ secrets.SSH_PORT }}
+          username: ${{ secrets.SSH_USERNAME }}
+          password: ${{ secrets.SSH_PASSWORD }}
+          key: ${{ secrets.SSH_PRIVATE_KEY }}
           script: |
-            echo "${{ secrets.DOCKER_PASSWORD }}" | docker login -u "${{ secrets.DOCKER_USERNAME }}" --password-stdin docker.io
-            sudo docker pull docker.io/valens200/dmim
-            sudo docker stop dmim || true
-            sudo docker rm dmim || true
-            sudo docker run -d --name dmim -p 3000:3000 -v /educable-dir/images/test:/opt/uploads/educapp-backend/images docker.io/valens200/dmim
+            export NVM_DIR=~/.nvm
+            source ~/.nvm/nvm.sh
+            cd ~/actions-runner/_work/dmim_app/DMIM_backend_service
+            chmod +x scripts/create_test_env.sh
+            ./scripts/create_prod_env.sh
+            git stash
+            git pull origin main
+            npm i
+            pm2 restart main.ts
