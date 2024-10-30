@@ -32,15 +32,15 @@ jobs:
           echo "STORE_PATH=$(pnpm store path --silent)" >> $GITHUB_ENV
 
       - name: Install dependencies
-        run: pnpm install
+        run: npm install
 
       - name: Create environment variables
         run: |
           chmod +x scripts/create_prod_env.sh
           ./scripts/create_prod_env.sh
 
-      - name: Build Next.js app
-        run: pnpm run build
+      - name: Build Nest app
+        run: npm run build
 
       - name: Archive .next folder
         run: tar -czf mis-prod-build.tar.gz .next
