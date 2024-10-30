@@ -65,6 +65,7 @@ export class RmbStaffController {
     );
   }
   @Get('all')
+  @Public()
   async getAll(): Promise<ApiResponse> {
     return new ApiResponse(
       true,

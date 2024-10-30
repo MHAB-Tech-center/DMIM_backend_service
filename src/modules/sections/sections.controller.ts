@@ -12,13 +12,14 @@ import { SectionsService } from './sections.service';
 import { CreateSectionDTO } from 'src/common/dtos/sections/create-section.dto';
 import { ApiResponse } from 'src/common/payload/ApiResponse';
 import { CustomExceptionFilter } from 'src/exceptions/CustomExceptionFilter';
-import { ApiTags } from '@nestjs/swagger';
+import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 import { Public } from 'src/decorators/public.decorator';
 import { UUID } from 'crypto';
 import { UpdateSectionFlagDTO } from 'src/common/dtos/sections/update-flag.dto';
 
 @Controller('sections')
 @ApiTags('section')
+@ApiBearerAuth()
 @UseFilters(CustomExceptionFilter) // Apply filter to the controller
 export class SectionsController {
   constructor(private sectionService: SectionsService) {}

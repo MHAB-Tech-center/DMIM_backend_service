@@ -7,7 +7,7 @@ export class RMBStaffMember extends Person {
   @Column()
   key: string = 'On_Work';
 
-  @OneToOne(() => RMBRole)
+  @OneToOne(() => RMBRole, { eager: true })
   @JoinColumn({ name: 'role_id' })
   rmbRole: RMBRole;
   @Column()
