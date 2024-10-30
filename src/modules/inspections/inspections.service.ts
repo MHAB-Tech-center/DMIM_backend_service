@@ -61,6 +61,7 @@ export class InspectionsService {
     const loggedInUser: Profile = await this.utilService.getLoggedInProfile(
       request,
     );
+    console.log(loggedInUser);
     const inspector: Inspector = await this.inspectorService.findByEmail(
       loggedInUser.email.toString(),
     );

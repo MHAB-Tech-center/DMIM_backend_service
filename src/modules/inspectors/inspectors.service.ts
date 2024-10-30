@@ -89,6 +89,7 @@ export class InspectorsService {
     const userProfile = await this.userService.getOneByEmail(email);
     inspector.profile = userProfile;
     inspector.minesite = minesite;
+    inspector.email = userProfile.email.toString();
     userProfile.activationCode = null;
     userProfile.password = password;
     if (file) {
