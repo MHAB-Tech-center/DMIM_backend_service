@@ -40,7 +40,9 @@ export class InspectionPlan extends BaseEntity {
   })
   status: EInspectionStatus;
 
-  @OneToMany(() => InspectionReview, (review) => review.inspectionPlan)
+  @OneToMany(() => InspectionReview, (review) => review.inspectionPlan, {
+    eager: false,
+  })
   reviews: InspectionReview[];
 
   constructor(

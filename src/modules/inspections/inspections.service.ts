@@ -231,10 +231,10 @@ export class InspectionsService {
     const inspectionPlan: InspectionPlan = await this.getInspectionPlan(
       dto.planId,
     );
-    if (inspectionPlan.status == EInspectionStatus[EInspectionStatus.REVIEWED])
-      throw new BadRequestException('The inspection plan is alreay reviewed');
     inspectionPlan.status = EInspectionStatus[EInspectionStatus.REVIEWED];
-    const reviews: InspectionReview[] = inspectionPlan.reviews;
+    const reviews: InspectionReview[] = inspectionPlan.reviews
+      ? inspectionPlan.reviews
+      : [];
 
     const review: InspectionReview = await this.reviewService.saveReview(
       dto.reviewMessage,
@@ -242,7 +242,9 @@ export class InspectionsService {
     );
     reviews.push(review);
     inspectionPlan.reviews = reviews;
-    await this.inspectionPlanRepository.save(inspectionPlan);
+    const plan: InspectionPlan = await this.inspectionPlanRepository.save(
+      inspectionPlan,
+    );
     // sednd an email
     await this.mailingService.sendEmail(
       '',
@@ -252,6 +254,7 @@ export class InspectionsService {
       review.comment,
       inspectionPlan.inspectorInfo.email,
     );
+    return null;
   }
   async getInspectionPlanByStatus(status: string) {
     const inspectionStatus: EInspectionStatus =

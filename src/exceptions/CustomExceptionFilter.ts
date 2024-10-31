@@ -15,6 +15,7 @@ import { Response } from 'express';
 export class CustomExceptionFilter implements ExceptionFilter {
   catch(exception: any, host: ArgumentsHost) {
     const ctx = host.switchToHttp();
+    console.log(exception);
     const response = ctx.getResponse<Response>();
     let status = HttpStatus.INTERNAL_SERVER_ERROR; // Default status code
     let message: any = 'Internal server error'; // Default message
