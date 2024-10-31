@@ -43,6 +43,14 @@ export class InspectionsController {
     return await this.inspectionsService.create(dto);
   }
   @Public()
+  @Post('inspection-plan/main/create')
+  async createInspectionPlans(
+    @Body() dto: CreateInspectionPlanDTO,
+    @Req() request: Request,
+  ): Promise<any> {
+    return null;
+  }
+  @Public()
   @Post('inspection-plan/create')
   async createInspectionPlan(
     @Body() dto: CreateInspectionPlanDTO,
