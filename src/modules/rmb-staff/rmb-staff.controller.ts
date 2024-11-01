@@ -73,22 +73,6 @@ export class RmbStaffController {
       await this.rmbStaffService.getAll(),
     );
   }
-  @Get('all/pending')
-  async getAllPending(): Promise<ApiResponse> {
-    return new ApiResponse(
-      true,
-      'All rmb pending staff members were retrieved successfully',
-      await this.rmbStaffService.getAllPending(),
-    );
-  }
-  @Get('all/active')
-  async getAllActive(): Promise<ApiResponse> {
-    return new ApiResponse(
-      true,
-      'All rmb active staff members were retrieved successfully',
-      await this.rmbStaffService.getAllActive(),
-    );
-  }
 
   @Get('/:id')
   async findById(@Param('id') id: UUID): Promise<ApiResponse> {
@@ -139,7 +123,7 @@ export class RmbStaffController {
     );
   }
 
-  @Put('roles/update/:id')
+  @Put('roles/update-role/:id')
   async updateRMBRole(
     @Body() dto: CreateRMBRoleDTO,
     @Param('id') id: UUID,
@@ -188,9 +172,11 @@ export class RmbStaffController {
     );
   }
   @Put('roles/update/:id')
+  @ApiQuery({ name: 'rmbRoleId', required: true })
+  @ApiQuery({ name: 'rmbStaffId', required: true })
   async updateRMBStaffRole(
-    rmbRoleId: string,
-    rmbStaffId: string,
+    @Query('rmbRoleId') rmbRoleId: string,
+    @Query('rmbStaffId') rmbStaffId: string,
   ): Promise<ApiResponse> {
     return new ApiResponse(
       true,

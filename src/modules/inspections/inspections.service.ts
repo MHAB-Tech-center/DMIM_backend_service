@@ -61,7 +61,6 @@ export class InspectionsService {
     const loggedInUser: Profile = await this.utilService.getLoggedInProfile(
       request,
     );
-    console.log(loggedInUser);
     const inspector: Inspector = await this.inspectorService.findByEmail(
       loggedInUser.email.toString(),
     );
@@ -232,10 +231,10 @@ export class InspectionsService {
     const inspectionPlan: InspectionPlan = await this.getInspectionPlan(
       dto.planId,
     );
-    if (inspectionPlan.status == EInspectionStatus[EInspectionStatus.REVIEWED])
-      throw new BadRequestException('The inspection plan is alreay reviewed');
     inspectionPlan.status = EInspectionStatus[EInspectionStatus.REVIEWED];
-    const reviews: InspectionReview[] = inspectionPlan.reviews;
+    const reviews: InspectionReview[] = inspectionPlan.reviews
+      ? inspectionPlan.reviews
+      : [];
 
     const review: InspectionReview = await this.reviewService.saveReview(
       dto.reviewMessage,
@@ -243,7 +242,9 @@ export class InspectionsService {
     );
     reviews.push(review);
     inspectionPlan.reviews = reviews;
-    await this.inspectionPlanRepository.save(inspectionPlan);
+    const plan: InspectionPlan = await this.inspectionPlanRepository.save(
+      inspectionPlan,
+    );
     // sednd an email
     await this.mailingService.sendEmail(
       '',
@@ -253,6 +254,7 @@ export class InspectionsService {
       review.comment,
       inspectionPlan.inspectorInfo.email,
     );
+    return null;
   }
   async getInspectionPlanByStatus(status: string) {
     const inspectionStatus: EInspectionStatus =
@@ -302,7 +304,7 @@ export class InspectionsService {
   async getCategoriesInspectionPlan(
     planId: UUID,
   ): Promise<InspectionsResponseDTO> {
-    const inspectionPlan: any = await this.getInspectionPlan(planId);
+    const inspectionPlan: InspectionPlan = await this.getInspectionPlan(planId);
     const categoryList: Category[] = await this.categoryRepository.find({
       where: {
         inspectionPlan: { id: inspectionPlan.id },
@@ -314,6 +316,7 @@ export class InspectionsService {
       categoryList,
       inspectionPlan.id,
       inspectionPlan.summaryReport,
+      inspectionPlan.minesiteInfo,
     );
     return inspectionsResponse;
   }
@@ -330,7 +333,7 @@ export class InspectionsService {
     year: number,
     planId: UUID,
   ): Promise<InspectionsResponseDTO> {
-    const inspectionPlan: any = await this.getInspectionPlan(planId);
+    const inspectionPlan: InspectionPlan = await this.getInspectionPlan(planId);
     const categoryList: Category[] = await this.categoryRepository.find({
       where: {
         inspectionPlan: {
@@ -347,6 +350,7 @@ export class InspectionsService {
       categoryList,
       inspectionPlan.id,
       inspectionPlan.summaryReport,
+      inspectionPlan.minesiteInfo,
     );
     return inspectionsResponse;
   }
@@ -420,7 +424,7 @@ export class InspectionsService {
     planId: UUID,
     request: Request,
   ): Promise<InspectionsResponseDTO> {
-    const inspectionPlan: any = await this.getInspectionPlan(planId);
+    const inspectionPlan: InspectionPlan = await this.getInspectionPlan(planId);
     const inspector: Inspector =
       await this.inspectorService.getLoggedInInspector(request);
     const categoryList: Category[] = await this.categoryRepository.find({
@@ -440,6 +444,7 @@ export class InspectionsService {
       categoryList,
       inspectionPlan.id,
       inspectionPlan.summaryReport,
+      inspectionPlan.minesiteInfo,
     );
     return inspectionsResponse;
   }
@@ -449,7 +454,7 @@ export class InspectionsService {
     planId: UUID,
     request: Request,
   ): Promise<InspectionsResponseDTO> {
-    const inspectionPlan: any = await this.getInspectionPlan(planId);
+    const inspectionPlan: InspectionPlan = await this.getInspectionPlan(planId);
     const inspector: Inspector =
       await this.inspectorService.getLoggedInInspector(request);
     const categoryList: Category[] = await this.categoryRepository.find({
@@ -467,6 +472,7 @@ export class InspectionsService {
       categoryList,
       inspectionPlan.id,
       inspectionPlan.summaryReport,
+      inspectionPlan.minesiteInfo,
     );
     return inspectionsResponse;
   }

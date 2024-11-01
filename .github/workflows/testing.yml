@@ -1,55 +1,26 @@
-name: Prod Deploy to SSH Server
-
+name: production-deploy
 on:
   push:
-    branches:
-      - main
-    paths-ignore: ['.vscode/**']
+    branches: ["main"]
+  # workflow_dispatch:
 
 jobs:
   deploy:
     runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        node-version: [20.x]
 
     steps:
-      - name: Checkout code
+      - name: Copy repository
         uses: actions/checkout@v4
-
-      - uses: pnpm/action-setup@v4
-        name: Install pnpm
-        with:
-          version: 9
-          run_install: false
-
-      - name: Install Node.js
-        uses: actions/setup-node@v4
-        with:
-          node-version: 20
-          cache: 'pnpm'
-
-      - name: Get pnpm store directory
-        shell: bash
-        run: |
-          echo "STORE_PATH=$(pnpm store path --silent)" >> $GITHUB_ENV
-
-      - name: Install dependencies
-        run: npm install
-
-      - name: Create environment variables
-        run: |
-          chmod +x scripts/create_test_env.sh
-          ./scripts/create_test_env.sh
-
-      - name: Build Nest app
-        run: npm run build
 
       - name: Connect to Server and Deploy
         uses: appleboy/ssh-action@v0.1.10
         with:
-          host: ${{ secrets.SSH_HOST }}
-          port: ${{ secrets.SSH_PORT }}
-          username: ${{ secrets.SSH_USERNAME }}
-          password: ${{ secrets.SSH_PASSWORD }}
-          key: ${{ secrets.SSH_PRIVATE_KEY }}
+          host: 10.10.82.249
+          username: root
+          password: Q22Ryf431kx
           script: |
             export NVM_DIR=~/.nvm
             source ~/.nvm/nvm.sh
