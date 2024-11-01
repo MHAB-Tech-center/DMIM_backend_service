@@ -23,7 +23,7 @@ async function bootstrap() {
   );
   app.useGlobalFilters(new CustomExceptionFilter());
   const config = new DocumentBuilder()
-    .setTitle('DMIM BACKEND API')
+    .setTitle('DIGITAL MINE INSPECTION MANUAL APIs')
     .setDescription(
       'This is the digital inspection manual, By MHAB Tech Center',
     )

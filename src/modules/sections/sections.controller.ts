@@ -30,7 +30,7 @@ export class SectionsController {
     return this.sectionService.create(dto);
   }
   @Put('update/:id')
-  async update(id: UUID, dto: CreateSectionDTO) {
+  async update(@Param('id') id: UUID, @Body() dto: CreateSectionDTO) {
     return new ApiResponse(
       true,
       'The section was updated successfully',
