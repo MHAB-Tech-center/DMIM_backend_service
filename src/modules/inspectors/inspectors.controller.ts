@@ -53,7 +53,7 @@ export class InspectorsController {
   }
   @Post('invite')
   @Public()
-  // @Roles('ADMIN')
+  @Roles('ADMIN')
   async inviteInspector(@Body() dto: InviteUser): Promise<ApiResponse> {
     return this.inspectorService.inviteInspector(dto);
   }
@@ -70,12 +70,14 @@ export class InspectorsController {
 
   // Get inspector by ID
   @Get('/by-id/:id')
+  @Roles('RMB','ADMIN')
   async getById(@Param('id') id: UUID): Promise<ApiResponse> {
     return this.inspectorService.findById(id);
   }
 
   // Delete an inspector
   @Delete('/delete/:id')
+  @Roles('ADMIN')
   async delete(@Param('id') id: UUID): Promise<ApiResponse> {
     return this.inspectorService.delete(id);
   }

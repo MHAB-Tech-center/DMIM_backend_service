@@ -14,7 +14,6 @@ import { RMBStaffMember } from 'src/entities/RMBStaffMember.entity';
 import { UsersService } from '../users/users.service';
 import { RoleService } from '../roles/roles.service';
 import { MailingService } from 'src/integrations/mailing/mailing.service';
-import { SystemFeature } from 'src/entities/system-feature.entity';
 import { EUserStatus } from 'src/common/Enum/EUserStatus.enum';
 import { EAccountStatus } from 'src/common/Enum/EAccountStatus.enum';
 import { InviteUser } from 'src/common/dtos/invite-user.dto';
@@ -131,7 +130,7 @@ export class RMBStaffService {
     profile.activationCode = this.userService.generateRandomFourDigitNumber();
     profile = await this.userService.saveExistingProfile(profile, role);
     await this.mailingService.sendEmail(
-      `rmb-dmim://signup?email=${profile.email.toString()}`,
+      `https://dmim-frontend.vercel.app/register?email=${profile.email.toString()}`,
       'invite-rmb',
       profile.email.toString(),
       profile,

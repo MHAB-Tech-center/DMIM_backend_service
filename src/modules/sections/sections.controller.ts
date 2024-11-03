@@ -16,6 +16,7 @@ import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 import { Public } from 'src/decorators/public.decorator';
 import { UUID } from 'crypto';
 import { UpdateSectionFlagDTO } from 'src/common/dtos/sections/update-flag.dto';
+import { Roles } from 'src/utils/decorators/roles.decorator';
 
 @Controller('sections')
 @ApiTags('section')
@@ -25,11 +26,12 @@ export class SectionsController {
   constructor(private sectionService: SectionsService) {}
 
   @Post('create')
-  @Public()
+  @Roles('ADMIN')
   async create(@Body() dto: CreateSectionDTO): Promise<ApiResponse> {
     return this.sectionService.create(dto);
   }
   @Put('update/:id')
+  @Roles('ADMIN')
   async update(@Param('id') id: UUID, @Body() dto: CreateSectionDTO) {
     return new ApiResponse(
       true,
@@ -38,6 +40,7 @@ export class SectionsController {
     );
   }
   @Patch('change-flag/:id')
+  @Roles('ADMIN')
   async updateFlagStandard(
     @Param('id') id: UUID,
     @Body() dto: UpdateSectionFlagDTO,
@@ -53,11 +56,12 @@ export class SectionsController {
   }
 
   @Get('by-title/:title')
+  @Roles('ADMIN','RMB')
   async getSectionByTitle(@Param('title') title: string): Promise<ApiResponse> {
     return this.sectionService.getSectionByTitle(title);
   }
   @Get('all')
-  @Public()
+  @Roles('ADMIN','RMB')
   async getAllSections() {
     return new ApiResponse(
       true,

@@ -23,6 +23,7 @@ import { InviteUser } from 'src/common/dtos/invite-user.dto';
 import { CustomExceptionFilter } from 'src/exceptions/CustomExceptionFilter';
 import { CreateRMBStaffMemberDTO } from './dtos/create-rmb-member.dto';
 import { AssignFeaturesDTO } from './dtos/assignFeatures.dto';
+import { Roles } from 'src/utils/decorators/roles.decorator';
 
 @Controller('rmb-staff')
 @ApiTags('rmb-staff')
@@ -45,8 +46,8 @@ export class RmbStaffController {
       await this.rmbStaffService.create(body, file),
     );
   }
-  @Public()
   @Post('invite')
+  @Roles('ADMIN')
   async inviteInspector(@Body() dto: InviteUser): Promise<ApiResponse> {
     return new ApiResponse(
       true,
@@ -56,6 +57,7 @@ export class RmbStaffController {
   }
 
   @Get('all/by-status')
+  @Roles('ADMIN','RMB')
   @ApiQuery({ name: 'status', required: true, example: 'pending' })
   async findByStatus(@Query('status') status: string): Promise<ApiResponse> {
     return new ApiResponse(
@@ -65,7 +67,7 @@ export class RmbStaffController {
     );
   }
   @Get('all')
-  @Public()
+  @Roles('ADMIN','RMB')
   async getAll(): Promise<ApiResponse> {
     return new ApiResponse(
       true,
@@ -75,6 +77,7 @@ export class RmbStaffController {
   }
 
   @Get('/:id')
+  @Roles('ADMIN','RMB')
   async findById(@Param('id') id: UUID): Promise<ApiResponse> {
     return new ApiResponse(
       true,
@@ -84,6 +87,7 @@ export class RmbStaffController {
   }
 
   @Get()
+  @Roles('ADMIN','RMB')
   @ApiQuery({ name: 'userId', required: true })
   async findByUser(@Query('userId') userId: any): Promise<ApiResponse> {
     return new ApiResponse(
@@ -93,6 +97,7 @@ export class RmbStaffController {
     );
   }
   @Delete('/:id')
+  @Roles('ADMIN')
   async delete(@Param('id') id: UUID): Promise<ApiResponse> {
     return new ApiResponse(
       true,
@@ -101,7 +106,7 @@ export class RmbStaffController {
     );
   }
   @Post('/roles/create')
-  @Public()
+  @Roles('ADMIN')
   async addRMBRole(@Body() dto: CreateRMBRoleDTO): Promise<ApiResponse> {
     return new ApiResponse(
       true,
@@ -114,7 +119,7 @@ export class RmbStaffController {
     );
   }
   @Get('roles/all')
-  @Public()
+  @Roles('ADMIN','RMB')
   async getAllRMBRoles(): Promise<ApiResponse> {
     return new ApiResponse(
       true,
@@ -124,6 +129,7 @@ export class RmbStaffController {
   }
 
   @Put('roles/update-role/:id')
+  @Roles('ADMIN')
   async updateRMBRole(
     @Body() dto: CreateRMBRoleDTO,
     @Param('id') id: UUID,
@@ -140,6 +146,7 @@ export class RmbStaffController {
     );
   }
   @Delete('roles/delete/:id')
+  @Roles('ADMIN')
   async deleteRMBRole(@Param('id') id: UUID): Promise<ApiResponse> {
     return new ApiResponse(
       true,
@@ -148,7 +155,7 @@ export class RmbStaffController {
     );
   }
   @Put('assign-roles')
-  @Public()
+  @Roles('ADMIN')
   @ApiQuery({ name: 'rmbRoleId', required: true })
   @ApiQuery({ name: 'rmbStaffId', required: true })
   async assignRMBRole(
@@ -162,6 +169,7 @@ export class RmbStaffController {
     );
   }
   @Put('assign-featues')
+  @Roles('ADMIN')
   async assignFeaturesToRole(
     @Body() dto: AssignFeaturesDTO,
   ): Promise<ApiResponse> {
@@ -172,6 +180,7 @@ export class RmbStaffController {
     );
   }
   @Put('roles/update/:id')
+  @Roles('ADMIN')
   @ApiQuery({ name: 'rmbRoleId', required: true })
   @ApiQuery({ name: 'rmbStaffId', required: true })
   async updateRMBStaffRole(
@@ -186,8 +195,8 @@ export class RmbStaffController {
   }
 
   @Patch('dissociate-role')
-  @Public()
   @ApiQuery({ name: 'rmbStaffId', required: true })
+  @Roles('ADMIN')
   async dissociateRMBRole(
     @Query('rmbStaffId') rmbStaffId: UUID,
   ): Promise<ApiResponse> {

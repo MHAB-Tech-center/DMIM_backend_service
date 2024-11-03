@@ -384,14 +384,12 @@ export class InspectionsService {
   }
 
   async getReportsFilteredByAllForLoggedInInspector(
-    status: EInspectionStatus,
     request: Request,
   ): Promise<any> {
     const inspector = await this.inspectorService.getLoggedInInspector(request);
     const inspectionPlans: InspectionPlan[] =
       await this.inspectionPlanRepository.find({
         where: {
-          status: status,
           inspectorInfo: { id: inspector.id },
         },
         relations: ['minesiteInfo', 'inspectorInfo'],
@@ -450,7 +448,6 @@ export class InspectionsService {
   }
 
   async getMyCategoriesFilteredByStatus(
-    status: EInspectionStatus,
     planId: UUID,
     request: Request,
   ): Promise<InspectionsResponseDTO> {
@@ -461,7 +458,6 @@ export class InspectionsService {
       where: {
         inspectionPlan: {
           id: inspectionPlan.id,
-          status: status,
           inspectorInfo: { id: inspector.id },
         },
       },

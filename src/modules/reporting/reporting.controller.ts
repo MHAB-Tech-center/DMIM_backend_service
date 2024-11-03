@@ -6,6 +6,7 @@ import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 import { CustomExceptionFilter } from 'src/exceptions/CustomExceptionFilter';
 import { Public } from 'src/decorators/public.decorator';
 import { UUID } from 'crypto';
+import { Roles } from 'src/utils/decorators/roles.decorator';
 
 @Controller('reporting')
 @ApiTags('reporting')
@@ -15,7 +16,7 @@ export class ReportingController {
   constructor(private reportingService: ReportingService) {}
 
   @Get('inspections/:planId')
-  @Public()
+  @Roles('ADMIN','RMB')
   async getInspectionsReport(
     @Res() response: Response,
     @Param('id') planId: UUID,

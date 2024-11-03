@@ -19,7 +19,7 @@ import {
 } from '@nestjs/common';
 import { UsersService } from './users.service';
 import { NotFoundException } from '@nestjs/common';
-import { ApiBearerAuth, ApiBody, ApiTags } from '@nestjs/swagger';
+import { ApiBearerAuth, ApiBody, ApiOperation, ApiTags } from '@nestjs/swagger';
 import { Roles } from 'src/utils/decorators/roles.decorator';
 import { UUID } from 'crypto';
 import { ApiResponse } from 'src/common/payload/ApiResponse';
@@ -52,6 +52,7 @@ export class UsersController {
 
   @Public()
   @Post('/create')
+  @ApiOperation({ description:"Creates an admin"})
   @ApiBody({ type: CreateUserDto })
   createAdminAccount(@Body() body: CreateUserDto) {
     try {

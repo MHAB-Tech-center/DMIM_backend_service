@@ -1,6 +1,5 @@
 import { MailerService } from '@nestjs-modules/mailer';
 import { Injectable } from '@nestjs/common';
-import { ConfigService } from '@nestjs/config';
 import { Profile } from 'src/entities/profile.entity';
 import { footerHTML, headerHTML } from 'src/utils/appData/constants';
 
@@ -8,7 +7,6 @@ import { footerHTML, headerHTML } from 'src/utils/appData/constants';
 export class MailingService {
   private options;
   constructor(
-    private readonly configService: ConfigService,
     private readonly mailService: MailerService,
   ) {}
 

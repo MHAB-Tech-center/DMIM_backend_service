@@ -27,6 +27,7 @@ import { EditInspectionRecordDTO } from 'src/common/dtos/inspections/edit-inspec
 import { EditManyInspectionRecordsDTO } from 'src/common/dtos/inspections/edit-many-inspections-records.dto';
 import { ReviewInspectionPlanDTO } from 'src/common/dtos/inspections/review-inspection-plan.dto';
 import { EInspectionStatus } from 'src/common/Enum/EInspectionStatus.enum';
+import { Roles } from 'src/utils/decorators/roles.decorator';
 
 @Controller('inspections')
 @ApiTags('inspections')
@@ -36,22 +37,15 @@ export class InspectionsController {
   constructor(private inspectionsService: InspectionsService) {}
 
   @Post('inspection-records/create')
-  @Public()
+  @Roles('SUPERVISOR','ENVIRONOMIST','INSPECTOR')
   async createInspectionRecords(
     @Body() dto: CreateInspectionDTO,
   ): Promise<ApiResponse> {
     return await this.inspectionsService.create(dto);
   }
   @Public()
-  @Post('inspection-plan/main/create')
-  async createInspectionPlans(
-    @Body() dto: CreateInspectionPlanDTO,
-    @Req() request: Request,
-  ): Promise<any> {
-    return null;
-  }
-  @Public()
   @Post('inspection-plan/create')
+  @Roles('SUPERVISOR','ENVIRONOMIST','INSPECTOR')
   async createInspectionPlan(
     @Body() dto: CreateInspectionPlanDTO,
     @Req() request: Request,
@@ -59,6 +53,7 @@ export class InspectionsController {
     return this.inspectionsService.createInspectionPlan(request, dto);
   }
   @Put('/records/update')
+  @Roles('SUPERVISOR','ENVIRONOMIST','INSPECTOR')
   async editInspectionRecord(@Body() dto: EditInspectionRecordDTO) {
     return new ApiResponse(
       true,
@@ -67,6 +62,7 @@ export class InspectionsController {
     );
   }
   @Put('/records/update-bulk')
+  @Roles('SUPERVISOR','ENVIRONOMIST','INSPECTOR')
   async editManyInspectionRecords(@Body() dto: EditManyInspectionRecordsDTO) {
     return new ApiResponse(
       true,
@@ -76,7 +72,7 @@ export class InspectionsController {
   }
 
   @Put('review/')
-  @Public()
+  @Roles('RMB','ADMIN')
   async reviewInspectionPlan(@Body() dto: ReviewInspectionPlanDTO) {
     return new ApiResponse(
       true,
@@ -153,6 +149,7 @@ export class InspectionsController {
     );
   }
   @Get('categories/loggedIn-inspector')
+  @Roles('SUPERVISOR','ENVIRONOMIST','INSPECTOR')
   @ApiOperation({
     summary: ' Get all inspection category records',
     description:
@@ -218,9 +215,9 @@ export class InspectionsController {
     description:
       'Retrieves all  inspection category records filtered by status that are associated to loggedIn inspector',
   })
-  @Get('categories/loggedIn-inspector/by-status')
+  @Get('categories/loggedIn-inspector')
+  @Roles('SUPERVISOR','ENVIRONOMIST','INSPECTOR')
   async getMyCategoriesFilteredByStatus(
-    @Query('status') status: EInspectionStatus,
     @Query('planId') planId: UUID,
     @Req() request: Request,
   ): Promise<ApiResponse> {
@@ -228,7 +225,6 @@ export class InspectionsController {
       true,
       'Inspection records were retrieved successfully',
       await this.inspectionsService.getMyCategoriesFilteredByStatus(
-        status,
         planId,
         request,
       ),
@@ -236,13 +232,14 @@ export class InspectionsController {
   }
 
   @Get('records/category-id/:categoryId')
-  @Public()
+  @Roles('RMB','ADMIN')
   async getRecordsByCategory(
     @Param('categoryId') categoryId: UUID,
   ): Promise<ApiResponse> {
     return await this.inspectionsService.getRecordsByCategory(categoryId);
   }
   @Get('/plans/all')
+  @Roles('RMB','ADMIN')
   @Public()
   async getAllInspectionPlans() {
     return new ApiResponse(
@@ -252,6 +249,7 @@ export class InspectionsController {
     );
   }
   @Get('/plans/all/paginated')
+  @Roles('RMB','ADMIN')
   @Public()
   @ApiQuery({
     name: 'status',
@@ -305,7 +303,7 @@ export class InspectionsController {
     );
   }
   @Get('plan/:planId')
-  @Public()
+  @Roles('INSPECTOR','SUPERVISOR','ENVIRONOMIST', 'RMB','ADMIN')
   async getInspectionPlan(@Param('planId') planId: UUID): Promise<ApiResponse> {
     return new ApiResponse(
       true,
@@ -313,21 +311,21 @@ export class InspectionsController {
       await this.inspectionsService.getInspectionPlan(planId),
     );
   }
-  @Get('plans/loggedIn-inspector/by-status/:status')
+  @Get('plans/loggedIn-inspector')
+  @Roles('INSPECTOR','SUPERVISOR','ENVIRONOMIST')
   async getAllPlansFilteredByAllForLoggedInInspector(
-    @Param('status') status: EInspectionStatus,
     @Req() request: Request,
   ): Promise<ApiResponse> {
     return new ApiResponse(
       true,
       'Inspections plans were retrieved successfully',
       await this.inspectionsService.getReportsFilteredByAllForLoggedInInspector(
-        status,
         request,
       ),
     );
   }
   @Get('plans/current-plan/by-loggedIn-inspector')
+  @Roles('INSPECTOR','SUPERVISOR','ENVIRONOMIST')
   async getCurrentPlanForLoggedInInspector(
     @Req() request: Request,
   ): Promise<ApiResponse> {

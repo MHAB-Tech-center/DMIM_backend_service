@@ -5,6 +5,7 @@ import { ApiBearerAuth, ApiOperation, ApiTags } from '@nestjs/swagger';
 import { Request } from 'express';
 import { CustomExceptionFilter } from 'src/exceptions/CustomExceptionFilter';
 import { Public } from 'src/decorators/public.decorator';
+import { Roles } from 'src/utils/decorators/roles.decorator';
 
 @Controller('analytics')
 @ApiTags('analytics')
@@ -13,6 +14,7 @@ import { Public } from 'src/decorators/public.decorator';
 export class AnalyticsController {
   constructor(private analyticsService: AnalyticsService) {}
   @Get('/inspector')
+  @Roles('RMB','ADMIN')
   @ApiOperation({
     description: 'This is or loggedIn inspectors only',
   })
@@ -25,7 +27,7 @@ export class AnalyticsController {
     );
   }
   @Get('rmb')
-  @Public()
+  @Roles('RMB','ADMIN')
   async getAdminDashBoard(): Promise<ApiResponse> {
     return new ApiResponse(
       true,

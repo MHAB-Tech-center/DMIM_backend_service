@@ -6,6 +6,7 @@ import { ApiResponse } from 'src/common/payload/ApiResponse';
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 import { CustomExceptionFilter } from 'src/exceptions/CustomExceptionFilter';
 import { Public } from 'src/decorators/public.decorator';
+import { Roles } from 'src/utils/decorators/roles.decorator';
 
 @Controller('minesites')
 @ApiTags('minesites')
@@ -14,11 +15,12 @@ import { Public } from 'src/decorators/public.decorator';
 export class MinesiteController {
   constructor(private minesiteService: MinesiteService) {}
   @Post('create')
-  @Public()
+  @Roles('ADMIN')
   async create(@Body() dto: CreateMineSiteDTO): Promise<ApiResponse> {
     return this.minesiteService.create(dto);
   }
   @Post('update')
+  @Roles('ADMIN')
   async update(
     @Param('id') id: UUID,
     @Body() dto: CreateMineSiteDTO,
@@ -26,11 +28,12 @@ export class MinesiteController {
     return this.minesiteService.update(id, dto);
   }
   @Get('all')
-  @Public()
+  @Roles('ADMIN')
   async getAll() {
     return this.minesiteService.getAll();
   }
   @Get('/:id')
+  @Roles('ADMIN')
   async getById(@Param('id') id: UUID): Promise<any> {
     return this.minesiteService.getById(id);
   }
