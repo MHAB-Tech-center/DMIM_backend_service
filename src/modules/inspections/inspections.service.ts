@@ -317,6 +317,7 @@ export class InspectionsService {
       inspectionPlan.id,
       inspectionPlan.summaryReport,
       inspectionPlan.minesiteInfo,
+      inspectionPlan.status
     );
     return inspectionsResponse;
   }
@@ -351,6 +352,7 @@ export class InspectionsService {
       inspectionPlan.id,
       inspectionPlan.summaryReport,
       inspectionPlan.minesiteInfo,
+      inspectionPlan.status
     );
     return inspectionsResponse;
   }
@@ -443,6 +445,7 @@ export class InspectionsService {
       inspectionPlan.id,
       inspectionPlan.summaryReport,
       inspectionPlan.minesiteInfo,
+      inspectionPlan.status
     );
     return inspectionsResponse;
   }
@@ -469,6 +472,7 @@ export class InspectionsService {
       inspectionPlan.id,
       inspectionPlan.summaryReport,
       inspectionPlan.minesiteInfo,
+      inspectionPlan.status
     );
     return inspectionsResponse;
   }
@@ -489,6 +493,7 @@ export class InspectionsService {
   }
 
   async approveOrRejectInspectionPlan(action: string, planId: UUID) : Promise<InspectionPlan>{
+    if(!action) throw new BadRequestException("The action should not be null");
     let status: EInspectionStatus;
     switch(action.toUpperCase()){
       case "APPROVE":
