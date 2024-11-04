@@ -6,9 +6,7 @@ import { footerHTML, headerHTML } from 'src/utils/appData/constants';
 @Injectable()
 export class MailingService {
   private options;
-  constructor(
-    private readonly mailService: MailerService,
-  ) {}
+  constructor(private readonly mailService: MailerService) {}
 
   async sendEmail(
     link: string,
@@ -17,6 +15,7 @@ export class MailingService {
     user: Profile,
     data?: any,
     email?: string,
+    inspectionDate?: string
   ) {
     const recipient = await user;
     switch (type) {
@@ -131,28 +130,40 @@ export class MailingService {
           `,
         };
         break;
-      case 'notify-inspection':
+      case 'reject':
         this.options = {
           transporterName: null,
           to: recipient.email,
-          subject: 'DMIM Email verification',
+          subject: 'Inspection report Rejected',
           html: `${headerHTML}
-         <div class="content">
-            <p>Dear [Company Name],</p>
-            <p>We wanted to inform you that an inspection has been completed. The actions taken are as follows:</p>
-            <ul>
-                <li>Action 1: [Details]</li>
-                <li>Action 2: [Details]</li>
-                <li>Action 3: [Details]</li>
-            </ul>
-            <p>If you have any questions, please do not hesitate to contact us.</p>
-            <p>Best regards,<br>The RMB Team</p>
-         </div>
-
-          ${footerHTML}  
-          `,
+           <div class="content">
+              <p>Dear ${name},</p>
+              <p>We wanted to inform the incpection report you submitted on ${inspectionDate} has been rejected by RMB Staff in charge</p>
+              <p>If you have any questions, please do not hesitate to contact us.</p>
+              <p>Best regards,<br>The RMB Team</p>
+           </div>
+  
+            ${footerHTML}  
+            `,
         };
         break;
+        case 'approve':
+          this.options = {
+            transporterName: null,
+            to: recipient.email,
+            subject: 'Inspection report Approved',
+            html: `${headerHTML}
+             <div class="content">
+                <p>Dear ${name},</p>
+                <p>We wanted to inform the incpection report you submitted on ${inspectionDate} has been approved by RMB Staff in charge</p>
+                <p>If you have any questions, please do not hesitate to contact us.</p>
+                <p>Best regards,<br>The RMB Team</p>
+             </div>
+    
+              ${footerHTML}  
+              `,
+          };
+          break;
       case 'review':
         this.options = {
           transporterName: null,
@@ -163,7 +174,7 @@ export class MailingService {
             <p>Dear ${name},</p>
             <p>We just wanted to let you know that your inspection has been reviewed with the following reviews:</p>
             <ul>
-                <li>${data}</li>
+                <pre>${data}</pre>
             </ul>
             <p>If you have any questions, please do not hesitate to contact us.</p>
             <p>Best regards,<br>The RMB Team</p>

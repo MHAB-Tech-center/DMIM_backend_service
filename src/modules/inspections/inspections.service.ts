@@ -488,6 +488,26 @@ export class InspectionsService {
     );
   }
 
+  async approveOrRejectInspectionPlan(action: string, planId: UUID) : Promise<InspectionPlan>{
+    let status: EInspectionStatus;
+    switch(action.toUpperCase()){
+      case "APPROVE":
+        status = EInspectionStatus.APPROVED;
+        break;
+      case 'REJECT':
+        status = EInspectionStatus.REJECTED;
+        break;
+       default:
+        throw new BadRequestException("The provided action is not valid, it should be in [REJECT,APPROVE]") 
+    }
+
+    let inspectionPlan = await this.getInspectionPlan(planId);
+    inspectionPlan.status = status;
+    inspectionPlan = await this.inspectionPlanRepository.save(inspectionPlan)
+    await this.mailingService.sendEmail('',action.toLowerCase(),inspectionPlan.inspectorInfo.lastName, null, null, inspectionPlan.inspectorInfo.email, `${inspectionPlan.createdAt.getDay}/${inspectionPlan.createdAt.getMonth()}/${inspectionPlan.createdAt.getFullYear()}`)
+    return inspectionPlan;
+  }
+
   // Retrieve all inspection plans
   async findAll(): Promise<InspectionPlan[]> {
     return this.inspectionPlanRepository.find({

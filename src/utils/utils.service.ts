@@ -47,7 +47,7 @@ export class UtilsService {
     const refreshToken: String = await this.jwt.signAsync(
       { roles: user.roles, email: user.email },
       {
-        expiresIn: '1d',
+        expiresIn: '3d',
         secret: this.config.get('SECRET_KEY'),
       },
     );

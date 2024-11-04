@@ -3,6 +3,7 @@ import {
   Controller,
   Get,
   Param,
+  Patch,
   Post,
   Put,
   Query,
@@ -61,6 +62,7 @@ export class InspectionsController {
       await this.inspectionsService.editInspectionRecord(dto),
     );
   }
+  
   @Put('/records/update-bulk')
   @Roles('SUPERVISOR','ENVIRONOMIST','INSPECTOR')
   async editManyInspectionRecords(@Body() dto: EditManyInspectionRecordsDTO) {
@@ -69,6 +71,11 @@ export class InspectionsController {
       'All records were updated successfully',
       await this.inspectionsService.editManyInspectionRecords(dto),
     );
+  }
+  @ApiQuery({name:"action", example:"APPROVE"})
+  @Patch('/plans/take-action')
+  async approveOrRejectInspectionPlan(@Query('action') action: string, @Param('planId') planId: UUID) : Promise<ApiResponse>{
+    return new ApiResponse(true, "The inspection plan was updated successfully", await this.inspectionsService.approveOrRejectInspectionPlan(action,planId))
   }
 
   @Put('review/')
