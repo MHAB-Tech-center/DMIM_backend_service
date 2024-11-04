@@ -73,7 +73,7 @@ export class InspectionsController {
     );
   }
   @ApiQuery({name:"action", example:"APPROVE"})
-  @Patch('/plans/take-action')
+  @Patch('/reports/take-action')
   async approveOrRejectInspectionPlan(@Query('action') action: string, @Param('planId') planId: UUID) : Promise<ApiResponse>{
     return new ApiResponse(true, "The inspection plan was updated successfully", await this.inspectionsService.approveOrRejectInspectionPlan(action,planId))
   }
