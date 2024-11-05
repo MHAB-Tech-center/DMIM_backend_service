@@ -28,12 +28,10 @@ export class MinesiteController {
     return this.minesiteService.update(id, dto);
   }
   @Get('all')
-  @Roles('ADMIN')
   async getAll() {
     return this.minesiteService.getAll();
   }
   @Get('/:id')
-  @Roles('ADMIN')
   async getById(@Param('id') id: UUID): Promise<any> {
     return this.minesiteService.getById(id);
   }
