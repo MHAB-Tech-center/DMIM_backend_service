@@ -56,12 +56,10 @@ export class SectionsController {
   }
 
   @Get('by-title/:title')
-  @Roles('ADMIN','RMB')
   async getSectionByTitle(@Param('title') title: string): Promise<ApiResponse> {
     return this.sectionService.getSectionByTitle(title);
   }
   @Get('all')
-  @Roles('ADMIN','RMB')
   async getAllSections() {
     return new ApiResponse(
       true,
