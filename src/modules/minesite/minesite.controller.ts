@@ -28,6 +28,7 @@ export class MinesiteController {
     return this.minesiteService.update(id, dto);
   }
   @Get('all')
+  @Public()
   async getAll() {
     return this.minesiteService.getAll();
   }

@@ -189,6 +189,7 @@ export class MailingService {
     }
     try {
       await this.mailService.sendMail(this.options);
+      console.log("Email sent")
     } catch (error) {
       console.log(error);
     }

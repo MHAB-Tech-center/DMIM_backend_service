@@ -14,7 +14,7 @@ import { InspectionsService } from './inspections.service';
 import { ApiResponse } from 'src/common/payload/ApiResponse';
 import { CreateInspectionDTO } from 'src/common/dtos/inspections/create-inspection.dto';
 import { Request } from 'express';
-import {
+import { 
   ApiBearerAuth,
   ApiOperation,
   ApiQuery,
@@ -38,7 +38,8 @@ export class InspectionsController {
   constructor(private inspectionsService: InspectionsService) {}
 
   @Post('inspection-records/create')
-  @Roles('SUPERVISOR','ENVIRONOMIST','INSPECTOR')
+  @Public()
+  // @Roles('SUPERVISOR','ENVIRONOMIST','INSPECTOR')
   async createInspectionRecords(
     @Body() dto: CreateInspectionDTO,
   ): Promise<ApiResponse> {

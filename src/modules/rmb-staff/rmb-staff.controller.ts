@@ -47,7 +47,7 @@ export class RmbStaffController {
     );
   }
   @Post('invite')
-  @Roles('ADMIN')
+  @Roles('ADMIN', 'RMB')
   async inviteInspector(@Body() dto: InviteUser): Promise<ApiResponse> {
     return new ApiResponse(
       true,

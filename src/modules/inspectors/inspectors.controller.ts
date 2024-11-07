@@ -52,8 +52,7 @@ export class InspectorsController {
     return this.inspectorService.create(body, file);
   }
   @Post('invite')
-  @Public()
-  @Roles('ADMIN')
+  @Roles('ADMIN', 'RMB')
   async inviteInspector(@Body() dto: InviteUser): Promise<ApiResponse> {
     return this.inspectorService.inviteInspector(dto);
   }
