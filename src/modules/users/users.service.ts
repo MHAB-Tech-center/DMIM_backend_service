@@ -238,7 +238,7 @@ export class UsersService {
     // let userGender = this.utilsService.getGender(gender);
     try {
       const role = await this.roleService.getRoleByName(ERole[ERole.ADMIN]);
-      const password = await this.getDefaultPassword();
+      const password = await this.utilsService.hashString(body.password);
       const userToCreate = new Profile(email, password);
       userToCreate.activationCode = this.generateRandomFourDigitNumber();
       const userEntity = this.userRepo.create(userToCreate);

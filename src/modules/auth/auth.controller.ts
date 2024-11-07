@@ -24,11 +24,11 @@ import { VerifyAccountDTO } from 'src/common/dtos/verify-account.dto';
 import { ResetPasswordDTO } from 'src/common/dtos/reset-password.dto';
 import { ApiTags } from '@nestjs/swagger';
 import { AuthService } from './auth.service';
-import { Request } from 'express';
 import { Public } from 'src/decorators/public.decorator';
 import { Profile } from 'src/entities/profile.entity';
 import { VerifyLoginDTO } from 'src/common/dtos/verify-login.dto';
 import { CustomExceptionFilter } from 'src/exceptions/CustomExceptionFilter';
+import { Request } from 'express';
 
 @ApiTags('auth')
 @Controller('auth')
@@ -86,8 +86,7 @@ export class AuthController {
     );
   }
   @Get('/get-profile')
-  async getProfile(@Req() req: Request) {
-    let profile = await this.authService.getProfile(req);
-    return profile;
+  async getProfile(@Req() req: Request) : Promise<ApiResponse>{
+    return new ApiResponse(true, "The profile was retrieved successfully", await this.authService.getProfile(req))
   }
 }

@@ -1,9 +1,9 @@
 /* eslint-disable */
 export enum ERole {
-  ADMIN,
-  RMB,
-  INSPECTOR,
-  USER,
-  ENVIRONOMIST,
-  SUPERVISOR,
+  ADMIN = "ADMIN",
+  RMB = " RMB",
+  INSPECTOR = "INSPECTOR",
+  USER = "USER",
+  ENVIRONOMIST = "ENVIRONOMIST",
+  SUPERVISOR = "SUPERVISOR"
 }

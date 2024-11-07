@@ -19,7 +19,8 @@ export class ReportingService {
     );
     const workbook: XLSX.WorkBook = XLSX.utils.book_new();
     const sheetTitle = 'All inspe';
-    const headers = [
+    const data : any[]= [
+     [
       'Id',
       'Record Title',
       'Value',
@@ -27,24 +28,26 @@ export class ReportingService {
       'Category',
       'Section',
       'inspectionPlan code',
+     ]
     ];
-    let data: any = [];
+    // const data: any = [];
     let id = 1;
     categories.forEach((category: Category) => {
       category.records.forEach((record: InspectionRecord) => {
         id++;
-        data = [
+        const newData = [
           id,
           record.title,
           record.boxValue,
-          100,
-          record.flagValue,
+          record.flagValue? record.flagValue : "None",
+          category.title,
           category.section.title,
           inspectionPlan.id,
         ];
-        headers.push(data);
+        data.push(newData)
       });
     });
+
     const worksheet = XLSX.utils.aoa_to_sheet(data);
     XLSX.utils.book_append_sheet(workbook, worksheet, sheetTitle);
 

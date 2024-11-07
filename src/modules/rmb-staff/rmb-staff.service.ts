@@ -23,6 +23,7 @@ import { UtilsService } from 'src/utils/utils.service';
 import { CloudinaryService } from '../cloudinary/cloudinary.service';
 import { CreateRMBStaffMemberDTO } from './dtos/create-rmb-member.dto';
 import { AssignFeaturesDTO } from './dtos/assignFeatures.dto';
+import { Request } from 'express';
 
 @Injectable()
 export class RMBStaffService {
@@ -55,6 +56,12 @@ export class RMBStaffService {
         email: email,
       },
     });
+  }
+  async getLoggedInRMBStaff(request: Request) {
+    const loggedInUser: Profile = await this.utilsService.getLoggedInProfile(
+      request,
+    );
+    return await this.findByEmail(loggedInUser.email.toString());
   }
 
   async getAllActive() {
