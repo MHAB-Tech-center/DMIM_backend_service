@@ -7,6 +7,7 @@ import { Public } from 'src/decorators/public.decorator';
 import { UUID } from 'crypto';
 import { Roles } from 'src/utils/decorators/roles.decorator';
 import { ReportService } from './report.service';
+import { sampleData } from 'src/utils/appData/constants';
 
 @Controller('reporting')
 @ApiTags('reporting')

@@ -106,7 +106,21 @@ export class ReportService {
          ? { type: 'pattern', pattern: 'solid', fgColor: { argb: 'FFFAFAFA' } }
          : { type: 'pattern', pattern: 'solid', fgColor: { argb: 'FFFFFFFF' } };
        row.eachCell((cell) => {
-         cell.fill = fill;
+        cell.fill = {
+          type: 'pattern',
+          pattern: 'solid',
+          fgColor: { argb: '008000' } // Green background
+        }
+        cell.alignment = { vertical: 'middle', horizontal: 'left', wrapText: true }
+       });
+     }else{
+      row.eachCell((cell) => {
+        cell.fill = {
+          type: 'pattern',
+          pattern: 'solid',
+          fgColor: { argb: 'FFFFFF00' } // Green background
+        }
+        cell.alignment = { vertical: 'middle', horizontal: 'left' }
        });
      }
    });

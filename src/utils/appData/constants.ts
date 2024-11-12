@@ -139,3 +139,26 @@ export const columns =  [
     { header: 'Environmental Status', key: 'EnvironmentalStatus', width: 20 },
     { header: 'Wayforward/comment', key: 'Wayforwardcomment', width: 20 },
   ];
+
+  export interface MineData {
+    code: string
+    name: string
+    subsite: string
+    operator: string
+    operatorAddress: string
+    contactName: string
+    contactNumber: string
+  }
+
+  export const sampleData: MineData[] = [
+    {
+      code: 'RW001 NP',
+      name: 'Rutongo Mines Concession',
+      subsite: 'Nyamyumba,Gasambye,Mahaza,and Karambo',
+      operator: 'Tinco Investments ltd (Rutongo mine ltd)',
+      operatorAddress: 'Tel: +250788301846\nEmail: martin@tincogroup.com',
+      contactName: 'Kevin Buyskes',
+      contactNumber: 'Tel: +250788389933'
+    },
+    // Add more sample data as needed
+  ]

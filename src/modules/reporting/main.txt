@@ -1,0 +1,13 @@
+    const CellsToBeMerged = [
+      { title: 'Mine Name / ID Number', cells: 'A1:E1', contentCell: 'A1' },
+      { title: 'Mine site Operator & Owner', cells: 'F1:L1', contentCell: 'F1' },
+      { title: 'Mine site location', cells: 'M1:R1', contentCell: 'M1' },
+      { title: 'Types of Minerals produced', cells: 'S1:V1', contentCell: 'S1' },
+      { title: 'Mining Licence Information', cells: 'W1:Z1', contentCell: 'W1' },
+      { title: 'Mine Production Details', cells: 'AA1:EE1', contentCell: 'AA1' },
+      { title: 'Production History', cells: 'FF1:KK1', contentCell: 'FF1' },
+      { title: 'Red Flag Information', cells: 'LL1:NN1', contentCell: 'LL1' },
+      { title: 'AFP', cells: 'OO1:QQ1', contentCell: 'OO1' },
+      { title: 'Data Source', cells: 'RR1:TT1', contentCell: 'RR1' },
+      { title: 'National mine site requirements', cells: 'UU1:XX1', contentCell: 'UU1' },
+    ];
