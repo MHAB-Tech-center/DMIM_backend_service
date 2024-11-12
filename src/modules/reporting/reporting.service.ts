@@ -98,7 +98,6 @@ export class ReportingService {
      { header: 'Created At', key: 'createdAt', width: 20 },
    ];
 
-   // Style the header row
    const headerRow = worksheet.getRow(1);
    headerRow.font = { bold: true };
    headerRow.fill = {
@@ -107,7 +106,6 @@ export class ReportingService {
      fgColor: { argb: 'FFE0E0E0' },
    };
 
-   // Add data rows
    this.users.forEach((user) => {
      worksheet.addRow({
        id: user.id,
@@ -119,7 +117,6 @@ export class ReportingService {
      });
    });
 
-   // Style all cells
    worksheet.eachRow((row : any, rowNumber) => {
      row.eachCell((cell) => {
        cell.border = {
@@ -130,7 +127,6 @@ export class ReportingService {
        };
      });
      
-     // Add zebra striping
      if (rowNumber > 1) { // Skip header row
        const fill = rowNumber % 2 === 0 
          ? { type: 'pattern', pattern: 'solid', fgColor: { argb: 'FFFAFAFA' } }
@@ -141,7 +137,6 @@ export class ReportingService {
      }
    });
 
-   // Set response headers
    res.setHeader(
      'Content-Type',
      'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
@@ -151,7 +146,6 @@ export class ReportingService {
      'attachment; filename=users-report.xlsx',
    );
 
-   // Write to response
    await workbook.xlsx.write(res);
    res.end();
 
