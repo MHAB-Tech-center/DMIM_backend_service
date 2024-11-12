@@ -1,10 +1,10 @@
 import { Global, Module } from '@nestjs/common';
-import { ReportingService } from './reporting.service';
 import { ReportingController } from './reporting.controller';
+import { ReportService } from './report.service';
 
 @Global()
 @Module({
-  providers: [ReportingService],
+  providers: [ReportService],
   controllers: [ReportingController],
 })
 export class ReportingModule {}
