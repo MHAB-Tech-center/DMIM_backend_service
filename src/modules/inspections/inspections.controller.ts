@@ -38,8 +38,7 @@ export class InspectionsController {
   constructor(private inspectionsService: InspectionsService) {}
 
   @Post('inspection-records/create')
-  @Public()
-  // @Roles('SUPERVISOR','ENVIRONOMIST','INSPECTOR')
+  @Roles('SUPERVISOR','ENVIRONOMIST','INSPECTOR')
   async createInspectionRecords(
     @Body() dto: CreateInspectionDTO,
   ): Promise<ApiResponse> {

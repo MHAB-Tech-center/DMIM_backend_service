@@ -168,6 +168,7 @@ export class InspectionsService {
       this.utilService.getSummaryReportEntity(dto),
     );
     // Change the status to submitted
+    console.log(inspectionPlan)
     inspectionPlan.status = EInspectionStatus[EInspectionStatus.SUBMITTED];
     inspectionPlan.summaryReport = summaryReport;
     inspectionPlan.identification = identification;
@@ -320,6 +321,32 @@ export class InspectionsService {
       inspectionPlan.status
     );
     return inspectionsResponse;
+  }
+  async getAllInspectionPlans(){
+    return await this.inspectionPlanRepository.find({})
+  }
+  async getAllInspectionReports(): Promise<InspectionsResponseDTO[]> {
+    const inspectionPlans: InspectionPlan[] = await this.getAllInspectionPlans();
+    let responseDTOs: InspectionsResponseDTO[] = [];
+    inspectionPlans.forEach(async (plan:InspectionPlan) => {
+      const inspectionPlan = await this.getInspectionPlan(plan.id)
+      const categoryList: Category[] = await this.categoryRepository.find({
+        where: {
+          inspectionPlan: { id: inspectionPlan.id },
+        },
+        relations: ['section', 'records'],
+      });
+      const inspectionsResponse = new InspectionsResponseDTO(
+        inspectionPlan.identification,
+        categoryList,
+        inspectionPlan.id,
+        inspectionPlan.summaryReport,
+        inspectionPlan.minesiteInfo,
+        inspectionPlan.status
+      );
+      responseDTOs.push(inspectionsResponse)
+    })
+    return responseDTOs;   
   }
 
   async countAllPlansByProvince(province: string): Promise<number> {

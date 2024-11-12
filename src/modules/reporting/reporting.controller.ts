@@ -28,4 +28,17 @@ export class ReportingController {
       await this.reportingService.getInspectionsReport(planId, response),
     );
   }
+
+  @Get('inspections/all')
+  @Public()
+  // @Roles('ADMIN','RMB')
+  async getAllInspectionsReport(
+    @Res() response: Response,
+  ) {
+    return new ApiResponse(
+      true,
+      'The file downloaded successfully',
+      await this.reportingService.getInspectionsReports(response),
+    );
+  }
 }
