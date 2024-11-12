@@ -40,6 +40,7 @@
     "class-validator": "^0.14.0",
     "cloudinary": "^2.5.0",
     "cors": "^2.8.5",
+    "exceljs": "^4.4.0",
     "file-type": "^18.5.0",
     "googleapis": "^125.0.0",
     "handlebars": "^4.7.8",
@@ -73,7 +74,7 @@
     "supertest": "^6.3.3",
     "ts-jest": "^29.1.0",
     "ts-loader": "^9.4.3",
-    "ts-node": "^10.9.1",
+    "ts-node": "^10.9.2",
     "tsconfig-paths": "^4.2.0",
     "typescript": "^5.1.3"
   },
