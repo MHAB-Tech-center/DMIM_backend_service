@@ -40,6 +40,7 @@
     "class-validator": "^0.14.0",
     "cloudinary": "^2.5.0",
     "cors": "^2.8.5",
+    "exceljs": "^4.4.0",
     "file-type": "^18.5.0",
     "googleapis": "^125.0.0",
     "handlebars": "^4.7.8",

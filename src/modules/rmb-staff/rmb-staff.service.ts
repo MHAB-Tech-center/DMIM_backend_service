@@ -137,7 +137,7 @@ export class RMBStaffService {
     profile.activationCode = this.userService.generateRandomFourDigitNumber();
     profile = await this.userService.saveExistingProfile(profile, role);
     await this.mailingService.sendEmail(
-      `https://dmim-frontend.vercel.app/register?email=${profile.email.toString()}`,
+      `invite-rmb?email=${profile.email.toString()}`,
       'invite-rmb',
       profile.email.toString(),
       profile,

@@ -31,7 +31,6 @@ lerna-debug.log*
 .env
 # IDE - VSCode
 .vscode/*
-/scripts/create_test_env.sh
 !.vscode/settings.json
 !.vscode/tasks.json
 !.vscode/launch.json

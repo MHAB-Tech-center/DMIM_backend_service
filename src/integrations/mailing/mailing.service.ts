@@ -17,6 +17,7 @@ export class MailingService {
     email?: string,
     inspectionDate?: string
   ) {
+    const frontendUrl = "http://dmis.rmb.gov.rw:5173/";
     const recipient = await user;
     switch (type) {
       case 'get-code':
@@ -48,7 +49,7 @@ export class MailingService {
           <p>Thank you for signing up! Please click the button below to verify your account :</p>
           <p>Or use Your verification code</p>
            <a href="[Profile Setup Link]" class="btn">${recipient.activationCode}</a>
-          <p> You can also verify your account by click on this link <a class='button' href='${link}'>Reset your password</a>
+          <p> You can also verify your account by click on this link <a class='button' href='${frontendUrl}${link}'>Reset your password</a>
         </div>
           ${footerHTML}  
           `,
@@ -81,7 +82,7 @@ export class MailingService {
        <div class="content">
           <p>Dear ${name},</p>
           <p>Welcome to the RMB team! Set up your profile to access your account and manage your responsibilities within the app.</p>
-          <a href="${link}" class="btn">Set Up Profile</a>
+                <a href="${frontendUrl}${link}" style="display: inline-block; padding: 10px 15px; color: #ffffff; background-color: #007bff; text-decoration: none; border-radius: 5px;">Set Up Profile</a>
           <p>We are glad to have you with us!</p>
           <p>Best regards,<br>The RMB Team</p>
        </div>
@@ -102,7 +103,7 @@ export class MailingService {
             <p>Dear ${name},</p>
             <p>We are thrilled to welcome you to our Digital Mine Inspection Manual  platform. To start using the app, please set up your
                 profile.</p>
-            <a href="${link}" class="btn">Set Up Profile</a>
+                <a href="${frontendUrl}${link}" style="display: inline-block; padding: 10px 15px; color: #ffffff; background-color: #007bff; text-decoration: none; border-radius: 5px;">Set Up Profile</a>
         <p>We are glad to have you with us!</p>
           <p>Best regards,<br>The RMB Team</p>
         </div>
@@ -122,7 +123,7 @@ export class MailingService {
             <p>Dear ${name},</p>
             <p>We are thrilled to welcome you to our Digital Mine Inspection Manual  platform. To start using the app, please set up your
                 profile.</p>
-            <a href="${link}" class="btn">Set Up Profile</a>
+            <a href="${frontendUrl}${link}" class="btn">Set Up Profile</a>
            <p>We are glad to have you with us!</p>
           <p>Best regards,<br>The RMB Team</p>
         </div>
