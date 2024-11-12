@@ -137,7 +137,7 @@ export class RMBStaffService {
     profile.activationCode = this.userService.generateRandomFourDigitNumber();
     profile = await this.userService.saveExistingProfile(profile, role);
     await this.mailingService.sendEmail(
-      `register?email=${profile.email.toString()}`,
+      `http://dmis.rmb.gov.rw:5173/register?email=${profile.email.toString()}`,
       'invite-rmb',
       profile.email.toString(),
       profile,
