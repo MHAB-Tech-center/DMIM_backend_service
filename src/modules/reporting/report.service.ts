@@ -12,7 +12,7 @@ import { Category } from 'src/entities/category.entity';
 export class ReportService {
   constructor(private inspectionService: InspectionsService) {}
 
-  getFlabValues(report: InspectionsResponseDTO) : RedFlagInformation{
+  getFlabValues(report: InspectionsResponseDTO): RedFlagInformation {
     let redFlagInfo: RedFlagInformation = new RedFlagInformation();
     report.records.forEach((category: Category) => {
       if (category.section.flagStandard == 'RED') {
@@ -37,7 +37,6 @@ export class ReportService {
       }
     });
     return redFlagInfo;
-
   }
   async getInspectionsReport(planId: UUID, res: Response) {
     const report = await this.inspectionService.getCategoriesInspectionPlan(
@@ -53,28 +52,38 @@ export class ReportService {
       pattern: 'solid',
       fgColor: { argb: 'green' },
     };
-    let redFlagInfo: RedFlagInformation = this.getFlabValues(report)
+    let redFlagInfo: RedFlagInformation = this.getFlabValues(report);
     //operatorAddress,
     worksheet.addRow({
       // mine name / ID Number
-      MineNo: report.minesite.code ? report.minesite.code : "N/A",
+      MineNo: report.minesite?.code ? report.minesite.code : 'N/A',
       parameters: 'N/A',
       Subsites: 'N/A',
       //  Mine site Operator & Owner
-      Operator: report.identification.mineOperator ? report.identification.mineOperator :"N/A",
+      Operator: report.identification
+        ? report.identification?.mineOperator
+          ? report.identification?.mineOperator
+          : 'N/A'
+        : 'N/A',
       operatorAddress: `${report.identification.province},${report.identification.district}`,
-      ContactName: report.identification.responsiblePersonNames ? report.identification.responsiblePersonNames : "N/A",
-      ContactNumber: report.identification.responsiblePersonContact ? report.identification.responsiblePersonContact :"N/A",
+      ContactName: report.identification?.responsiblePersonNames
+        ? report.identification?.responsiblePersonNames
+        : 'N/A',
+      ContactNumber: report?.identification?.responsiblePersonContact
+        ? report.identification?.responsiblePersonContact
+        : 'N/A',
       OperatorNID: 'N/A',
-      OwnerName: report.identification.mineOwner ? report.identification.mineOwner : "N/A",
+      OwnerName: report.identification.mineOwner
+        ? report.identification?.mineOwner
+        : 'N/A',
       OwnerAddress: 'N/A',
       OwnerNID: 'N/A',
       //  Mine site location
-      EastUTM: report.identification.coordinates.utm_east,
-      SouthUTM: report.identification.coordinates.utm_south,
-      DMSEast: report.identification.coordinates.dms_east,
-      SouthDMS: report.identification.coordinates.dms_south,
-      District: report.minesite.district,
+      EastUTM: report?.identification?.coordinates.utm_east,
+      SouthUTM: report?.identification?.coordinates.utm_south,
+      DMSEast: report?.identification?.coordinates.dms_east,
+      SouthDMS: report?.identification?.coordinates.dms_south,
+      District: report?.minesite.district,
       Sector: 'N/A',
       Cell: 'N/A',
       //  Types of Minerals Produced
@@ -192,20 +201,29 @@ export class ReportService {
       fgColor: { argb: 'green' },
     };
     inspectionReports.forEach((report: InspectionsResponseDTO) => {
-      let redFlagInfo: RedFlagInformation = this.getFlabValues(report)
+      let redFlagInfo: RedFlagInformation = this.getFlabValues(report);
       //operatorAddress,
       worksheet.addRow({
         // mine name / ID Number
-        MineNo: report.minesite.code ? report.minesite.code : "N/A",
+        MineNo: report.minesite.code ? report.minesite.code : 'N/A',
         parameters: 'N/A',
         Subsites: 'N/A',
-        //  Mine site Operator & Owner
-        Operator: report.identification.mineOperator ? report.identification.mineOperator :"N/A",
+        Operator: report.identification
+          ? report.identification?.mineOperator
+            ? report.identification?.mineOperator
+            : 'N/A'
+          : 'N/A',
         operatorAddress: `${report.identification.province},${report.identification.district}`,
-        ContactName: report.identification.responsiblePersonNames ? report.identification.responsiblePersonNames : "N/A",
-        ContactNumber: report.identification.responsiblePersonContact ? report.identification.responsiblePersonContact :"N/A",
+        ContactName: report.identification.responsiblePersonNames
+          ? report.identification.responsiblePersonNames
+          : 'N/A',
+        ContactNumber: report.identification.responsiblePersonContact
+          ? report.identification.responsiblePersonContact
+          : 'N/A',
         OperatorNID: 'N/A',
-        OwnerName: report.identification.mineOwner ? report.identification.mineOwner : "N/A",
+        OwnerName: report.identification.mineOwner
+          ? report.identification.mineOwner
+          : 'N/A',
         OwnerAddress: 'N/A',
         OwnerNID: 'N/A',
         //  Mine site location
@@ -265,7 +283,6 @@ export class ReportService {
         EnvironmentalStatus: 'N/A',
         Wayforwardcomment: report.summaryReport.mainProblems,
       });
-  
     });
     worksheet.eachRow((row: any, rowNumber) => {
       row.eachCell((cell) => {
