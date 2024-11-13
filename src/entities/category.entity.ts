@@ -19,7 +19,7 @@ export class Category extends BaseEntity {
   // @OneToMany(() => Notification, (notification) => notification.miningCompany)
   // notifications: Notification[];
 
-  @OneToMany(() => InspectionRecord, (record) => record.category)
+  @OneToMany(() => InspectionRecord, (record) => record.category, {eager:true})
   records: InspectionRecord[];
 
   constructor(title: string, inspectionPlan: InspectionPlan, section: Section) {

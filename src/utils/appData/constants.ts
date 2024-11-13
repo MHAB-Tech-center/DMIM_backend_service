@@ -105,9 +105,9 @@ export const columns =  [
     { header: 'Cell', key: 'Cell', width: 20 },
     { header: 'Mined Minerals', key: 'MinedMinerals', width: 20 },
     { header: 'ICGLR Classification', key: 'ICGLRClassification', width: 20 },
-    { header: 'Type of mineral license', key: 'LicenseNumber', width: 20 },
-    { header: 'License Number', key: '', width: 20 },
-    { header: 'Issued Date', key: 'Issued Date', width: 20 },
+    { header: 'Type of mineral license', key: 'MineralLicenseType', width: 20 },
+    { header: 'License Number', key: 'LicenseNumber', width: 20 },
+    { header: 'Issued Date', key: 'IssuedDate', width: 20 },
     { header: 'Expiry Date', key: 'ExpiryDate', width: 20 },
     { header: 'Surface Area (ha)', key: 'SurfaceArea', width: 20 },
     { header: 'Type of Mine (open pit, underground,both)', key: 'TypeofMine', width: 20 },
@@ -118,8 +118,8 @@ export const columns =  [
     { header: 'Number of Large open pit(s) - ACTIVE', key: 'NumberOfLargeOpenPitActive', width: 20 },
     { header: 'Number of Large open pit(s) - ABANDONED', key: 'NumberOfLargeOpenPitAbandoned', width: 20 },
     { header: 'Number of Small open pit(s) - ACTIVE', key: 'NumberOfSmallOpenPitActive', width: 20 },
-    { header: 'Number of Small open pit(s) - ABANDONED', key: 'NumberOfSmallOpenAbandoned', width: 20 },
-    { header: 'Number of Underground (tunnels) - Active', key: 'NumberOfUndergroundAbandoned', width: 20 },
+    { header: 'Number of Small open pit(s) - ABANDONED', key: 'NumberOfSmallOpenPitAbandoned', width: 20 },
+    { header: 'Number of Underground (tunnels) - Active', key: 'NumberOfUndergroundActive', width: 20 },
     { header: 'Number of Underground (tunnels) - ABANDONED', key: 'NumberOfUndergroundAbandoned', width: 20 },
     { header: 'Mine Site Monthly Productive Capacity[t]', key: 'MonthlyProductiveCapacity', width: 20 },
     { header: 'Production History', key: 'ProductionHistory', width: 20 },
@@ -140,25 +140,10 @@ export const columns =  [
     { header: 'Wayforward/comment', key: 'Wayforwardcomment', width: 20 },
   ];
 
-  export interface MineData {
-    code: string
-    name: string
-    subsite: string
-    operator: string
-    operatorAddress: string
-    contactName: string
-    contactNumber: string
-  }
 
-  export const sampleData: MineData[] = [
-    {
-      code: 'RW001 NP',
-      name: 'Rutongo Mines Concession',
-      subsite: 'Nyamyumba,Gasambye,Mahaza,and Karambo',
-      operator: 'Tinco Investments ltd (Rutongo mine ltd)',
-      operatorAddress: 'Tel: +250788301846\nEmail: martin@tincogroup.com',
-      contactName: 'Kevin Buyskes',
-      contactNumber: 'Tel: +250788389933'
-    },
-    // Add more sample data as needed
-  ]
+  export class RedFlagInformation{
+    ArmedGroupsPresent: string = "N/A";
+    ChildrenPresent: string = "N/A";
+    ForeignMinerals: string = "N/A";
+    ForcedLabor: string = "N/A";
+  }
