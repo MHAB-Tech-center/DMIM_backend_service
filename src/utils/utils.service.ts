@@ -11,6 +11,7 @@ import { JwtService } from '@nestjs/jwt';
 import * as bcrypt from 'bcrypt';
 import { Request } from 'express';
 import { CreateInspectionDTO } from 'src/common/dtos/inspections/create-inspection.dto';
+import { InspectionsResponseDTO } from 'src/common/dtos/responses/inspections-response.dto';
 import { EGender } from 'src/common/Enum/EGender.enum';
 import { EInspectionStatus } from 'src/common/Enum/EInspectionStatus.enum';
 import { EInspectorRole } from 'src/common/Enum/EInspectorRole.enum';
@@ -23,6 +24,7 @@ import { Role } from 'src/entities/role.entity';
 import { SummaryReport } from 'src/entities/summary-report.entity';
 import { RoleService } from 'src/modules/roles/roles.service';
 import { UsersService } from 'src/modules/users/users.service';
+import { RecordedValues, RedFlagInformation } from './appData/constants';
 
 @Injectable()
 export class UtilsService {
@@ -227,5 +229,260 @@ export class UtilsService {
       prev: page > 1 ? page - 1 : null,
       next: page < lastPage ? page + 1 : null,
     };
+  }
+  getRedFlabValues(report: InspectionsResponseDTO): RedFlagInformation {
+    let redFlagInfo: RedFlagInformation = new RedFlagInformation();
+    report.records.forEach((category: Category) => {
+      if (category.section.flagStandard == 'RED') {
+        category.records.forEach((record: InspectionRecord) => {
+          switch (record.pseudoName) {
+            case 'non-state-armed-groups-or-their-affiliates-illegally-control-mine-site':
+              redFlagInfo.ArmedGroupsPresent = record.boxValue
+                ? record.boxValue
+                : record.flagValue;
+              break;
+            case 'children-below-the-minimum-working-age-as-defined-in-rwanda--16-years--are-employed-in-exploitation-at-the-mine-site':
+              redFlagInfo.ChildrenPresent = record.boxValue
+                ? record.boxValue
+                : record.flagValue;
+              break;
+            case 'forced-labor-is-practiced-on-the-mine-site':
+              redFlagInfo.ForcedLabor = record.boxValue
+                ? record.boxValue
+                : record.flagValue;
+              break;
+            case 'security-staff-are-sensitized-to-prevent-report-influx-of-external-minerals-on-mine-sites':
+              redFlagInfo.ForeignMinerals = record.boxValue
+                ? record.boxValue
+                : record.flagValue;
+              break;
+            default:
+              redFlagInfo = redFlagInfo;
+          }
+        });
+      }
+    });
+    return redFlagInfo;
+  }
+
+  getOtherFlabValues(report: InspectionsResponseDTO): RecordedValues {
+    let data: RecordedValues = new RecordedValues();
+    report.records.forEach((category: Category) => {
+      if (category.section.flagStandard == 'RED') {
+        category.records.forEach((record: InspectionRecord) => {
+          switch (record.pseudoName) {
+            case 'afp-sampling-has-already-taken-place':
+              data.SamplingTookPlace = record.boxValue
+                ? record.boxValue
+                : record.flagValue;
+              break;
+            case 'ppe-specify':
+              data.PPEAvailable = record.boxValue
+                ? record.boxValue
+                : record.flagValue;
+              break;
+            case 'health---safety':
+              data.SafetyAtOperatingSite = record.boxValue
+                ? record.boxValue
+                : record.flagValue;
+              break;
+            case 'comments---action-15':
+              data.Wayforwardcomment = record.boxValue
+                ? record.boxValue
+                : record.flagValue;
+              break;
+            case 'proposed-remedial-actions':
+              // TOFO
+              data.EnvironmentalStatus = record.boxValue
+                ? record.boxValue
+                : record.flagValue;
+              break;
+            case 'mine-site-certification-status--based-on-the-next-pages':
+              data.CurrentstatusOfMinesite = record.boxValue
+                ? record.boxValue
+                : record.flagValue;
+              break;
+            case 'date-of-last-inspection':
+              data.DateOfLastInspection = record.boxValue
+                ? record.boxValue
+                : record.flagValue;
+              break;
+            case 'next-inspection-date':
+              data.NextInspectionDate = record.boxValue
+                ? record.boxValue
+                : record.flagValue;
+              break;
+            case 'inspectorInfo.name':
+              data.ResponsibleOfLastMine = record.boxValue
+                ? record.boxValue
+                : record.flagValue;
+              break;
+            case 'reference-of-last-inspection-report':
+              data.LastMineInspection = record.boxValue
+                ? record.boxValue
+                : record.flagValue;
+              break;
+            case 'inspectorInfo.name':
+              data.ResponsibleOfLastMine = record.boxValue
+                ? record.boxValue
+                : record.flagValue;
+              break;
+            case 'main-problem-at-mine-site':
+              data.InspectionComments = record.boxValue
+                ? record.boxValue
+                : record.flagValue;
+              break;
+            case 'data-source':
+              data.ProductionHistory = record.boxValue
+                ? record.boxValue
+                : record.flagValue;
+              break;
+            case 'large-open-pit-abandoned':
+              data.NumberOfLargeOpenPitAbandoned = record.boxValue
+                ? record.boxValue
+                : record.flagValue;
+              break;
+            case 'small-open-pit-abandoned':
+              data.NumberOfSmallOpenPitAbandoned = record.boxValue
+                ? record.boxValue
+                : record.flagValue;
+              break;
+            case 'underground-tunnels-active':
+              data.NumberOfUndergroundActive = record.boxValue
+                ? record.boxValue
+                : record.flagValue;
+              break;
+            case 'underground-tunnels-abandoned':
+              data.NumberOfUndergroundAbandoned = record.boxValue
+                ? record.boxValue
+                : record.flagValue;
+              break;
+            case 'small-open-pit-active':
+              data.NumberOfSmallOpenPitActive = record.boxValue
+                ? record.boxValue
+                : record.flagValue;
+              break;
+            case 'large-open-pit-active':
+              data.NumberOfLargeOpenPitActive = record.boxValue
+                ? record.boxValue
+                : record.flagValue;
+              break;
+            case 'exploitation-begun':
+              data.ExploitationBegun = record.boxValue
+                ? record.boxValue
+                : record.flagValue;
+              break;
+            case 'mine-site-classification':
+              data.ICGLRClassification = record.boxValue
+                ? record.boxValue
+                : record.flagValue;
+              break;
+            case 'enter-permit-type':
+              data.MineralLicenseType = record.boxValue
+                ? record.boxValue
+                : record.flagValue;
+              break;
+            case 'permit-number--ministerial-decree-no':
+              data.LicenseNumber = record.boxValue
+                ? record.boxValue
+                : record.flagValue;
+              break;
+            case 'date-issued':
+              data.IssuedDate = record.boxValue
+                ? record.boxValue
+                : record.flagValue;
+              break;
+            case 'expiry-date':
+              data.ExpiryDate = record.boxValue
+                ? record.boxValue
+                : record.flagValue;
+              break;
+            case 'surface-area-ha':
+              data.SurfaceArea = record.boxValue
+                ? record.boxValue
+                : record.flagValue;
+              break;
+            case 'id-of-responsible-operations-manager':
+              data.OperatorNID = record.boxValue
+                ? record.boxValue
+                : record.flagValue;
+              break;
+            case 'headquarters-address':
+              data.operatorAddress = record.boxValue
+                ? record.boxValue
+                : record.flagValue;
+              break;
+            case 'telephone-number-2':
+              data.ContactNumber = record.boxValue
+                ? record.boxValue
+                : record.flagValue;
+              break;
+            case 'name-of-responsible-operations-manager':
+              data.ContactName = record.boxValue
+                ? record.boxValue
+                : record.flagValue;
+              break;
+            case 'parameters':
+              data.ExpiryDate = record.boxValue
+                ? record.boxValue
+                : record.flagValue;
+              break;
+            case 'subsites':
+              data.Subsites = record.boxValue
+                ? record.boxValue
+                : record.flagValue;
+              break;
+            case 'type-of-mine':
+              data.NumberOfMine = record.boxValue
+                ? record.boxValue
+                : record.flagValue;
+              break;
+            case 'mine-activity-status':
+              data.MiningActivityStatus = record.boxValue
+                ? record.boxValue
+                : record.flagValue;
+              break;
+            case 'all-mine-workers--f-m':
+              data.NumberOfWorkers = record.boxValue
+                ? record.boxValue
+                : record.flagValue;
+              break;
+            case 'average-production-per-miner-per-day':
+              data.AverageProducation = record.boxValue
+                ? record.boxValue
+                : record.flagValue;
+              break;
+            case 'typical-depth-of-pits-or-tunnels--m---special-range':
+              data.AverageRepresentative = record.boxValue
+                ? record.boxValue
+                : record.flagValue;
+              break;
+            case 'monthly-capacity-specify-range':
+              data.MineSiteMonthly = record.boxValue
+                ? record.boxValue
+                : record.flagValue;
+              break;
+            case 'specify-order-of-economic-importance':
+              data.MinedMinerals = record.boxValue
+                ? record.boxValue
+                : record.flagValue;
+              break;
+            case 'subsites':
+              data.Subsites = record.boxValue
+                ? record.boxValue
+                : record.flagValue;
+              break;
+            case 'subsites':
+              data.Subsites = record.boxValue
+                ? record.boxValue
+                : record.flagValue;
+              break;
+            default:
+              data = data;
+          }
+        });
+      }
+    });
+    return data;
   }
 }

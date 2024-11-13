@@ -111,7 +111,6 @@ export const columns =  [
     { header: 'Expiry Date', key: 'ExpiryDate', width: 20 },
     { header: 'Surface Area (ha)', key: 'SurfaceArea', width: 20 },
     { header: 'Type of Mine (open pit, underground,both)', key: 'TypeofMine', width: 20 },
-    { header: 'Mining Activity Status (Active,Non-Active, Abandoned)', key: 'MiningActivityStatus', width: 20 },
     { header: 'Exploitation begun', key: 'ExploitationBegun', width: 20 },
     { header: 'Number of Workers (incl. Artisinalminers)', key: 'NumberofWorkers', width: 20 },
     { header: 'Average production per miner per day(kg)', key: 'AverageProduction', width: 20 },
@@ -121,6 +120,16 @@ export const columns =  [
     { header: 'Number of Small open pit(s) - ABANDONED', key: 'NumberOfSmallOpenPitAbandoned', width: 20 },
     { header: 'Number of Underground (tunnels) - Active', key: 'NumberOfUndergroundActive', width: 20 },
     { header: 'Number of Underground (tunnels) - ABANDONED', key: 'NumberOfUndergroundAbandoned', width: 20 },
+// Additional
+    { header: 'Type of Mine (open pit, underground, both)', key: 'NumberOfMine', width: 20 },
+    { header: 'Mining Activity Status (Active, Non-Active, Abandoned)', key: 'MiningActivityStatus', width: 20 },
+    { header: 'Number of Workers (incl. Artisinal miners)', key: 'NumberOfWorkers', width: 20 },
+    { header: 'Average production per miner per day (kg)', key: 'AverageProducation', width: 20 },
+    { header: 'Average / Representative Depth of Pit (m)', key: 'AverageRepresentative', width: 20 },
+    { header: 'Mine Site Monthly Productive Capacity [t]', key: 'MineSiteMonthly', width: 20 },
+
+
+
     { header: 'Mine Site Monthly Productive Capacity[t]', key: 'MonthlyProductiveCapacity', width: 20 },
     { header: 'Production History', key: 'ProductionHistory', width: 20 },
     { header: 'The Current status of the minesite', key: 'CurrentstatusOfMinesite', width: 20 },
@@ -146,4 +155,59 @@ export const columns =  [
     ChildrenPresent: string = "N/A";
     ForeignMinerals: string = "N/A";
     ForcedLabor: string = "N/A";
+  }
+
+  export class RecordedValues{
+    MinedMinerals:string = 'N/A';
+    ContactNumber: string = "N/A";
+    ContactName: string = "N/A";
+    Subsites: string = "N/A";
+
+    // Mine License Information
+    ICGLRClassification:string = 'N/A';
+    TypeOfMineralLicense: string = 'N/A';
+    IssuedDate: string = 'N/A';
+    ExpiryDate: string = 'N/A';
+    SurfaceArea: string = 'N/A';
+    MineralLicenseType: string ='N/A';
+
+    // Mine Production Details
+    TypeofMine: string = 'N/A';
+    MiningActivityStatus: string = 'N/A';
+    ExploitationBegun: string = 'N/A';
+    NumberofWorkers: string = 'N/A';
+    AverageProduction: string = 'N/A';
+    operatorAddress: string = "N/A";
+    NumberOfLargeOpenPitActive: string ='N/A';
+    NumberOfLargeOpenPitAbandoned: string = 'N/A';
+    NumberOfSmallOpenPitAbandoned: string = 'N/A';
+    NumberOfSmallOpenPitActive: string = 'N/A';
+    // =====
+    NumberOfMine: string = "N/A";
+    NumberOfWorkers: string = "N/A";
+    AverageProducation: string = "N/A";
+    AverageRepresentative: string = "N/A";
+    MineSiteMonthly: string = "N/A";
+
+
+    // Mine Production Details ====
+    NumberOfUndergroundActive: string ='N/A';
+    NumberOfUndergroundAbandoned: string = 'N/A';
+    RepresentativeDepth: string = 'N/A';
+    MonthlyProductiveCapacity: string = 'N/A';
+    SamplingTookPlace: string = "N/A";
+    PPEAvailable: string = "N/A";
+    SafetyAtOperatingSite: string = "N/A";
+    EnvironmentalStatus: string = "N/A";
+    Wayforwardcomment: string = "N/A";
+    // Production History ====
+    ProductionHistory: string ='N/A';
+    OperatorNID : string = "N/A";
+    CurrentstatusOfMinesite: string ='N/A';
+    DateOfLastInspection: string = 'N/A';
+    NextInspectionDate: string =  'N/A';
+    InspectionComments: string = "N/A";
+    LicenseNumber: string = "N/A";
+    ResponsibleOfLastMine: string = 'N/A';
+    LastMineInspection: string ='N/A';
   }

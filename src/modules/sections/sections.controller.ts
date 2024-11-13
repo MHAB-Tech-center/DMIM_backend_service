@@ -26,7 +26,8 @@ export class SectionsController {
   constructor(private sectionService: SectionsService) {}
 
   @Post('create')
-  @Roles('ADMIN')
+  // @Roles('ADMIN')
+  @Public()
   async create(@Body() dto: CreateSectionDTO): Promise<ApiResponse> {
     return this.sectionService.create(dto);
   }
