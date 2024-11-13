@@ -55,85 +55,81 @@ export class ReportService {
     let redFlagInfo: RedFlagInformation = this.getFlabValues(report);
     //operatorAddress,
     worksheet.addRow({
-      // mine name / ID Number
-      MineNo: report.minesite?.code ? report.minesite.code : 'N/A',
-      parameters: 'N/A',
-      Subsites: 'N/A',
-      //  Mine site Operator & Owner
-      Operator: report.identification
-        ? report.identification?.mineOperator
-          ? report.identification?.mineOperator
-          : 'N/A'
-        : 'N/A',
-      operatorAddress: `${report.identification.province},${report.identification.district}`,
-      ContactName: report.identification?.responsiblePersonNames
-        ? report.identification?.responsiblePersonNames
-        : 'N/A',
-      ContactNumber: report?.identification?.responsiblePersonContact
-        ? report.identification?.responsiblePersonContact
-        : 'N/A',
-      OperatorNID: 'N/A',
-      OwnerName: report.identification.mineOwner
-        ? report.identification?.mineOwner
-        : 'N/A',
-      OwnerAddress: 'N/A',
-      OwnerNID: 'N/A',
-      //  Mine site location
-      EastUTM: report?.identification?.coordinates.utm_east,
-      SouthUTM: report?.identification?.coordinates.utm_south,
-      DMSEast: report?.identification?.coordinates.dms_east,
-      SouthDMS: report?.identification?.coordinates.dms_south,
-      District: report?.minesite.district,
-      Sector: 'N/A',
-      Cell: 'N/A',
-      //  Types of Minerals Produced
-      MinedMinerals: 'N.A',
-      //  Mine Lisence Information
-      ICGLRClassification: 'N/A',
-      TypeOfMineralLicense: '',
-      //  Mine Lisence Information
-      IssuedDate: 'N/A',
-      ExpiryDate: 'N/A',
-      SurfaceArea: 'N/A',
-      MineralLicenseType: 'N/A',
-      LicenseNumber: report.identification.licenseNumber
-        ? report.identification.licenseNumber
-        : 'N/A',
-      //  Mine Production Details
-      TypeofMine: 'N/A',
-      MiningActivityStatus: 'N/A',
-      ExploitationBegun: 'N/A',
-      NumberofWorkers: 'N/A',
-      AverageProduction: 'N/A',
-      NumberOfLargeOpenPitActive: 'N/A',
-      NumberOfLargeOpenPitAbandoned: 'N/A',
-      NumberOfSmallOpenPitAbandoned: 'N/A',
-      NumberOfSmallOpenPitActive: 'N/A',
-      //  Mine Production Details ====
-      NumberOfUndergroundActive: 'N/A',
-      NumberOfUndergroundAbandoned: 'N/A',
-      RepresentativeDepth: 'N/A',
-      MonthlyProductiveCapacity: 'N/A',
-      //  Production History====
-      ProductionHistory: 'N/A',
-      CurrentstatusOfMinesite: 'N/A',
-      DateOfLastInspection: 'N/A',
-      NextInspectionDate: 'N/A',
-      ResponsibleOfLastMine: 'N/A',
-      LastMineInspection: 'N/A',
-      InspectionComments: report.summaryReport.proposedRemedialActions,
-      //  Red flag information====
-      ArmedGroupsPresent: redFlagInfo.ArmedGroupsPresent,
-      ChildrenPresent: redFlagInfo.ChildrenPresent,
-      ForeignMinerals: redFlagInfo.ForeignMinerals,
-      ForcedLabor: redFlagInfo.ForcedLabor,
-      //  AFP
-      SamplingTookPlace: 'N/A',
-      //  National mine site requirements
-      PPEAvailable: 'N/A',
-      SafetyAtOperatingSite: 'N/A',
-      EnvironmentalStatus: 'N/A',
-      Wayforwardcomment: report.summaryReport.mainProblems,
+     // Mine Information
+MineNo: report.minesite?.code ? report.minesite.code : 'N/A',
+parameters: 'N/A',
+Subsites: 'N/A',
+Operator: report.identification?.mineOperator ? report.identification.mineOperator : 'N/A',
+operatorAddress: `${report.identification?.district || 'N/A'}, ${report.identification?.sector || 'N/A'}`,
+ContactName: report.identification?.responsiblePersonNames ? report.identification.responsiblePersonNames : 'N/A',
+ContactNumber: report.identification?.responsiblePersonContact ? report.identification.responsiblePersonContact : 'N/A',
+OperatorNID: 'N/A',
+OwnerName: report.identification?.mineOwner ? report.identification.mineOwner : 'N/A',
+OwnerAddress: 'N/A',
+OwnerNID: 'N/A',
+
+// Mine Site Location
+EastUTM: report.identification?.coordinates?.utm_east || 'N/A',
+SouthUTM: report.identification?.coordinates?.utm_south || 'N/A',
+DMSEast: report.identification?.coordinates?.dms_east || 'N/A',
+SouthDMS: report.identification?.coordinates?.dms_south || 'N/A',
+District: report.minesite?.district || 'N/A',
+Sector: 'N/A',
+Cell: 'N/A',
+
+// Types of Minerals Produced
+MinedMinerals: 'N/A',
+
+// Mine License Information
+ICGLRClassification: 'N/A',
+TypeOfMineralLicense: '',
+IssuedDate: 'N/A',
+ExpiryDate: 'N/A',
+SurfaceArea: 'N/A',
+MineralLicenseType: 'N/A',
+LicenseNumber: report.identification?.licenseNumber ? report.identification.licenseNumber : 'N/A',
+
+// Mine Production Details
+TypeofMine: 'N/A',
+MiningActivityStatus: 'N/A',
+ExploitationBegun: 'N/A',
+NumberofWorkers: 'N/A',
+AverageProduction: 'N/A',
+NumberOfLargeOpenPitActive: 'N/A',
+NumberOfLargeOpenPitAbandoned: 'N/A',
+NumberOfSmallOpenPitAbandoned: 'N/A',
+NumberOfSmallOpenPitActive: 'N/A',
+
+// Mine Production Details ====
+NumberOfUndergroundActive: 'N/A',
+NumberOfUndergroundAbandoned: 'N/A',
+RepresentativeDepth: 'N/A',
+MonthlyProductiveCapacity: 'N/A',
+
+// Production History ====
+ProductionHistory: 'N/A',
+CurrentstatusOfMinesite: 'N/A',
+DateOfLastInspection: 'N/A',
+NextInspectionDate: 'N/A',
+ResponsibleOfLastMine: 'N/A',
+LastMineInspection: 'N/A',
+InspectionComments: report.summaryReport?.proposedRemedialActions || 'N/A',
+
+// Red Flag Information ====
+ArmedGroupsPresent: redFlagInfo?.ArmedGroupsPresent || 'N/A',
+ChildrenPresent: redFlagInfo?.ChildrenPresent || 'N/A',
+ForeignMinerals: redFlagInfo?.ForeignMinerals || 'N/A',
+ForcedLabor: redFlagInfo?.ForcedLabor || 'N/A',
+
+// AFP
+SamplingTookPlace: 'N/A',
+
+// National Mine Site Requirements
+PPEAvailable: 'N/A',
+SafetyAtOperatingSite: 'N/A',
+EnvironmentalStatus: 'N/A',
+Wayforwardcomment: report.summaryReport?.mainProblems || 'N/A',
+
     });
 
     worksheet.eachRow((row: any, rowNumber) => {
@@ -204,50 +200,53 @@ export class ReportService {
       let redFlagInfo: RedFlagInformation = this.getFlabValues(report);
       //operatorAddress,
       worksheet.addRow({
-        // mine name / ID Number
-        MineNo: report.minesite.code ? report.minesite.code : 'N/A',
+        // Mine Information
+        MineNo: report.minesite?.code ? report.minesite.code : 'N/A',
         parameters: 'N/A',
         Subsites: 'N/A',
-        Operator: report.identification
-          ? report.identification?.mineOperator
-            ? report.identification?.mineOperator
-            : 'N/A'
+        Operator: report.identification?.mineOperator
+          ? report.identification.mineOperator
           : 'N/A',
-        operatorAddress: `${report.identification.province},${report.identification.district}`,
-        ContactName: report.identification.responsiblePersonNames
+        operatorAddress: `${report.identification?.district || 'N/A'}, ${
+          report.identification?.sector || 'N/A'
+        }`,
+        ContactName: report.identification?.responsiblePersonNames
           ? report.identification.responsiblePersonNames
           : 'N/A',
-        ContactNumber: report.identification.responsiblePersonContact
+        ContactNumber: report.identification?.responsiblePersonContact
           ? report.identification.responsiblePersonContact
           : 'N/A',
         OperatorNID: 'N/A',
-        OwnerName: report.identification.mineOwner
+        OwnerName: report.identification?.mineOwner
           ? report.identification.mineOwner
           : 'N/A',
         OwnerAddress: 'N/A',
         OwnerNID: 'N/A',
-        //  Mine site location
-        EastUTM: report.identification.coordinates.utm_east,
-        SouthUTM: report.identification.coordinates.utm_south,
-        DMSEast: report.identification.coordinates.dms_east,
-        SouthDMS: report.identification.coordinates.dms_south,
-        District: report.minesite.district,
+
+        // Mine Site Location
+        EastUTM: report.identification?.coordinates?.utm_east || 'N/A',
+        SouthUTM: report.identification?.coordinates?.utm_south || 'N/A',
+        DMSEast: report.identification?.coordinates?.dms_east || 'N/A',
+        SouthDMS: report.identification?.coordinates?.dms_south || 'N/A',
+        District: report.minesite?.district || 'N/A',
         Sector: 'N/A',
         Cell: 'N/A',
-        //  Types of Minerals Produced
-        MinedMinerals: 'N.A',
-        //  Mine Lisence Information
+
+        // Types of Minerals Produced
+        MinedMinerals: 'N/A',
+
+        // Mine License Information
         ICGLRClassification: 'N/A',
         TypeOfMineralLicense: '',
-        //  Mine Lisence Information
         IssuedDate: 'N/A',
         ExpiryDate: 'N/A',
         SurfaceArea: 'N/A',
         MineralLicenseType: 'N/A',
-        LicenseNumber: report.identification.licenseNumber
+        LicenseNumber: report.identification?.licenseNumber
           ? report.identification.licenseNumber
           : 'N/A',
-        //  Mine Production Details
+
+        // Mine Production Details
         TypeofMine: 'N/A',
         MiningActivityStatus: 'N/A',
         ExploitationBegun: 'N/A',
@@ -257,31 +256,37 @@ export class ReportService {
         NumberOfLargeOpenPitAbandoned: 'N/A',
         NumberOfSmallOpenPitAbandoned: 'N/A',
         NumberOfSmallOpenPitActive: 'N/A',
-        //  Mine Production Details ====
+
+        // Mine Production Details ====
         NumberOfUndergroundActive: 'N/A',
         NumberOfUndergroundAbandoned: 'N/A',
         RepresentativeDepth: 'N/A',
         MonthlyProductiveCapacity: 'N/A',
-        //  Production History====
+
+        // Production History ====
         ProductionHistory: 'N/A',
         CurrentstatusOfMinesite: 'N/A',
         DateOfLastInspection: 'N/A',
         NextInspectionDate: 'N/A',
         ResponsibleOfLastMine: 'N/A',
         LastMineInspection: 'N/A',
-        InspectionComments: report.summaryReport.proposedRemedialActions,
-        //  Red flag information====
-        ArmedGroupsPresent: redFlagInfo.ArmedGroupsPresent,
-        ChildrenPresent: redFlagInfo.ChildrenPresent,
-        ForeignMinerals: redFlagInfo.ForeignMinerals,
-        ForcedLabor: redFlagInfo.ForcedLabor,
-        //  AFP
+        InspectionComments:
+          report.summaryReport?.proposedRemedialActions || 'N/A',
+
+        // Red Flag Information ====
+        ArmedGroupsPresent: redFlagInfo?.ArmedGroupsPresent || 'N/A',
+        ChildrenPresent: redFlagInfo?.ChildrenPresent || 'N/A',
+        ForeignMinerals: redFlagInfo?.ForeignMinerals || 'N/A',
+        ForcedLabor: redFlagInfo?.ForcedLabor || 'N/A',
+
+        // AFP
         SamplingTookPlace: 'N/A',
-        //  National mine site requirements
+
+        // National Mine Site Requirements
         PPEAvailable: 'N/A',
         SafetyAtOperatingSite: 'N/A',
         EnvironmentalStatus: 'N/A',
-        Wayforwardcomment: report.summaryReport.mainProblems,
+        Wayforwardcomment: report.summaryReport?.mainProblems || 'N/A',
       });
     });
     worksheet.eachRow((row: any, rowNumber) => {
