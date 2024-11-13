@@ -37,10 +37,22 @@ export class SectionsService {
 
   async update(id: UUID, dto: CreateSectionDTO): Promise<Section> {
     const sectionEntity = await this.findSectionById(id);
-    sectionEntity.flagStandard = dto.flagStandard;
+    sectionEntity.flagStandard = this.getFlag(dto);
     sectionEntity.title = dto.title;
     const section = await this.sectionRepository.save(sectionEntity);
     return section;
+  }
+  getFlag(dto: CreateSectionDTO){
+    switch (dto.flagStandard.toUpperCase()) {
+      case 'RED':
+        return 'RED';
+      case 'YELLOW':
+        return 'YELLOW';
+      default:
+        throw new BadRequestException(
+          'The flag provided is invalid; It should be red or yellow',
+        );
+    }
   }
   async updateFlagStandard(
     id: UUID,

@@ -108,6 +108,7 @@ export class InspectionsService {
         inspectionPlan,
         null,
       );
+      categoryEntity.section = section;
       let category: Category;
       if (
         !(await this.categoryService.existsByTitleInspectionPlan(
