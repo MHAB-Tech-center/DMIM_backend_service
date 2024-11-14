@@ -20,12 +20,13 @@ export class ReportingController {
   // @Roles('ADMIN','RMB')
   async getInspectionsReport(
     @Res() response: Response,
-    @Param('id') planId: UUID,
+    @Param('planId') planId: UUID,
   ) {
+    console.log('planId', planId);
     return new ApiResponse(
       true,
       'The file downloaded successfully',
-      await this.reportingService.getInspectionsReport(planId, response),
+      await this.reportingService.getInspectionsReport(planId as any, response),
     );
   }
 

@@ -21,6 +21,7 @@ export class ReportService {
   ) {}
 
   async getInspectionsReport(planId: UUID, res: Response) {
+    console.log('planId', planId);
     const report: InspectionsResponseDTO =
       await this.inspectionService.getCategoriesInspectionPlan(planId);
     const workbook = new ExcelJS.Workbook();
@@ -31,6 +32,12 @@ export class ReportService {
     let redFlagInfo: RedFlagInformation =
       this.utilsService.getRedFlabValues(report);
     const data: RecordedValues = this.utilsService.getOtherFlabValues(report);
+
+    /* Logging the data */
+    // console.log(data);
+    // console.log(redFlagInfo);
+    // console.log(report);
+
     //operatorAddress,
     worksheet.addRow({
       // Mine Information

@@ -233,7 +233,7 @@ export class UtilsService {
   getRedFlabValues(report: InspectionsResponseDTO): RedFlagInformation {
     let redFlagInfo: RedFlagInformation = new RedFlagInformation();
     report.records.forEach((category: Category) => {
-      if (category.section.flagStandard == 'RED') {
+      if (category.section?.flagStandard == 'RED') {
         category.records.forEach((record: InspectionRecord) => {
           switch (record.pseudoName) {
             case 'non-state-armed-groups-or-their-affiliates-illegally-control-mine-site':
@@ -268,7 +268,7 @@ export class UtilsService {
   getOtherFlabValues(report: InspectionsResponseDTO): RecordedValues {
     let data: RecordedValues = new RecordedValues();
     report.records.forEach((category: Category) => {
-      if (category.section.flagStandard == 'RED') {
+      // if (category.section?.flagStandard == 'RED') {
         category.records.forEach((record: InspectionRecord) => {
           switch (record.pseudoName) {
             case 'afp-sampling-has-already-taken-place':
@@ -481,7 +481,7 @@ export class UtilsService {
               data = data;
           }
         });
-      }
+      // }
     });
     return data;
   }
