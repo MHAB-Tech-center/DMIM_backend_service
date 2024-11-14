@@ -92,7 +92,7 @@ import { AnalyticsModule } from './modules/analytics/analytics.module';
     }),
     MailerModule.forRoot({
       transport: {
-        host: 'smtp.gmail.com',
+        host: process.env.SMTP_HOST,
         auth: {
           user: process.env.EMAIL_USERNAME,
           pass: process.env.EMAIL_PASSWORD,
