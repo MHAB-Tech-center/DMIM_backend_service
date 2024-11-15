@@ -62,7 +62,9 @@ import { AnalyticsModule } from './modules/analytics/analytics.module';
         type: 'postgres',
         url: `postgres://${configService.get(
           'DB_USERNAME',
-        )}:${configService.get('DB_PASSWORD_TEST')}@${configService.get(
+        )}:${configService.get(
+          process.env.NODE_ENV === 'production' ? 'DB_PASSWORD_TEST' : 'DB_PASSWORD_LOCAL',
+        )}@${configService.get(
           'DB_HOST',
         )}:${+configService.get<number>('DB_PORT')}/${configService.get(
           'DB_NAME',
