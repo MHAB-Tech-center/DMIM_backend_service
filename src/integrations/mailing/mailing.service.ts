@@ -189,7 +189,10 @@ export class MailingService {
         throw new Error('Provide valid email type');
     }
     try {
-      await this.mailService.sendMail(this.options);
+      await this.mailService.sendMail({
+        ...this.options,
+        from: process.env.EMAIL,
+      });
       console.log('Email sent');
     } catch (error) {
       console.log(error);
