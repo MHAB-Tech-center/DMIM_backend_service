@@ -191,7 +191,8 @@ export class MailingService {
     try {
       await this.mailService.sendMail({
         ...this.options,
-        from: process.env.EMAIL,
+        // from: process.env.EMAIL,
+        from: `DMIS Support <${process.env.EMAIL}>`,
       });
       console.log('Email sent');
     } catch (error) {
